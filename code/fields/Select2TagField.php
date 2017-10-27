@@ -6,7 +6,7 @@
  * By default expects select2 to be installed via composer to component/select2/
  */
 class FrontendifySelect2TagField extends TextField {
-	use frontendify_field, frontendify_select2field, frontendify_requirements;
+	use frontendify_field, frontendify_requirements;
 
 	const FrontendifyType = 'Select2Field';
 

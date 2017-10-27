@@ -6,7 +6,7 @@
  */
 
 class FrontendifyMultiSelect2Field extends ListboxField {
-	use frontendify_field, frontendify_select2field, frontendify_requirements;
+	use frontendify_field, frontendify_requirements;
 
 	const FrontendifyType = 'Select2Field';
 
