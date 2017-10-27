@@ -1,0 +1,39 @@
+<?php
+
+use Milkyway\SS\GridFieldUtils\DisplayAsTimeline;
+use Milkyway\SS\GridFieldUtils\FormatSwitcher;
+use Milkyway\SS\GridFieldUtils\SaveAllButton;
+
+class FrontendifyGridField extends FrontEndGridField {
+	public function __construct( $name, $title, \SS_List $dataList, $editableColumns = null, \GridFieldConfig $config = null ) {
+		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
+
+		parent::__construct( $name, $title, $dataList, $config );
+
+		$config = $this->getConfig();
+		if ( $editableColumns ) {
+			$config
+				->removeComponentsByType( GridFieldDataColumns::class )
+				->removeComponentsByType( GridFieldEditButton::class )
+				->removeComponentsByType( GridFieldDeleteAction::class )
+				->removeComponentsByType( GridFieldAddNewButton::class )
+				->removeComponentsByType( GridFieldAddExistingSearchButton::class )
+				->removeComponentsByType( GridFieldPaginator::class )
+				->removeComponentsByType( GridFieldPageCount::class )
+				->addComponent( new FrontendifyGridFieldSaveAllButton( 'toolbar-header-right' ) )
+				->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'toolbar-header-right' ) )
+				->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
+				->addComponent( new GridFieldDeleteAction() )
+				->addComponent( new GridFieldEditButton());
+		} else {
+			$config
+				->removeComponentsByType( GridFieldEditButton::class )
+				->removeComponentsByType( GridFieldDeleteAction::class )
+				->removeComponentsByType( GridFieldAddNewButton::class );
+
+		}
+		$this->addExtraClass( 'frontendify-gridfield');
+		$this->setTitle('');
+
+	}
+}

@@ -1,0 +1,13 @@
+form fieldset.frontendifygrid table.ss-gridfield-table {
+	th.col-ID, td.col-ID {
+		display: none;
+	}
+	td {
+		padding: 4px;
+	}
+	input {
+		width: 100%;
+		border-width: 0 0 0 1px;
+		line-height: 1em;
+	}
+}

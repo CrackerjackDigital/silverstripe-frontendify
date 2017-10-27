@@ -1,0 +1,20 @@
+{
+    "name": "crackerjackdigital/silverstripe-frontendify",
+    "description": "Frontend Fields and Grid for SilverStripe",
+    "type": "silverstripe-module",
+    "authors": [
+        {
+            "name": "Steve Wake",
+            "email": "steve@moveforward.co.nz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "silverstripe/framework": "~3.1",
+	    "webbuilders-group/silverstripe-frontendgridfield": "*",
+	    "composer/installers": "*"
+	 },
+	"extra": {
+			"installer-name": "frontendify"
+	}
+}
