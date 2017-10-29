@@ -29,7 +29,7 @@ class FrontendifyGridFieldDateFilter implements GridField_HTMLProvider {
 			( new FrontendifyDateField( self::DateFieldName, '', $request->postVar(self::DateFieldName) ))->addExtraClass( 'frontendify-datefilter-date' ),
 			( new GridField_FormAction( $gridField, 'FilterDate', 'Set Date', 'filterdate', [] ))->addExtraClass( 'frontendify-datefilter-apply btn ui-state-default')
 		]))->addExtraClass( 'frontendify-datefilter');
-		
+
 		return [
 			'header' => $group->SmallFieldHolder(),
 		];
