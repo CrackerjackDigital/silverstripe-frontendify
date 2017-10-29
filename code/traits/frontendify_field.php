@@ -1,15 +1,13 @@
 <?php
 
 trait frontendify_field {
-	public function Field( $properties = [] ) {
+	public function onBeforeRender() {
 		$this->requirements();
 		$classes = strtolower( self::FrontendifyType);
 
 		$this->addExtraClass( "frontendify-field frontendify-{$classes}");
 
 		$this->setAttribute( 'placeholder', $this->Title() );
-
-		return parent::Field( $properties );
 	}
 
 	public function setFieldData( $name, $value ) {

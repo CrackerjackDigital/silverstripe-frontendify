@@ -16,7 +16,7 @@ trait frontendify_requirements {
 			[
 				'css/frontendify.css',
 			],
-			$requirements,
+			$requirements ?: [],
 			[
 				"css/$type.css",
 				"js/$type.js",
