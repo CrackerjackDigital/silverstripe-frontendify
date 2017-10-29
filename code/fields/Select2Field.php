@@ -6,7 +6,7 @@
  */
 
 class FrontendifySelect2Field extends DropdownField {
-	use frontendify_select2field, frontendify_field, frontendify_requirements;
+	use frontendify_field, frontendify_requirements;
 
 	const FrontendifyType = 'Select2Field';
 
