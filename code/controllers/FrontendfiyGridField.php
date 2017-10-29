@@ -138,11 +138,11 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	public function canView() {
-		return Permission::check( 'CAN_VIEW_' . self::ModelClass );
+		return Permission::check( 'CAN_VIEW_' . static::ModelClass );
 	}
 
 	public function canEdit() {
-		return Permission::check( 'CAN_EDIT_' . self::ModelClass );
+		return Permission::check( 'CAN_EDIT_' . static::ModelClass );
 	}
 
 }

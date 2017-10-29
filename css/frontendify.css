@@ -1,1 +1,21 @@
+/* line 2, ../scss/frontendify.scss */
+form fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, form fieldset.frontendifygrid table.ss-gridfield-table td.col-ID {
+  display: none;
+}
+/* line 5, ../scss/frontendify.scss */
+form fieldset.frontendifygrid table.ss-gridfield-table td {
+  padding: 4px;
+}
+/* line 8, ../scss/frontendify.scss */
+form fieldset.frontendifygrid table.ss-gridfield-table input {
+  width: 100%;
+  border-width: 0 0 0 1px;
+  line-height: 1em;
+}
 
+/* line 15, ../scss/frontendify.scss */
+::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+  color: transparent;
+}

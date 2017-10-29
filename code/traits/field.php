@@ -18,6 +18,14 @@ trait frontendify_field {
 		return $this;
 	}
 
+	/**
+	 * Return an array from a list, or the passed value if not a 'list type'
+	 *
+	 * @param array|SS_List|SS_Map $list a map, array, list etc to convert to an array
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
 	protected function decodeList( $list ) {
 		if ( $list instanceof SS_Map ) {
 			$list = $list->toArray();
