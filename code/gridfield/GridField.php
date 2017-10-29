@@ -19,12 +19,11 @@ class FrontendifyGridField extends FrontEndGridField {
 			$config
 				->removeComponentsByType( GridFieldAddExistingSearchButton::class )
 				->removeComponentsByType( GridFieldPaginator::class )
-				->removeComponentsByType( GridFieldPageCount::class )
-				->addComponent( new FrontendifyGridFieldSaveAllButton( 'toolbar-header-right' ) );
+				->removeComponentsByType( GridFieldPageCount::class );
 
 
 			if ($allowNew) {
-				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'toolbar-header-right' ) );
+				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'buttons-before-right' ) );
 			}
 			$config->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
 				->removeComponentsByType( GridFieldDataColumns::class )
@@ -32,7 +31,6 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldEditButton::class )
 				->removeComponentsByType( GridFieldDeleteAction::class )
 				->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
-				->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'buttons-before-right' ) )
 				->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) )
 				->addComponent( new FrontendifyGridFieldDateFilter())
 				->addComponent( new GridFieldDeleteAction() )

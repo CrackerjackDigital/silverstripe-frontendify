@@ -33,6 +33,6 @@
 			self.select2ify();
 		}
 	});
-//	$(selector).select2ify();
+	$(selector).select2ify();
 
 })(jQuery);
