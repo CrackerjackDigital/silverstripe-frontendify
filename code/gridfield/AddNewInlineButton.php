@@ -12,7 +12,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		$this->editableColumns = $editableColumns;
 	}
 
-	public function handleSave( GridField $grid, DataObjectInterface $record ) {
+	public function handleSave( GridField $grid, DataObjectInterface $record, &$errors = [] ) {
 		$list  = $grid->getList();
 		$value = $grid->Value();
 
@@ -47,9 +47,12 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 			if ( $list instanceof ManyManyList ) {
 				$extra = array_intersect_key( $form->getData(), (array) $list->getExtraFields() );
 			}
-
-			$item->write();
-			$list->add( $item, $extra );
+			try {
+				$item->write();
+				$list->add( $item, $extra );
+			} catch (Exception $e) {
+				$errors[] = $e->getMessage();
+			}
 		}
 	}
 
@@ -72,7 +75,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		}
 
 		Requirements::javascript( THIRDPARTY_DIR . '/javascript-templates/tmpl.js' );
-		GridFieldExtensions::include_requirements();
+//		GridFieldExtensions::include_requirements();
 		$this->requirements();
 
 		$data = new ArrayData( array(

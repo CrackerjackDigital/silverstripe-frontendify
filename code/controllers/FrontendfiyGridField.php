@@ -27,7 +27,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	public function init() {
 		parent::init();
 
-		Requirements::css('themes/shared/css/frontendify.css');
+		Requirements::css( 'themes/shared/css/frontendify.css' );
 	}
 
 	/**
@@ -36,11 +36,19 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	public function filterData($data) {
+	public function filterData( $data ) {
 		$request = $this->getRequest();
-		if ($filterDate = $request->postVar(FrontendifyGridFieldDateFilter::DateFieldName)) {
-			$data = $data->filter('StartDate:GreaterThan', $filterDate);
+
+		$filterDate = $request->postVar( FrontendifyGridFieldDateFilter::DateFieldName )
+			?: ($request->isGet() ? date( 'Y-m-d', strtotime( 'monday this week' ) ) : '');
+
+		if ($filterDate) {
+			$data = $data->filter( [
+				'StartDate:GreaterThan' => $filterDate
+			] );
+
 		}
+
 		return $data;
 	}
 
@@ -67,28 +75,35 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	public function save( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
 		if ( $field = $this->field( $request ) ) {
+			$errors = [];
+
 			if ( $request->isPOST() ) {
 				$data = $request->postVars();
-				$field->handleAlterAction( 'save', [], $data );
+				$field->handleAlterAction( 'save', [], $data, $errors );
 			}
 			if ( $request->isAjax() ) {
 				$this->getResponse()->setStatusCode( 200 );
-
 				return $field->forTemplate();
 			}
 		}
 
-		return $this->renderWith( [
-			'CrewSchedule_edit', 'Page'
-		]);
+		return $this->edit($request);
 	}
 
 	public function edit( SS_HTTPRequest $request ) {
-		return $this->renderWith( [ static::ModelClass . '_edit', 'FrontendifyGridField_edit', 'Page' ] );
+		return $this->renderWith( [ static::ModelClass . '_edit', static::ModelClass, 'Page' ] );
 	}
 
 	public function view( SS_HTTPRequest $request ) {
-		return $this->renderWith( [ static::ModelClass . '_view', 'FrontendifyGridField_view', 'Page' ] );
+		return $this->renderWith( [ static::ModelClass . '_view', static::ModelClass, 'Page' ] );
+	}
+
+	public function Form() {
+		if ($this->canEdit()) {
+			return $this->EditForm();
+		} else {
+			return $this->ViewForm();
+		}
 	}
 
 	public function EditForm() {
@@ -102,7 +117,8 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		);
 
 		$form->setFormAction( '/' . static::URLSegment . '/save' );
-		$form->addExtraClass( 'frontendify');
+		$form->addExtraClass( 'frontendify' );
+
 		return $form;
 	}
 
@@ -116,7 +132,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		$grid = FrontendifyGridField::create(
 			static::ModelClass,
 			$model->i18n_plural_name(),
-			$this->filterData($this->gridFieldData()),
+			$this->filterData( $this->gridFieldData() ),
 			$model->provideEditableColumns()
 
 		);
@@ -148,7 +164,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		$grid = FrontendifyGridField::create(
 			static::ModelClass,
 			$model->i18n_plural_name(),
-			$this->filterData($this->gridFieldData())
+			$this->filterData( $this->gridFieldData() )
 		);
 
 		return $grid;

@@ -8,9 +8,9 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 		return [ 'save' ] + parent::getActions( $gridField);
 	}
 
-	public function handleAction( GridField $gridField, $actionName, $arguments, $data ) {
+	public function handleAction( GridField $gridField, $actionName, $arguments, $data, &$errors = [] ) {
 		if ( in_array($actionName, $this->getActions( $gridField))) {
-			$this->saveAllRecords( $gridField, $arguments, $data );
+			$this->saveAllRecords( $gridField, $arguments, $data, $errors );
 		}
 		return true;
 	}
@@ -26,7 +26,7 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 			if ( $this->publish && $singleton->hasExtension( 'Versioned' ) ) {
 				$this->buttonName = _t( 'GridField.SAVE_ALL_AND_PUBLISH', 'Save all and publish' );
 			} else {
-				$this->buttonName = _t( 'GridField.SAVE_ALL', 'Save all' );
+				$this->buttonName = _t( 'GridField.SAVE', 'Save' );
 			}
 		}
 

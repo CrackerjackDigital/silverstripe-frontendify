@@ -26,13 +26,12 @@ class FrontendifyGridFieldDateFilter implements GridField_HTMLProvider {
 		$request = Controller::curr()->getRequest();
 
 		$filterDate = $request->postVar( self::DateFieldName )
-			?: ( $request->isGET()
-				? date('Y-m-d', strtotime('this monday'))
-					: '');
+			?: ( $request->isGET() ? date('Y-m-d', strtotime('monday this week')): '');
 
 		$group = (new FieldGroup( [
 			( new FrontendifyDateField( self::DateFieldName, '', $filterDate ))->addExtraClass( 'frontendify-datefilter-date' ),
-			( new GridField_FormAction( $gridField, 'FilterDate', 'Set Date', 'filterdate', [] ))->addExtraClass( 'frontendify-datefilter-apply btn ui-state-default')
+			( new GridField_FormAction( $gridField, 'FilterDate', 'Go', 'filterdate', [] ))->addExtraClass( 'frontendify-datefilter-apply btn ui-state-default')
+
 		]))->addExtraClass( 'frontendify-datefilter');
 
 		return [

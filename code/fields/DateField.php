@@ -1,7 +1,7 @@
 <?php
 
 
-class FrontendifyDateField extends DateField {
+class FrontendifyDateField extends TextField {
 	use frontendify_field, frontendify_requirements;
 
 	const FrontendifyType = 'DateField';
@@ -16,7 +16,7 @@ class FrontendifyDateField extends DateField {
 	public function __construct( $name, $title = null, $value = null ) {
 		parent::__construct( $name, $title, $value );
 		$this->setAttribute( 'type', 'date');
-		$this->addExtraClass( 'datepicker');
+		$this->removeExtraClass( 'datepicker');
 		$this->removeExtraClass( 'hasDatepicker');
 	}
 }

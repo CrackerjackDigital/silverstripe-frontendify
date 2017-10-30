@@ -3,7 +3,7 @@
 class FrontendifyGridField extends FrontEndGridField {
 	use frontendify_requirements, frontendify_config;
 
-	const FrontendifyType = 'FrontEndGridField';
+	const FrontendifyType = 'GridField';
 
 	private static $frontendify_require = [
 		self::FrontendifyType => [
@@ -11,34 +11,44 @@ class FrontendifyGridField extends FrontEndGridField {
 		],
 	];
 	private static $frontendify_block = [
-		'/frontendgridfield/css/FrontEndGridField.css',
+		'/framework/css/GridField.css',
+		'/frontendgridfield/css/GridField.css',
+		'/gridfieldextensions/javascript/GridFieldExtensions.js'
 	];
 
-	public function __construct( $name, $title, \SS_List $dataList, $editableColumns = null, $allowNew = true, \GridFieldConfig $config = null ) {
+	public function __construct( $name, $title, \SS_List $dataList, $editableColumns = null, $allowNew = null, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 
 		parent::__construct( $name, $title, $dataList, $config );
 
+		$model = singleton( $this->getModelClass() );
+		$editableColumns = $editableColumns ?: $model->provideEditableColumns();
+
 		$config = $this->getConfig();
 		if ( $editableColumns ) {
-			$config
-				->removeComponentsByType( GridFieldAddExistingSearchButton::class )
+			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
 				->removeComponentsByType( GridFieldPaginator::class )
 				->removeComponentsByType( GridFieldPageCount::class );
 
-			if ( $allowNew ) {
+			$config->removeComponentsByType( GridFieldAddNewButton::class )
+				->removeComponentsByType( GridFieldEditButton::class )
+				->removeComponentsByType( GridFieldDeleteAction::class );
+
+			if ( $allowNew || ( is_null( $allowNew ) && $model->canCreate() ) ) {
 				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'buttons-before-right' ) );
 			}
-			$config->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
-				->removeComponentsByType( GridFieldDataColumns::class )
-				->removeComponentsByType( GridFieldAddNewButton::class )
-				->removeComponentsByType( GridFieldEditButton::class )
-				->removeComponentsByType( GridFieldDeleteAction::class )
-				->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
-				->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) )
-				->addComponent( new FrontendifyGridFieldDateFilter() )
-				->addComponent( new GridFieldDeleteAction() )
-				->addComponent( new GridFieldEditButton() );
+
+			if ($model->canEdit()) {
+
+				$config->removeComponentsByType( GridFieldDataColumns::class )
+					->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
+					->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
+			}
+			if ( $model->canDelete() ) {
+				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
+			}
+			$config->addComponent( new FrontendifyGridFieldDateFilter() );
+
 		} else {
 			$config
 				->removeComponentsByType( GridFieldEditButton::class )

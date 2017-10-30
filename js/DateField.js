@@ -5,14 +5,13 @@
 
 		$.fn.datefieldify = function () {
 			console.log('datefieldify');
-
 			$(selector).datepicker({
-				dateFormat: 'yy-mm-dd',
-				altFormat: 'yy-mm-dd',
-				autoclose: true,
+				format: 'yyyy-mm-dd',
+				todayBtn: true,
 				todayHighlight: true,
+				autoclose: true,
 				autoSize: true,
-				defaultDate: 0
+				weekStart: 1
 			}).addClass('datefieldified');
 
 		};

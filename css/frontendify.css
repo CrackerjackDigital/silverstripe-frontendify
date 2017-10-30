@@ -1,7 +1,10 @@
-@import url(../../frontendgridfield/css/FrontEndGridField.css);
-/* line 5, ../scss/frontendify.scss */
+/* line 3, ../scss/frontendify.scss */
 form .ss-gridfield > div {
   margin-bottom: 0;
+}
+/* line 7, ../scss/frontendify.scss */
+form fieldset.frontendifygrid {
+  overflow-x: auto;
 }
 /* line 10, ../scss/frontendify.scss */
 form fieldset.frontendifygrid .frontendify-datefilter {
@@ -15,18 +18,18 @@ form fieldset.frontendifygrid .frontendify-datefilter input {
 /* line 19, ../scss/frontendify.scss */
 form fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, form fieldset.frontendifygrid table.ss-gridfield-table td.col-ID {
   display: none;
-}
-/* line 22, ../scss/frontendify.scss */
-form fieldset.frontendifygrid table.ss-gridfield-table td {
   padding: 4px;
 }
-/* line 25, ../scss/frontendify.scss */
+/* line 24, ../scss/frontendify.scss */
+form fieldset.frontendifygrid table.ss-gridfield-table td.col-StartDate, form fieldset.frontendifygrid table.ss-gridfield-table td.col-EndDate {
+  min-width: 8em;
+}
+/* line 29, ../scss/frontendify.scss */
 form fieldset.frontendifygrid table.ss-gridfield-table input {
-  width: 100%;
-  border-width: 0 0 0 1px;
+  border-width: 1px;
   line-height: 1em;
 }
-/* line 33, ../scss/frontendify.scss */
+/* line 36, ../scss/frontendify.scss */
 form ::-webkit-datetime-edit-year-field:not([aria-valuenow]),
 form ::-webkit-datetime-edit-month-field:not([aria-valuenow]),
 form ::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
