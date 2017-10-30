@@ -5,7 +5,7 @@ class FrontendifyTextField extends TextField {
 
 	const FrontendifyType = 'TextField';
 
-	private static $frontendify_requirements = [
+	private static $frontendify_require = [
 		self::FrontendifyType => [
 			'css/TextField.css'
 		]

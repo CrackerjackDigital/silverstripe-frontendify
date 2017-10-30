@@ -1,19 +1,38 @@
-form fieldset.frontendifygrid table.ss-gridfield-table {
-	th.col-ID, td.col-ID {
-		display: none;
-	}
-	td {
-		padding: 4px;
-	}
-	input {
-		width: 100%;
-		border-width: 0 0 0 1px;
-		line-height: 1em;
-	}
-}
+@import '../../frontendgridfield/css/FrontEndGridField.css';
 
-::-webkit-datetime-edit-year-field:not([aria-valuenow]),
-::-webkit-datetime-edit-month-field:not([aria-valuenow]),
-::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
-	color: transparent;
+form {
+	.ss-gridfield {
+		> div {
+			margin-bottom: 0;
+		}
+	}
+	fieldset.frontendifygrid {
+		.frontendify-datefilter {
+			text-align: center;
+			line-height: 3em;
+
+			input {
+				padding: 0 1em;
+			}
+		}
+		table.ss-gridfield-table {
+			th.col-ID, td.col-ID {
+				display: none;
+			}
+			td {
+				padding: 4px;
+			}
+			input {
+				width: 100%;
+				border-width: 0 0 0 1px;
+				line-height: 1em;
+			}
+		}
+	}
+
+	::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+	::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+	::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+		color: transparent;
+	}
 }

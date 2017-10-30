@@ -12,7 +12,7 @@ class FrontendifySelect2TagField extends TextField {
 
     private static $frontendify_tag_seperator = ',';
 
-	private static $frontendify_requirements = [
+	private static $frontendify_require = [
 		self::FrontendifyType => [
 			"js/select2/select2.js",
 			"js/select2/select2.css"

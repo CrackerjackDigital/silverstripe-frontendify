@@ -28,11 +28,20 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		parent::init();
 
 		Requirements::css('themes/shared/css/frontendify.css');
+	}
 
-		$this->activeLink = 'scheduling';
-		$this->setField( 'Title', 'Scheduling' );
-
-		$this->addToCrumb( 'Crew Schedules', CrewSchedule_Controller::URLSegment );
+	/**
+	 * @param DataList $data
+	 *
+	 * @return mixed
+	 * @throws \InvalidArgumentException
+	 */
+	public function filterData($data) {
+		$request = $this->getRequest();
+		if ($filterDate = $request->postVar(FrontendifyGridFieldDateFilter::DateFieldName)) {
+			$data = $data->filter('StartDate:GreaterThan', $filterDate);
+		}
+		return $data;
 	}
 
 	public function index() {
@@ -97,13 +106,17 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		return $form;
 	}
 
+	/**
+	 * @return \FrontendifyGridField
+	 */
+
 	public function EditGridField() {
 		$model = singleton( static::ModelClass );
 
 		$grid = FrontendifyGridField::create(
 			static::ModelClass,
 			$model->i18n_plural_name(),
-			$this->gridFieldData(),
+			$this->filterData($this->gridFieldData()),
 			$model->provideEditableColumns()
 
 		);
@@ -125,13 +138,17 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		return $form;
 	}
 
+	/**
+	 * @return \FrontendifyGridField
+	 */
+
 	public function ViewGridField() {
 		$model = singleton( static::ModelClass );
 
 		$grid = FrontendifyGridField::create(
 			static::ModelClass,
 			$model->i18n_plural_name(),
-			$this->gridFieldData()
+			$this->filterData($this->gridFieldData())
 		);
 
 		return $grid;

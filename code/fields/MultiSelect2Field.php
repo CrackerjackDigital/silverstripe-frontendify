@@ -10,7 +10,7 @@ class FrontendifyMultiSelect2Field extends ListboxField {
 
 	const FrontendifyType = 'Select2Field';
 
-	private static $frontendify_requirements = [
+	private static $frontendify_require = [
 		self::FrontendifyType => [
 			"js/select2/select2.js",
 			"js/select2/select2.css"

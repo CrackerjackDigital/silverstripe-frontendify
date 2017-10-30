@@ -7,8 +7,18 @@ trait frontendify_requirements {
 	public function requirements() {
 		$type = self::FrontendifyType;
 
+		$blocks = self::config()->get('frontendify_block') ?: [];
+		foreach ($blocks as $block) {
+			if ( substr( $block, 0, 1 ) == '/' ) {
+				$block = substr( $block, 1 );
+			} else {
+				$block = FRONTENDIFY_DIR . '/' . $block;
+			}
+			Requirements::block($block);
+		}
+
 		// get requirements for ths component added via e.g. frontendify_reqreuirments['Select2Field'] = [ 'js/Select2Field.js' ]
-		$requirements = ( $all = ( self::config()->get( "frontendify_requirements" ) ?: [] ) )
+		$requirements = ( $all = ( self::config()->get( "frontendify_require" ) ?: [] ) )
 			? ( isset( $all[ self::FrontendifyType ] ) ? $all[ self::FrontendifyType ] : [] )
 			: [];
 
@@ -24,7 +34,9 @@ trait frontendify_requirements {
 		);
 
 		foreach ( $requirements as $requirement ) {
-			if ( substr( $requirement, 0, 1 ) != '/' ) {
+			if ( substr( $requirement, 0, 1 ) == '/' ) {
+				$requirement = substr( $requirement, 1 );
+			} else {
 				$requirement = FRONTENDIFY_DIR . '/' . $requirement;
 			}
 			switch ( substr( $requirement, - 3, 3 ) ) {
