@@ -67,4 +67,8 @@ class FrontendifyGridField extends FrontEndGridField {
 		$this->requirements();
 		return parent::FieldHolder($properties);
 	}
+
+	public function XLink($action = null) {
+//		if ($this->form->Form)
+	}
 }
