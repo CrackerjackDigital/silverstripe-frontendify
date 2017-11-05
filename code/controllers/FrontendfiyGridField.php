@@ -191,7 +191,8 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 				'Status' => [
 					'title'    => '',
 					'callback' => function ( $item ) {
-						$field = new LiteralField( 'Status', '<i></i>' );
+						$field = (new LiteralField( 'Status', '<i>&nbsp;</i>' ))->setAllowHTML( true);
+
 
 						return $field;
 					},

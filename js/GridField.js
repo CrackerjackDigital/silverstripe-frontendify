@@ -54,8 +54,6 @@
 					url: this.data('url'),
 					dataType: 'html',
 					success: function (data, textStatus, jqXHR) {
-						debugger;
-
 						var errors = JSON.parse(jqXHR.getResponseHeader('X-Errors'));
 
 						// Replace the grid field with response, not the form.
@@ -83,8 +81,8 @@
 							grid.find('.sortable-header th:last').html(content);
 						}
 
-						grid.find('tr').removeClass('error');
-						grid.find('.col-Status').html('<i></i>');
+						grid.find('tbody tr').removeClass('error');
+						grid.find('td.col-Status').html('<i></i>').find('i').attr('title', 'OK');
 
 						if (errors) {
 							var lineNum,
@@ -93,12 +91,11 @@
 								icon;
 
 							for (lineNum in errors) {
-								if (row = grid.find('tr').eq(lineNum)) {
+								// row is 0-based, errors are 1-based
+								if (row = grid.find('tbody tr').eq(lineNum - 1)) {
 									lineErrors = errors[lineNum];
-									icon = $('<i></i>');
-									icon.addClass('icos-error');
-
-									row.addClass('error').find('.col-Status').empty().append(icon);
+									row.addClass('error');
+									row.find('td.col-Status i').addClass('icol-error').attr('title', lineErrors.join(','));
 								}
 							}
 						}
