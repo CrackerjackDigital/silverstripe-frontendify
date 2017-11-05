@@ -25,7 +25,9 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	 *
 	 * @var array e.g. [ 'EntryDate:GreaterThan' => null, 'Status' => 'Pending' ]
 	 */
-	private static $filters = [];
+	private static $filters = [
+		# e.g. 'DateFilter' => 'StartDate:GreaterThan'
+	];
 
 	abstract public function gridFieldData();
 
@@ -51,17 +53,13 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 			$extraFilters
 		);
 
-		foreach ($filters as $filterSpec => $value) {
-			$fieldName = current(explode(':', $filterSpec));
-
-			if (is_null($value)) {
-				$value = $request->postVar( $fieldName);
-
-				if (is_null($value)) {
-					continue;
-				}
+		foreach ($filters as $filterName => $filterSpec) {
+			if (array_key_exists($filterName, $request->postVars())) {
+				$data = $data->filter(
+					$filterSpec,
+					$request->postVar($filterName)
+				);
 			}
-			$data = $data->filter($filterSpec, $value);
 		}
 		return $data;
 	}
