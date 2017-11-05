@@ -1,7 +1,7 @@
 <?php
 
 class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
-	public function __construct($displayFields = []) {
+	public function __construct( $displayFields = [] ) {
 		$this->displayFields = $displayFields;
 	}
 
@@ -24,7 +24,10 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		/** @var GridFieldOrderableRows $sortable */
 		$sortable = $grid->getConfig()->getComponentByType( 'GridFieldOrderableRows' );
 
+		$line = 0;
 		foreach ( $value[ $dataKey ] as $id => $fields ) {
+			$line ++;
+
 			if ( ! is_numeric( $id ) || ! is_array( $fields ) ) {
 				continue;
 			}
@@ -54,8 +57,12 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 			try {
 				$item->write();
 				$list->add( $item, $extra );
+
+			} catch ( ValidationException $e ) {
+				$errors[ $line ] = $e->getResult()->messageList();
+
 			} catch ( Exception $e ) {
-				$errors[] = $e->getMessage();
+				$errors[ $line ] = $e->getMessage();
 			}
 		}
 	}

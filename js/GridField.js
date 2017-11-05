@@ -3,15 +3,14 @@
 		/**
 		 * GridFieldAddNewInlineButton
 		 */
-		$(".frontendifygrid.ss-gridfield-editable").entwine({
-			reload: function (opts, successCallback) {
-				var grid = this;
-				// Record position of all items
-				var added = [];
-				var index = 0; // 0-based index
-				var self = this, form = this.closest('form'),
-					focusedElName = this.find(':input:focus').attr('name'), // Save focused element for restoring after refresh
-					data = form.find(':input').serializeArray();
+		$(".frontendify-gridfield").entwine({
+			saveall: function (ajaxOpts, successCallback) {
+				var grid = this,
+					form = this.closest('form'),
+					focusedElName = this.find(':input:focus').attr('name'),
+					data = form.find(':input').serializeArray(),
+					index = 0,
+					added = [];
 
 
 				grid.find("tbody:first .ss-gridfield-item").each(function () {
@@ -24,8 +23,12 @@
 					}
 					index++;
 				});
-				if (!ajaxOpts) ajaxOpts = {};
-				if (!ajaxOpts.data) ajaxOpts.data = [];
+				if (!ajaxOpts) {
+					ajaxOpts = {};
+				}
+				if (!ajaxOpts.data) {
+					ajaxOpts.data = [];
+				}
 				ajaxOpts.data = ajaxOpts.data.concat(data);
 
 
@@ -51,36 +54,63 @@
 					url: this.data('url'),
 					dataType: 'html',
 					success: function (data, textStatus, jqXHR) {
+						debugger;
+
+						var errors = JSON.parse(jqXHR.getResponseHeader('X-Errors'));
+
 						// Replace the grid field with response, not the form.
 						// TODO Only replaces all its children, to avoid replacing the current scope
 						// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
-						self.empty().append($(data).children());
+						grid.empty().append($(data).children());
 
 						// Refocus previously focused element. Useful e.g. for finding+adding
 						// multiple relationships via keyboard.
-						if (focusedElName) self.find(':input[name="' + focusedElName + '"]').focus();
+						if (focusedElName) {
+							grid.find(':input[name="' + focusedElName + '"]').focus();
+						}
 
 						// Update filter
-						if (self.find('.filter-header').length) {
+						if (grid.find('.filter-header').length) {
 							var content;
 							if (ajaxOpts.data[0].filter == "show") {
 								content = '<span class="non-sortable"></span>';
-								self.addClass('show-filter').find('.filter-header').show();
+								grid.addClass('show-filter').find('.filter-header').show();
 							} else {
 								content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
-								self.removeClass('show-filter').find('.filter-header').hide();
+								grid.removeClass('show-filter').find('.filter-header').hide();
 							}
 
-							self.find('.sortable-header th:last').html(content);
+							grid.find('.sortable-header th:last').html(content);
 						}
+
+						grid.find('tr').removeClass('error');
+						grid.find('.col-Status').html('<i></i>');
+
+						if (errors) {
+							var lineNum,
+								lineErrors,
+								row,
+								icon;
+
+							for (lineNum in errors) {
+								if (row = grid.find('tr').eq(lineNum)) {
+									lineErrors = errors[lineNum];
+									icon = $('<i></i>');
+									icon.addClass('icos-error');
+
+									row.addClass('error').find('.col-Status').empty().append(icon);
+								}
+							}
+						}
+
 
 						form.removeClass('loading');
 						if (successCallback) {
 							successCallback.apply(this, arguments);
 						}
-						self.trigger('reload', self);
 					},
 					error: function (e) {
+						debugger;
 						alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
 						form.removeClass('loading');
 					}
@@ -138,7 +168,6 @@
 				if (e.target != this[0]) {
 					return;
 				}
-
 				var tmpl = window.tmpl;
 				var row = this.find(".frontendify-add-inline-template:last");
 				var num = this.data("add-inline-num") || 1;
@@ -155,11 +184,74 @@
 		});
 
 
+		$('.frontendify-gridfield *').entwine({
+			getFrontendifyGridField: function () {
+				return this.closest('.frontendify-gridfield');
+			}
+		});
+
+
+		$('.frontendify-gridfield .action.frontendify-saveallbutton').entwine({
+			onclick: function (e) {
+				var filterState = 'show'; //filterstate should equal current state.
+
+				// If the button is disabled, do nothing.
+				if (this.button('option', 'disabled')) {
+					e.preventDefault();
+					return;
+				}
+
+				if (this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))) {
+					filterState = 'hidden';
+				}
+				this.getFrontendifyGridField().saveall({data: [{name: this.attr('name'), value: this.val(), filter: filterState}]});
+
+				e.preventDefault();
+				e.stopPropagation();
+
+				return false;
+			},
+			/**
+			 * Get the url this action should submit to
+			 */
+			actionurl: function () {
+				var btn = this.closest(':button'),
+					grid = this.getFrontendifyGridField(),
+					form = this.closest('form'),
+					data = form.find(':input.gridstate').serialize(),
+					csrf = form.find('input[name="SecurityID"]').val();
+
+				// Add current button
+				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+				// Add csrf
+				if (csrf) {
+					data += "&SecurityID=" + encodeURIComponent(csrf);
+				}
+
+				// Include any GET parameters from the current URL, as the view
+				// state might depend on it. For example, a list pre-filtered
+				// through external search criteria might be passed to GridField.
+				if (window.location.search) {
+					data = window.location.search.replace(/^\?/, '') + '&' + data;
+				}
+
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
+				return $.path.makeUrlAbsolute(
+					grid.data('url') + connector + data,
+					$('base').attr('href')
+				);
+			}
+
+		});
+
 		/**
-		 * GridFieldEditableColumns
+		 * GridFieldEditableColumns disable row clicks
 		 */
 
-		$('.ss-gridfield.ss-gridfield-editable .ss-gridfield-item td').entwine({
+		$('.frontendify-gridfield.ss-gridfield-editable .ss-gridfield-item td').entwine({
 			onclick: function (e) {
 				// Prevent the default row click action when clicking a cell that contains a field
 				if (this.find('.editable-column-field').length) {
@@ -173,7 +265,7 @@
 
 		$(".ss-gridfield-orderable tbody").entwine({
 			rebuildSort: function () {
-				var grid = this.getGridField();
+				var grid = this.getFrontendifyGridField();
 
 				// Get lowest sort value in this list (respects pagination)
 				var minSort = null;
@@ -225,9 +317,9 @@
 					self.rebuildSort();
 
 					// Check if we are allowed to postback
-					var grid = self.getGridField();
+					var grid = self.getFrontendifyGridField();
 					if (grid.data("immediate-update") && postback) {
-						grid.reload({
+						grid.saveall({
 							url: grid.data("url-reorder")
 						});
 					}
@@ -255,8 +347,8 @@
 		});
 
 		$(".frontendify-add-new-inline").entwine({
-			onclick: function () {
-				this.getGridField().trigger("frontendifyaddnewinline");
+			onclick: function (e) {
+				this.getFrontendifyGridField().trigger("frontendifyaddnewinline");
 				return false;
 			}
 		});

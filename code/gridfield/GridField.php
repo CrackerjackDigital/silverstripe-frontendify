@@ -5,17 +5,18 @@ class FrontendifyGridField extends FrontEndGridField {
 
 	const FrontendifyType = 'GridField';
 
+	private static $frontendify_block = [
+		'/framework/css/GridField.css',
+		'/framework/javascript/GridField.js',
+		'/frontendgridfield/css/GridField.css',
+		'/gridfieldextensions/javascript/GridFieldExtensions.js'
+	];
+
 	private static $frontendify_require = [
 		self::FrontendifyType => [
 			'/themes/default/css/frontendify.css',
 		],
 	];
-	private static $frontendify_block = [
-		'/framework/css/GridField.css',
-		'/frontendgridfield/css/GridField.css',
-		'/gridfieldextensions/javascript/GridFieldExtensions.js'
-	];
-
 	public function __construct( $name, $title, \SS_List $dataList, $editableColumns = null, $allowNew = null, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 

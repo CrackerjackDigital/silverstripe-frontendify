@@ -112,19 +112,21 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 
 		foreach ( $grid->getColumns() as $column ) {
 			if ( in_array( $column, $handled ) ) {
-				$field = $fields->dataFieldByName( $column );
-				$field->setName( sprintf(
-					'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), __CLASS__, $field->getName()
-				) );
+				$field = $fields->fieldByName( $column );
+				if ($field) {
+					$field->setName( sprintf(
+						'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), __CLASS__, $field->getName()
+					) );
 
-				$content = $field->Field();
+					$content = $field->Field();
 
-				// Convert HTML IDs built by FormTemplateHelper to the template format
-				$content = str_replace(
-					'GridFieldAddNewInlineButton_o.num_',
-					'GridFieldAddNewInlineButton_{%=o.num%}_',
-					$content
-				);
+					// Convert HTML IDs built by FormTemplateHelper to the template format
+					$content = str_replace(
+						'GridFieldAddNewInlineButton_o.num_',
+						'GridFieldAddNewInlineButton_{%=o.num%}_',
+						$content
+					);
+				}
 			} else {
 				$content = $grid->getColumnContent( $record, $column );
 

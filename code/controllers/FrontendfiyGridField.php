@@ -1,8 +1,8 @@
 <?php
 
 abstract class FrontendfiyGridField_Controller extends Page_Controller {
-	const GridModelClass    = '';
-	const URLSegment        = '';
+	const GridModelClass = '';
+	const URLSegment     = '';
 
 	private static $allowed_actions = [
 		'index' => true,
@@ -49,19 +49,30 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		$request = $this->getRequest();
 
 		$filters = array_merge(
-			$this->config()->get('filters'),
+			$this->config()->get( 'filters' ),
 			$extraFilters
 		);
 
-		foreach ($filters as $filterName => $filterSpec) {
-			if (array_key_exists($filterName, $request->postVars())) {
+		foreach ( $filters as $filterName => $filterSpec ) {
+			$filterValue = $request->postVar( $filterName );
+
+			if ( ! empty( $filterValue ) ) {
 				$data = $data->filter(
 					$filterSpec,
-					$request->postVar($filterName)
+					$request->postVar( $filterName )
 				);
 			}
 		}
+
 		return $data;
+	}
+
+	public function canView() {
+		return Permission::check( 'CAN_VIEW_' . static::GridModelClass );
+	}
+
+	public function canEdit() {
+		return Permission::check( 'CAN_EDIT_' . static::GridModelClass );
 	}
 
 	public function index() {
@@ -70,10 +81,9 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		} elseif ( $this->canView() ) {
 			return $this->view( $this->getRequest() );
 		} else {
-			$this->setSessionMessage( "Sorry, you are not allowed to do that", "error");
-			return $this->redirectBack();
+			$this->setSessionMessage( "Sorry, you are not allowed to do that", "error" );
+			return $this->renderWith([ static::GridModelClass, 'Page']);
 		}
-
 	}
 
 	public function field( SS_HTTPRequest $request ) {
@@ -94,13 +104,19 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 				$data = $request->postVars();
 				$field->handleAlterAction( 'save', [], $data, $errors );
 			}
+			$response = $this->getResponse();
+
 			if ( $request->isAjax() ) {
-				$this->getResponse()->setStatusCode( 200 );
+				$response->setStatusCode( 200 );
+				if ( $errors ) {
+					$response->addHeader( 'X-Errors', json_encode( $errors ) );
+				}
+
 				return $field->forTemplate();
 			}
 		}
 
-		return $this->edit($request);
+		return $this->edit( $request );
 	}
 
 	public function edit( SS_HTTPRequest $request ) {
@@ -112,7 +128,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	public function Form() {
-		if ($this->canEdit()) {
+		if ( $this->canEdit() ) {
 			return $this->EditForm();
 		} else {
 			return $this->ViewForm();
@@ -120,75 +136,108 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	public function EditForm() {
-		$grid = $this->EditGridField();
+		if ($this->canEdit()) {
+			$grid = $this->EditGridField();
 
-		$form = new Form(
-			$this,
-			'Form',
-			new FieldList( [ $grid ] ),
-			new FieldList()
-		);
+			$form = new Form(
+				$this,
+				'Form',
+				new FieldList( [ $grid ] ),
+				new FieldList()
+			);
 
-		$form->setFormAction( '/' . static::URLSegment . '/save' );
-		$form->addExtraClass( 'frontendify' );
+			$form->setFormAction( '/' . static::URLSegment . '/save' );
+			$form->addExtraClass( 'frontendify' );
 
-		return $form;
+			return $form;
+
+		}
 	}
 
 	/**
 	 * @return \FrontendifyGridField
+	 * @throws \InvalidArgumentException
 	 */
 
 	public function EditGridField() {
-		$model = singleton( static::GridModelClass );
+		if ($this->canEdit()) {
+			$model = singleton( static::GridModelClass );
 
-		$grid = FrontendifyGridField::create(
-			static::GridModelClass,
-			$model->i18n_plural_name(),
-			$this->filterData( $this->gridFieldData() ),
+			$grid = FrontendifyGridField::create(
+				static::GridModelClass,
+				$model->i18n_plural_name(),
+				$this->filterData( $this->gridFieldData() ),
+				$this->getEditableColumns()
+
+			);
+
+			return $grid;
+
+		}
+	}
+
+	public function getEditableColumns() {
+		$model   = singleton( static::GridModelClass );
+		$columns = array_merge(
+			[
+				'ID'     => [
+					'title'    => '',
+					'callback' => function ( $item ) {
+						$field = new HiddenField( 'ID', '' );
+
+						return $field;
+					},
+				],
+				'Status' => [
+					'title'    => '',
+					'callback' => function ( $item ) {
+						$field = new LiteralField( 'Status', '<i></i>' );
+
+						return $field;
+					},
+				],
+			],
 			$model->provideEditableColumns()
-
 		);
 
-		return $grid;
+		return $columns;
 	}
 
 	public function ViewForm() {
-		$grid = $this->ViewGridField();
+		if ($this->canView()) {
+			$grid = $this->ViewGridField();
 
-		$form = new Form(
-			$this,
-			'Form',
-			new FieldList( [ $grid ] ),
-			new FieldList()
-		);
-		$form->addExtraClass( 'frontendify' );
+			$form = new Form(
+				$this,
+				'Form',
+				new FieldList( [ $grid ] ),
+				new FieldList()
+			);
+			$form->addExtraClass( 'frontendify' );
 
-		return $form;
+			return $form;
+
+		}
 	}
 
 	/**
 	 * @return \FrontendifyGridField
+	 * @throws \InvalidArgumentException
 	 */
 
 	public function ViewGridField() {
-		$model = singleton( static::GridModelClass );
+		if ($this->canView()) {
+			$model = singleton( static::GridModelClass );
 
-		$grid = FrontendifyGridField::create(
-			static::GridModelClass,
-			$model->i18n_plural_name(),
-			$this->filterData( $this->gridFieldData() )
-		);
+			$grid = FrontendifyGridField::create(
+				static::GridModelClass,
+				$model->i18n_plural_name(),
+				$this->filterData( $this->gridFieldData() )
+			);
 
-		return $grid;
-	}
+			return $grid;
 
-	public function canView() {
-		return Permission::check( 'CAN_VIEW_' . static::GridModelClass );
-	}
-
-	public function canEdit() {
-		return Permission::check( 'CAN_EDIT_' . static::GridModelClass );
+		}
 	}
 
 }
