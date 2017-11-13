@@ -19,6 +19,16 @@ class FrontendifyGridField extends FrontEndGridField {
 		],
 	];
 
+	/**
+	 * FrontendifyGridField constructor.
+	 *
+	 * @param string                $modelClass
+	 * @param null|string           $title
+	 * @param \SS_List|null         $dataList
+	 * @param array|boolean|null                  $editableColumns if false then read-only mode, null means get from model, otherwise use these
+	 * @param null                  $canCreate
+	 * @param \GridFieldConfig|null $config
+	 */
 	public function __construct( $modelClass, $title, \SS_List $dataList = null, $editableColumns = null, $canCreate = null, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 
@@ -26,7 +36,7 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$model = singleton( $modelClass );
 
-		$editableColumns = $editableColumns ?: $model->provideEditableColumns();
+		$editableColumns = is_null($editableColumns) ? $model->provideEditableColumns() : $editableColumns;
 
 		$canCreate = ( is_null( $canCreate ) && $model->canCreate() ) || (bool) $canCreate;
 
@@ -59,8 +69,6 @@ class FrontendifyGridField extends FrontEndGridField {
 				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
 			}
 
-			$config->addComponent( new FrontendifyGridFieldDateFilter() );
-
 		} else {
 			$config
 				->removeComponentsByType( GridFieldEditButton::class )
@@ -71,6 +79,8 @@ class FrontendifyGridField extends FrontEndGridField {
 			}
 
 		}
+		$config->addComponent( new FrontendifyGridFieldDateFilter() );
+
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
 		$this->setTitle( '' );
 	}

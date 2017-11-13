@@ -33,8 +33,6 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 
 	public function init() {
 		parent::init();
-
-		Requirements::css( 'themes/shared/css/frontendify.css' );
 	}
 
 	/**
@@ -57,27 +55,6 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		}
 		return $data;
 
-		/*
-				$filters = array_merge(
-					$this->config()->get( 'filters' ),
-					$extraFilters
-				);
-
-				foreach ( $filters as $filterName => $filterSpec ) {
-					if ($request->isPOST()) {
-						$filterValue = $request->postVar( $filterName );
-					}
-
-					if ( ! empty( $filterValue ) ) {
-						$data = $data->filter(
-							$filterSpec,
-							$filterValue
-						);
-					}
-				}
-		*/
-
-		return $data;
 	}
 
 	public function canView() {
@@ -134,11 +111,11 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	public function edit( SS_HTTPRequest $request ) {
-		return $this->renderWith( [ static::GridModelClass . '_edit', static::GridModelClass, 'Page' ] );
+		return $this->renderWith( [ static::GridModelClass . '_edit', static::GridModelClass, 'Page' ], [ 'Mode' => 'edit'] );
 	}
 
 	public function view( SS_HTTPRequest $request ) {
-		return $this->renderWith( [ static::GridModelClass . '_view', static::GridModelClass, 'Page' ] );
+		return $this->renderWith( [ static::GridModelClass . '_view', static::GridModelClass, 'Page' ], [ 'Mode' => 'view' ] );
 	}
 
 	public function Form() {
@@ -237,6 +214,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 				new FieldList( [ $grid ] ),
 				new FieldList()
 			);
+			$form->setFormAction( '/' . static::URLSegment . '/view' );
 			$form->addExtraClass( 'frontendify' );
 
 			return $form;
@@ -255,9 +233,9 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 
 			$grid = FrontendifyGridField::create(
 				static::GridModelClass,
-				$model->i18n_plural_name() //,
-//				null,
-//				$this->getViewableColumns()
+				$model->i18n_plural_name(),
+				null,
+				false
 			);
 			$grid->setList(
 				$this->filterData( $grid, $this->gridFieldData() )
