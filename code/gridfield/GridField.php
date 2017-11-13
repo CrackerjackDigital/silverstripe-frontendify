@@ -9,21 +9,30 @@ class FrontendifyGridField extends FrontEndGridField {
 		'/framework/css/GridField.css',
 		'/framework/javascript/GridField.js',
 		'/frontendgridfield/css/GridField.css',
-		'/gridfieldextensions/javascript/GridFieldExtensions.js'
+		'/gridfieldextensions/javascript/GridFieldExtensions.js',
 	];
 
 	private static $frontendify_require = [
 		self::FrontendifyType => [
+			'js/lib/lodash.min.js',
 			'/themes/default/css/frontendify.css',
 		],
 	];
-	public function __construct( $name, $title, \SS_List $dataList, $editableColumns = null, $allowNew = null, \GridFieldConfig $config = null ) {
+
+	public function __construct( $modelClass, $title, \SS_List $dataList = null, $editableColumns = null, $canCreate = null, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 
-		parent::__construct( $name, $title, $dataList, $config );
+		parent::__construct( $modelClass, $title, $dataList, $config );
 
-		$model = singleton( $this->getModelClass() );
+		$model = singleton( $modelClass );
+
 		$editableColumns = $editableColumns ?: $model->provideEditableColumns();
+
+		$canCreate = ( is_null( $canCreate ) && $model->canCreate() ) || (bool) $canCreate;
+
+		$canEdit = $model->canEdit();
+
+		$canDelete = $model->canDelete();
 
 		$config = $this->getConfig();
 		if ( $editableColumns ) {
@@ -35,19 +44,21 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldEditButton::class )
 				->removeComponentsByType( GridFieldDeleteAction::class );
 
-			if ( $allowNew || ( is_null( $allowNew ) && $model->canCreate() ) ) {
+			if ( $canCreate || $canEdit ) {
+				$config->removeComponentsByType( GridFieldDataColumns::class )
+					->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) );
+			}
+			// add new needs to come after editable columns so saving is kept in line order
+			if ( $canCreate ) {
 				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'buttons-before-right' ) );
 			}
-
-			if ($model->canEdit()) {
-
-				$config->removeComponentsByType( GridFieldDataColumns::class )
-					->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) )
-					->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
-			}
-			if ( $model->canDelete() ) {
+			if ( $canDelete ) {
 				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
 			}
+			if ($canCreate || $canEdit) {
+				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
+			}
+
 			$config->addComponent( new FrontendifyGridFieldDateFilter() );
 
 		} else {
@@ -55,7 +66,7 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldEditButton::class )
 				->removeComponentsByType( GridFieldDeleteAction::class );
 
-			if ( ! $allowNew ) {
+			if ( ! $canCreate ) {
 				$config->removeComponentsByType( GridFieldAddNewButton::class );
 			}
 
@@ -64,12 +75,46 @@ class FrontendifyGridField extends FrontEndGridField {
 		$this->setTitle( '' );
 	}
 
-	public function FieldHolder($properties = []) {
-		$this->requirements();
-		return parent::FieldHolder($properties);
+	/**
+	 * Pass an action on the first GridField_ActionProvider that matches the $actionName.
+	 *
+	 * @param string $actionName
+	 * @param mixed  $arguments
+	 * @param array  $data
+	 *
+	 * @param array  $results
+	 *
+	 * @return mixed
+	 * @throws \InvalidArgumentException
+	 *
+	 */
+	public function handleAlterAction( $actionName, $arguments, $data, &$results = [] ) {
+		$actionName = strtolower( $actionName );
+		$line       = 0;
+
+		foreach ( $this->getComponents() as $component ) {
+			if ( $component instanceof GridField_ActionProvider ) {
+				$actions = array_map( 'strtolower', (array) $component->getActions( $this ) );
+
+				if ( in_array( $actionName, $actions ) ) {
+					return $component->handleAction( $this, $actionName, $arguments, $data, $line, $results );
+				}
+			}
+		}
+
+		throw new InvalidArgumentException( sprintf(
+			'Can\'t handle action "%s"',
+			$actionName
+		) );
 	}
 
-	public function Link($action = null) {
-		return $this->form ? parent::Link($action) : '';
+	public function FieldHolder( $properties = [] ) {
+		$this->requirements();
+
+		return parent::FieldHolder( $properties );
+	}
+
+	public function Link( $action = null ) {
+		return $this->form ? parent::Link( $action ) : '';
 	}
 }

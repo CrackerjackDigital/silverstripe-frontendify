@@ -7,22 +7,31 @@
 			saveall: function (ajaxOpts, successCallback) {
 				var grid = this,
 					form = this.closest('form'),
+					table = grid.find('table tbody:first'),
 					focusedElName = this.find(':input:focus').attr('name'),
 					data = form.find(':input').serializeArray(),
-					index = 0,
-					added = [];
+					index = 1,
+					stashed = [];
 
+				// save all rows, for errors we need to be able to restore the pre-saved value
+				// as the response from the server only contains valid rows without changes if
+				// an error has occured.
+				table.find("tr.ss-gridfield-item").each(function () {
+					var id = $(this).data('id'),
+						action = id ? 'update' : 'new',
+						row = $(this).clone();
 
-				grid.find("tbody:first .ss-gridfield-item").each(function () {
-					// Record inline items with their original positions
-					if ($(this).is(".ss-gridfield-inline-new")) {
-						added.push({
-							'index': index,
-							'row': $(this)
-						});
-					}
+					row.removeClass('error').removeClass('success');
+
+					stashed[index] = {
+						'id': id,
+						'index': index,
+						'action': action,
+						'row': row
+					};
 					index++;
 				});
+
 				if (!ajaxOpts) {
 					ajaxOpts = {};
 				}
@@ -54,12 +63,31 @@
 					url: this.data('url'),
 					dataType: 'html',
 					success: function (data, textStatus, jqXHR) {
-						var errors = JSON.parse(jqXHR.getResponseHeader('X-Errors'));
+						var json = jqXHR.getResponseHeader('X-Messages'),
+							results = JSON.parse(json),     // json result for each row submitted (stashed)
+							saved = $(data).children(),
+							stash,
+							result,
+							index;
+
+						debugger;
+
+						table.find('.ss-gridfield-item').remove();
+
+						for (index in results) {
+							result = results[index];
+							stash = _.find(stashed, {index: result.index});
+
+							stash.row.addClass(result.type).find('td.col-Messages').text(result.message);
+
+							table.append(stash.row);
+						}
+
 
 						// Replace the grid field with response, not the form.
 						// TODO Only replaces all its children, to avoid replacing the current scope
 						// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
-						grid.empty().append($(data).children());
+//						grid.empty().append($(data).children());
 
 						// Refocus previously focused element. Useful e.g. for finding+adding
 						// multiple relationships via keyboard.
@@ -83,23 +111,6 @@
 
 						grid.find('tbody tr').removeClass('error');
 						grid.find('td.col-Status').html('<i></i>').find('i').attr('title', 'OK');
-
-						if (errors) {
-							var lineNum,
-								lineErrors,
-								row,
-								icon;
-
-							for (lineNum in errors) {
-								// row is 0-based, errors are 1-based
-								if (row = grid.find('tbody tr').eq(lineNum - 1)) {
-									lineErrors = errors[lineNum];
-									row.addClass('error');
-									row.find('td.col-Status i').addClass('icol-error').attr('title', lineErrors.join(','));
-								}
-							}
-						}
-
 
 						form.removeClass('loading');
 						if (successCallback) {
@@ -201,7 +212,13 @@
 				if (this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))) {
 					filterState = 'hidden';
 				}
-				this.getFrontendifyGridField().saveall({data: [{name: this.attr('name'), value: this.val(), filter: filterState}]});
+				this.getFrontendifyGridField().saveall({
+					data: [{
+						name: this.attr('name'),
+						value: this.val(),
+						filter: filterState
+					}]
+				});
 
 				e.preventDefault();
 				e.stopPropagation();

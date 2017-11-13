@@ -5,14 +5,23 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		$this->displayFields = $displayFields;
 	}
 
+	public function getHTMLFragments( $grid ) {
+		$grid->addExtraClass( 'ss-gridfield-editable' );
+	}
+
+	public function getColumnAttributes( $gridField, $record, $columnName ) {
+		return parent::getColumnAttributes( $gridField, $record, $columnName );
+	}
+
 	/**
 	 * Add exception handling around each row save and add any errors to $errors
 	 *
 	 * @param \GridField           $grid
 	 * @param \DataObjectInterface $record
-	 * @param array                $errors
+	 * @param int                  $line
+	 * @param array                $results
 	 */
-	public function handleSave( GridField $grid, DataObjectInterface $record, &$errors = [] ) {
+	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
 		$list  = $grid->getList();
 		$value = $grid->Value();
 
@@ -24,7 +33,6 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		/** @var GridFieldOrderableRows $sortable */
 		$sortable = $grid->getConfig()->getComponentByType( 'GridFieldOrderableRows' );
 
-		$line = 0;
 		foreach ( $value[ $dataKey ] as $id => $fields ) {
 			$line ++;
 
@@ -58,11 +66,28 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 				$item->write();
 				$list->add( $item, $extra );
 
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index'   => $line,
+					'type'    => 'success',
+					'message' => 'updated',
+				];
+
 			} catch ( ValidationException $e ) {
-				$errors[ $line ] = $e->getResult()->messageList();
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index'   => $line,
+					'type'    => 'error',
+					'message' => join( ',', $e->getResult()->messageList() ),
+				];
 
 			} catch ( Exception $e ) {
-				$errors[ $line ] = $e->getMessage();
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index'   => $line,
+					'type'    => 'error',
+					'message' => $e->getMessage(),
+				];
 			}
 		}
 	}

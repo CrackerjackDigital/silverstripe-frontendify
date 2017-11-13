@@ -12,7 +12,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		$this->editableColumns = $editableColumns;
 	}
 
-	public function handleSave( GridField $grid, DataObjectInterface $record, &$errors = [] ) {
+	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
 		$list  = $grid->getList();
 		$value = $grid->Value();
 
@@ -29,8 +29,9 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		if ( ! singleton( $class )->canCreate() ) {
 			return;
 		}
-
 		foreach ( $value[ __CLASS__ ] as $fields ) {
+			$line ++;
+
 			$item  = $class::create();
 			$extra = array();
 
@@ -50,8 +51,29 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 			try {
 				$item->write();
 				$list->add( $item, $extra );
-			} catch (Exception $e) {
-				$errors[] = $e->getMessage();
+
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index' => $line,
+					'type'    => 'success',
+					'message' => 'saved'
+				];
+
+			} catch ( ValidationException $e ) {
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index' => $line,
+					'type'    => 'error',
+					'message' => join( ',', $e->getResult()->messageList() )
+				];
+
+			} catch ( Exception $e ) {
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index' => $line,
+					'type'    => 'error',
+					'message' => $e->getMessage()
+				];
 			}
 		}
 	}

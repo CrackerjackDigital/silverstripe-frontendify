@@ -38,31 +38,44 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	/**
-	 * @param DataList $data
+	 * Enumerate grid components and call applyFilter on those which implement the GridFieldFilterInterface
+	 * @param \GridField $grid
+	 * @param DataList   $data
 	 *
-	 * @param array    $extraFilters e.g. [ 'EntryDate:GreaterThan' => null, 'Status' => 'Pending' ]
+	 * @param array      $extraFilters e.g. [ 'EntryDate:GreaterThan' => null, 'Status' => 'Pending' ]
 	 *
 	 * @return mixed
-	 * @throws \InvalidArgumentException
 	 */
-	public function filterData( $data, $extraFilters = [] ) {
+	public function filterData( $grid, $data, $extraFilters = [] ) {
 		$request = $this->getRequest();
 
-		$filters = array_merge(
-			$this->config()->get( 'filters' ),
-			$extraFilters
-		);
-
-		foreach ( $filters as $filterName => $filterSpec ) {
-			$filterValue = $request->postVar( $filterName );
-
-			if ( ! empty( $filterValue ) ) {
-				$data = $data->filter(
-					$filterSpec,
-					$request->postVar( $filterName )
-				);
+		$components = $grid->getComponents();
+		foreach ( $components as $component ) {
+			if ( $component instanceof GridFieldFilterInterface ) {
+				$component->applyFilter( $request, $data );
 			}
 		}
+		return $data;
+
+		/*
+				$filters = array_merge(
+					$this->config()->get( 'filters' ),
+					$extraFilters
+				);
+
+				foreach ( $filters as $filterName => $filterSpec ) {
+					if ($request->isPOST()) {
+						$filterValue = $request->postVar( $filterName );
+					}
+
+					if ( ! empty( $filterValue ) ) {
+						$data = $data->filter(
+							$filterSpec,
+							$filterValue
+						);
+					}
+				}
+		*/
 
 		return $data;
 	}
@@ -82,7 +95,8 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 			return $this->view( $this->getRequest() );
 		} else {
 			$this->setSessionMessage( "Sorry, you are not allowed to do that", "error" );
-			return $this->renderWith([ static::GridModelClass, 'Page']);
+
+			return $this->renderWith( [ static::GridModelClass, 'Page' ] );
 		}
 	}
 
@@ -98,18 +112,18 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	public function save( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
 		if ( $field = $this->field( $request ) ) {
-			$errors = [];
+			$messages = [];
 
 			if ( $request->isPOST() ) {
 				$data = $request->postVars();
-				$field->handleAlterAction( 'save', [], $data, $errors );
+				$field->handleAlterAction( 'save', [], $data, $messages );
 			}
 			$response = $this->getResponse();
 
 			if ( $request->isAjax() ) {
 				$response->setStatusCode( 200 );
-				if ( $errors ) {
-					$response->addHeader( 'X-Errors', json_encode( $errors ) );
+				if ( $messages ) {
+					$response->addHeader( 'X-Messages', json_encode( $messages ) );
 				}
 
 				return $field->forTemplate();
@@ -130,13 +144,21 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	public function Form() {
 		if ( $this->canEdit() ) {
 			return $this->EditForm();
-		} else {
+		} elseif ( $this->canView() ) {
 			return $this->ViewForm();
 		}
 	}
 
+	public function GridField() {
+		if ( $this->canEdit() ) {
+			return $this->EditGridField();
+		} elseif ( $this->canView() ) {
+			return $this->ViewGridField();
+		}
+	}
+
 	public function EditForm() {
-		if ($this->canEdit()) {
+		if ( $this->canEdit() ) {
 			$grid = $this->EditGridField();
 
 			$form = new Form(
@@ -160,15 +182,17 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	 */
 
 	public function EditGridField() {
-		if ($this->canEdit()) {
+		if ( $this->canEdit() ) {
 			$model = singleton( static::GridModelClass );
 
 			$grid = FrontendifyGridField::create(
 				static::GridModelClass,
 				$model->i18n_plural_name(),
-				$this->filterData( $this->gridFieldData() ),
-				$this->getEditableColumns()
-
+				null,
+				$this->getEditColumns()
+			);
+			$grid->setList(
+				$this->filterData( $grid, $this->gridFieldData() )
 			);
 
 			return $grid;
@@ -176,23 +200,22 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 		}
 	}
 
-	public function getEditableColumns() {
+	public function getEditColumns() {
 		$model   = singleton( static::GridModelClass );
 		$columns = array_merge(
 			[
-				'ID'     => [
+				'ID'       => [
 					'title'    => '',
 					'callback' => function ( $item ) {
 						$field = new HiddenField( 'ID', '' );
 
-						return $field;
+						return $field->setAttribute( 'data-id', $item->ID );
 					},
 				],
-				'Status' => [
+				'Messages' => [
 					'title'    => '',
 					'callback' => function ( $item ) {
-						$field = (new LiteralField( 'Status', '<i>&nbsp;</i>' ))->setAllowHTML( true);
-
+						$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
 
 						return $field;
 					},
@@ -205,7 +228,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	public function ViewForm() {
-		if ($this->canView()) {
+		if ( $this->canView() ) {
 			$grid = $this->ViewGridField();
 
 			$form = new Form(
@@ -227,18 +250,23 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	 */
 
 	public function ViewGridField() {
-		if ($this->canView()) {
+		if ( $this->canView() ) {
 			$model = singleton( static::GridModelClass );
 
 			$grid = FrontendifyGridField::create(
 				static::GridModelClass,
-				$model->i18n_plural_name(),
-				$this->filterData( $this->gridFieldData() )
+				$model->i18n_plural_name() //,
+//				null,
+//				$this->getViewableColumns()
+			);
+			$grid->setList(
+				$this->filterData( $grid, $this->gridFieldData() )
 			);
 
 			return $grid;
 
 		}
 	}
+
 
 }

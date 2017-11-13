@@ -8,14 +8,14 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 		return [ 'save' ] + parent::getActions( $gridField);
 	}
 
-	public function handleAction( GridField $gridField, $actionName, $arguments, $data, &$errors = [] ) {
+	public function handleAction( GridField $gridField, $actionName, $arguments, $data, &$line = 0, &$results = [] ) {
 		if ( in_array($actionName, $this->getActions( $gridField))) {
-			$this->saveAllRecords( $gridField, $arguments, $data, $errors );
+			$this->saveAllRecords( $gridField, $arguments, $data, $line, $results );
 		}
 		return true;
 	}
 
-	public function saveAllRecords( GridField $grid, $arguments, $data, &$errors = [] ) {
+	public function saveAllRecords( GridField $grid, $arguments, $data, &$line = 0, &$results = [] ) {
 		if ( isset( $data[ $grid->Name ] ) ) {
 			$currValue = $grid->Value();
 			$grid->setValue( $data[ $grid->Name ] );
@@ -23,7 +23,7 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 
 			foreach ( $grid->getConfig()->getComponents() as $component ) {
 				if ( $component instanceof GridField_SaveHandler ) {
-					$component->handleSave( $grid, $model, $errors );
+					$component->handleSave( $grid, $model, $line, $results );
 				}
 			}
 			$grid->setValue( $currValue );
