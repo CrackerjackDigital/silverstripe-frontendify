@@ -20,12 +20,11 @@
 		);
 		self.addClass('select2ified');
 	};
-
-	$('.frontendifygrid.ss-gridfield-editable').entwine('frontendify', {
-		onfrontendifyaddnewinline: function (e) {
-			$(selector, $(this)).not('.select2ified').select2ify();
-		}
-	});
+	$.fn.unselect2ify = function() {
+		var self = $(this);
+		self.removeClass('select2ified');
+		self.select2('destroy');
+	};
 
 	$(selector).entwine('frontendify', {
 		onmatch: function () {

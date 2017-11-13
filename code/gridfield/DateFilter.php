@@ -28,6 +28,16 @@ class FrontendifyGridFieldDateFilter
 		return date( 'Y-m-d' );
 	}
 
+	public function getValue() {
+		$request = Controller::curr()->getRequest();
+		if ($request->isPOST()) {
+			$value = $request->postVar($this->filterFieldName());
+		} else {
+			$value = $this->defaultValue();
+		}
+		return $value;
+	}
+
 	/**
 	 * @param \SS_HTTPRequest $request
 	 * @param \DataList       $data
@@ -35,12 +45,7 @@ class FrontendifyGridFieldDateFilter
 	 * @throws \InvalidArgumentException
 	 */
 	public function applyFilter( $request, &$data ) {
-		if ( $request->isPOST() ) {
-			$value = $request->postVar( $this->filterFieldName() );
-		} else {
-			$value = $this->defaultValue();
-		}
-
+		$value = $this->getValue();
 		if ( ! empty( $value ) ) {
 			$data = $data->filter( [
 				$this->modelFilter() => $value,
@@ -68,10 +73,7 @@ class FrontendifyGridFieldDateFilter
 	 * @return array
 	 */
 	public function getHTMLFragments( $gridField ) {
-		$request = Controller::curr()->getRequest();
-
-		$value = $request->postVar( $this->filterFieldName() )
-			?: $this->defaultValue();
+		$value = $this->getValue();
 
 		$group = ( new FieldGroup( [
 			( new FrontendifyDateField( $this->filterFieldName(), '', $value ) )->addExtraClass( 'frontendify-datefilter-date' ),

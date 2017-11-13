@@ -1,5 +1,5 @@
 (function ($) {
-	$.entwine("ss", function ($) {
+	$.entwine("frontendify", function ($) {
 		/**
 		 * GridFieldAddNewInlineButton
 		 */
@@ -12,6 +12,8 @@
 					data = form.find(':input').serializeArray(),
 					index = 1,
 					stashed = [];
+
+				$('.select2ified', row).unselect2ify();
 
 				// save all rows, for errors we need to be able to restore the pre-saved value
 				// as the response from the server only contains valid rows without changes if
@@ -70,7 +72,12 @@
 							result,
 							index;
 
-						debugger;
+						$('.frontendify-select2field').entwine('frontendify', {
+							onmatch: function () {
+								var self = $(this);
+								self.select2ify();
+							}
+						});
 
 						table.find('.ss-gridfield-item').remove();
 
@@ -80,7 +87,7 @@
 
 							stash.row.addClass(result.type).find('td.col-Messages').text(result.message);
 
-							table.append(stash.row);
+							stash.row.appendTo(table);
 						}
 
 
@@ -108,10 +115,6 @@
 
 							grid.find('.sortable-header th:last').html(content);
 						}
-
-						grid.find('tbody tr').removeClass('error');
-						grid.find('td.col-Status').html('<i></i>').find('i').attr('title', 'OK');
-
 						form.removeClass('loading');
 						if (successCallback) {
 							successCallback.apply(this, arguments);
@@ -260,6 +263,12 @@
 			}
 
 		});
+		$('.frontendifygrid.ss-gridfield-editable').entwine('frontendify', {
+			onfrontendifyaddnewinline: function (e) {
+				$('.frontendify-select2field', $(this)).not('.select2ified').select2ify();
+			}
+		});
+
 
 		/**
 		 * GridFieldEditableColumns disable row clicks
@@ -378,6 +387,7 @@
 				return false;
 			}
 		});
+
 
 	})
 })(jQuery);
