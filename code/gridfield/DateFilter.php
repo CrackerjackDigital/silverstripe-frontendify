@@ -8,7 +8,7 @@ class FrontendifyGridFieldDateFilter
 
 	protected $operation = 'GreaterThan';
 
-	public function __construct( $dateFieldName = 'StartDate', $operation = 'GreaterThan' ) {
+	public function __construct( $dateFieldName = 'StartDate', $operation = 'LessThan:Not' ) {
 		$this->modelFieldName = $dateFieldName;
 		$this->operation      = $operation;
 	}
