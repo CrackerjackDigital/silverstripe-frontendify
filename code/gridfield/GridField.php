@@ -72,11 +72,8 @@ class FrontendifyGridField extends FrontEndGridField {
 		} else {
 			$config
 				->removeComponentsByType( GridFieldEditButton::class )
-				->removeComponentsByType( GridFieldDeleteAction::class );
-
-			if ( ! $canCreate ) {
-				$config->removeComponentsByType( GridFieldAddNewButton::class );
-			}
+				->removeComponentsByType( GridFieldDeleteAction::class )
+				->removeComponentsByType( GridFieldAddNewButton::class );
 
 		}
 		$config->addComponent( new FrontendifyGridFieldDateFilter() );
