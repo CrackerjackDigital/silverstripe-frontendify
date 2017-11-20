@@ -7,7 +7,7 @@
 			saveall: function (ajaxOpts, successCallback) {
 				var grid = this,
 					form = this.closest('form'),
-					table = grid.find('table tbody:first'),
+					table = grid.find('table.ss-gridfield-table tbody:first'),
 					focusedElName = this.find(':input:focus').attr('name'),
 					data = form.find(':input').serializeArray(),
 					index = 1,
@@ -185,12 +185,20 @@
 
 				tmpl.cache[this[0].id + "frontendify-add-inline-template"] = tmpl(row.html());
 
-				this.find("tbody:first").append(tmpl(this[0].id + "frontendify-add-inline-template", {num: num}));
-				this.find("tbody:first").children(".ss-gridfield-no-items").hide();
+				this.find("table.ss-gridfield-table tbody:first").append(tmpl(this[0].id + "frontendify-add-inline-template", {num: num}));
+				this.find("table.ss-gridfield-table tbody:first").children(".ss-gridfield-no-items").hide();
 				this.data("add-inline-num", num + 1);
 
 				// Rebuild sort order fields
 				$(".ss-gridfield-orderable tbody").rebuildSort();
+				var picker = $(".frontendify-datefield").pickadate({
+					            formatSubmit: 'yyyy-mm-dd',
+					            format: 'dd-mm-yyyy', 
+					            selectYears: 2,
+					            firstDay: 1,
+								 selectMonths: true,
+								 container: 'body'
+						        }); 
 			}
 		});
 
