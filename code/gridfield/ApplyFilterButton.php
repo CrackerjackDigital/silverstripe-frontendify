@@ -1,7 +1,7 @@
 <?php
 
 class FrontendifyApplyFilterButton
-	implements GridField_HTMLProvider {
+	implements GridField_HTMLProvider, GridFieldFilterInterface {
 
 	public function getHTMLFragments($gridField) {
 		$field = ( new GridField_FormAction( $gridField, 'FilterDate', 'Apply', 'filterdate', [] ) )
@@ -9,7 +9,11 @@ class FrontendifyApplyFilterButton
 			->addExtraClass( 'frontendify-filterbutton' );
 
 		return [
-			'before' => $field->SmallFieldHolder(),
+			self::TargetFragment => $field->SmallFieldHolder(),
 		];
+	}
+
+	public function applyFilter( $request, &$data ) {
+
 	}
 }

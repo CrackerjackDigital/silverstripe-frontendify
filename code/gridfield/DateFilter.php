@@ -80,7 +80,7 @@ class FrontendifyGridFieldDateFilter
 			->addExtraClass( 'frontendify-datefilter-date' );
 
 		return [
-			'before' => $field->SmallFieldHolder(),
+			self::TargetFragment => $field->SmallFieldHolder(),
 		];
 	}
 }

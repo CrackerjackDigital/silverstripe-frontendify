@@ -58,6 +58,9 @@ class FrontendifyGridField extends FrontEndGridField {
 				$config->removeComponentsByType( GridFieldDataColumns::class )
 					->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) );
 			}
+
+			$config->addComponent( new FrontendifyGridFieldFilterRow());
+
 			// add new needs to come after editable columns so saving is kept in line order
 			if ( $canCreate ) {
 				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'buttons-before-right' ) );
