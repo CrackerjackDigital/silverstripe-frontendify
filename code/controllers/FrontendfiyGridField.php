@@ -44,7 +44,7 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	 *
 	 * @return mixed
 	 */
-	public function filterData( $grid, $data, $extraFilters = [] ) {
+	public function applyFilters( $grid, $data, $extraFilters = [] ) {
 		$request = $this->getRequest();
 
 		$components = $grid->getComponents();
@@ -154,6 +154,17 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 	}
 
 	/**
+	 * Add extra filters etc in derived class, or dont' do anything to remove filters
+	 * @param \GridField $grid
+	 */
+	protected function customiseFilters(GridField $grid) {
+		$grid->getConfig()->addComponents(
+			new FrontendifyGridFieldDateFilter(),
+			new FrontendifyApplyFilterButton()
+		);
+	}
+
+	/**
 	 * @return \FrontendifyGridField
 	 * @throws \InvalidArgumentException
 	 */
@@ -168,12 +179,13 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 				null,
 				$this->getEditColumns()
 			);
+			$this->customiseFilters( $grid );
+
 			$grid->setList(
-				$this->filterData( $grid, $this->gridFieldData() )
+				$this->applyFilters( $grid, $this->gridFieldData() )
 			);
 
 			return $grid;
-
 		}
 	}
 
@@ -237,8 +249,10 @@ abstract class FrontendfiyGridField_Controller extends Page_Controller {
 				null,
 				false
 			);
+			$this->customiseFilters( $grid );
+
 			$grid->setList(
-				$this->filterData( $grid, $this->gridFieldData() )
+				$this->applyFilters( $grid, $this->gridFieldData() )
 			);
 
 			return $grid;

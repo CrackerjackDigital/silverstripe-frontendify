@@ -75,14 +75,12 @@ class FrontendifyGridFieldDateFilter
 	public function getHTMLFragments( $gridField ) {
 		$value = $this->getValue();
 
-		$group = ( new FieldGroup( [
-			( new FrontendifyDateField( $this->filterFieldName(), '', $value ) )->addExtraClass( 'frontendify-datefilter-date' ),
-			( new GridField_FormAction( $gridField, 'FilterDate', 'Apply', 'filterdate', [] ) )->addExtraClass( 'frontendify-datefilter-apply btn ui-state-default' ),
-
-		] ) )->addExtraClass( 'frontendify-datefilter' );
+		$field = ( new FrontendifyDateField( $this->filterFieldName(), '', $value ) )
+			->addExtraClass( 'frontendify-filter' )
+			->addExtraClass( 'frontendify-datefilter-date' );
 
 		return [
-			'header' => $group->SmallFieldHolder(),
+			'before' => $field->SmallFieldHolder(),
 		];
 	}
 }

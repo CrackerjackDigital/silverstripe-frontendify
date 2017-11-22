@@ -1,37 +1,12 @@
 /* line 3, ../scss/frontendify.scss */
-form .ss-gridfield > div {
-  margin-bottom: 0;
-}
+form .ss-gridfield > div { margin-bottom: 0; }
 /* line 7, ../scss/frontendify.scss */
-form fieldset.frontendifygrid {
-  overflow-x: auto;
-}
+form fieldset.frontendifygrid { overflow-x: auto; }
 /* line 10, ../scss/frontendify.scss */
-form fieldset.frontendifygrid .frontendify-datefilter {
-  text-align: center;
-  line-height: 3em;
-}
-/* line 14, ../scss/frontendify.scss */
-form fieldset.frontendifygrid .frontendify-datefilter input {
-  padding: 0 1em;
-}
-/* line 19, ../scss/frontendify.scss */
-form fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, form fieldset.frontendifygrid table.ss-gridfield-table td.col-ID {
-  display: none;
-  padding: 4px;
-}
-/* line 24, ../scss/frontendify.scss */
-form fieldset.frontendifygrid table.ss-gridfield-table td.col-StartDate, form fieldset.frontendifygrid table.ss-gridfield-table td.col-EndDate {
-  min-width: 8em;
-}
-/* line 29, ../scss/frontendify.scss */
-form fieldset.frontendifygrid table.ss-gridfield-table input {
-  border-width: 1px;
-  line-height: 1em;
-}
-/* line 36, ../scss/frontendify.scss */
-form ::-webkit-datetime-edit-year-field:not([aria-valuenow]),
-form ::-webkit-datetime-edit-month-field:not([aria-valuenow]),
-form ::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
-  color: transparent;
-}
+form fieldset.frontendifygrid .frontendify-datefilter { text-align: center; }
+/* line 13, ../scss/frontendify.scss */
+form fieldset.frontendifygrid .frontendify-datefilter input { padding: 0 1em; }
+/* line 18, ../scss/frontendify.scss */
+form fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, form fieldset.frontendifygrid table.ss-gridfield-table td.col-ID { display: none; padding: 4px; }
+/* line 25, ../scss/frontendify.scss */
+form ::-webkit-datetime-edit-year-field:not([aria-valuenow]), form ::-webkit-datetime-edit-month-field:not([aria-valuenow]), form ::-webkit-datetime-edit-day-field:not([aria-valuenow]) { color: transparent; }

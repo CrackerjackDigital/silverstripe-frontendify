@@ -76,7 +76,6 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldAddNewButton::class );
 
 		}
-		$config->addComponent( new FrontendifyGridFieldDateFilter() );
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
 		$this->setTitle( '' );

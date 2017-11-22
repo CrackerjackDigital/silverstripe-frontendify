@@ -16,6 +16,7 @@ class FrontendifyDateField extends TextField {
 	public function __construct( $name, $title = null, $value = null ) {
 		parent::__construct( $name, $title, $value );
 		$this->setAttribute( 'type', 'date');
+		$this->addExtraClass( 'date');
 		$this->removeExtraClass( 'datepicker');
 		$this->removeExtraClass( 'hasDatepicker');
 	}
