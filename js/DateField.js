@@ -15,13 +15,14 @@
 			// }).addClass('datefieldified');
 
 			 $(selector).pickadate({
-            formatSubmit: 'yyyy-mm-dd',
-            format: 'dd mmmm, yyyy', 
-            selectYears: 2,
-            firstDay: 1,
-			 selectMonths: true
+			    formatSubmit: 'yyyy-mm-dd',
+			    format: 'dd mmmm, yyyy', 
+			    selectYears: 2,
+			    firstDay: 1,
+			    selectMonths: true,
+			    container: 'body'
 
-	        }).addClass('datefieldified');
+			}).addClass('datefieldified');
 
 		};
 
