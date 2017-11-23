@@ -12,7 +12,7 @@
 			firstDay: 1,
 			selectMonths: true
 
-		}).addClass('datefieldified');
+	        }).addClass('datefieldified');
 
 	};
 
