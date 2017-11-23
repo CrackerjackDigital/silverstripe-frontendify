@@ -13,8 +13,6 @@
 					index = 1,
 					stashed = [];
 
-				$('.select2ified', row).unselect2ify();
-
 				// save all rows, for errors we need to be able to restore the pre-saved value
 				// as the response from the server only contains valid rows without changes if
 				// an error has occured.
@@ -57,6 +55,8 @@
 					}
 				}
 
+				debugger;
+
 				form.addClass('loading');
 
 				$.ajax($.extend({}, {
@@ -71,6 +71,8 @@
 							stash,
 							result,
 							index;
+
+						debugger;
 
 						$('.frontendify-select2field').entwine('frontendify', {
 							onmatch: function () {
@@ -87,7 +89,7 @@
 
 							stash.row.addClass(result.type).find('td.col-Messages').text(result.message);
 
-							stash.row.appendTo(table);
+							table.append(stash.row);
 						}
 
 
@@ -191,17 +193,12 @@
 
 				// Rebuild sort order fields
 				$(".ss-gridfield-orderable tbody").rebuildSort();
-				var picker = $(".frontendify-datefield").pickadate({
-					            formatSubmit: 'yyyy-mm-dd',
-					            format: 'dd-mm-yyyy', 
-					            selectYears: 2,
-					            firstDay: 1,
-								 selectMonths: true,
-								 container: 'body'
-						        }); 
+
+				$('.frontendify-select2field', $(this)).not('.select2ified').select2ify();
+				$(".frontendify-datefield", $(this)).not('.datefieldified').datefieldify();
+
 			}
 		});
-
 
 		$('.frontendify-gridfield *').entwine({
 			getFrontendifyGridField: function () {
@@ -214,11 +211,11 @@
 			onclick: function (e) {
 				var filterState = 'show'; //filterstate should equal current state.
 
-				// If the button is disabled, do nothing.
-				if (this.button('option', 'disabled')) {
-					e.preventDefault();
-					return;
-				}
+				e.preventDefault();
+				e.stopPropagation();
+
+
+				debugger;
 
 				if (this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))) {
 					filterState = 'hidden';
@@ -230,9 +227,6 @@
 						filter: filterState
 					}]
 				});
-
-				e.preventDefault();
-				e.stopPropagation();
 
 				return false;
 			},
@@ -270,11 +264,6 @@
 				);
 			}
 
-		});
-		$('.frontendifygrid.ss-gridfield-editable').entwine('frontendify', {
-			onfrontendifyaddnewinline: function (e) {
-				$('.frontendify-select2field', $(this)).not('.select2ified').select2ify();
-			}
 		});
 
 

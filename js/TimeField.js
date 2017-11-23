@@ -5,16 +5,10 @@
 
 		$.fn.timefieldify = function () {
 			console.log('timefieldify');
-			$(selector).timepicker({
-				timeFormat: 'HH:mm',
-				interval: 15,
-				minTime: '07:00',
-				maxTime: '6:30pm',
-				defaultTime: 'now',
-				startTime: '07:00',
-				dynamic: true,
-				dropdown: true,
-				scrollbar: true
+			$(selector).pickatime({
+				clear: 'Clear',
+				format: 'HH:i (A)',
+				formatSubmit: 'HH:i'
 			}).addClass('timefieldified');
 
 		};

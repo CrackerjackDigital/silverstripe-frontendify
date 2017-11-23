@@ -9,6 +9,7 @@ class FrontendifyGridField extends FrontEndGridField {
 		'/framework/css/GridField.css',
 		'/framework/javascript/GridField.js',
 		'/frontendgridfield/css/GridField.css',
+		'/frontendgridfield/javascript/FrontEndGridField.js',
 		'/gridfieldextensions/javascript/GridFieldExtensions.js',
 	];
 

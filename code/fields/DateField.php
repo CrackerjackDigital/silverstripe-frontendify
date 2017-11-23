@@ -7,7 +7,7 @@ class FrontendifyDateField extends TextField {
 
 	private static $frontendify_require = [
 		self::FrontendifyType => [
-			'/frontendify/css/default.pickadate.css',
+			'/frontendify/css/default.picker.css',
 			'/frontendify/js/lib/picker.js',
 			'/frontendify/js/lib/picker.date.js',
 		],

@@ -1,12 +1,773 @@
-/* line 3, ../scss/frontendify.scss */
-form .ss-gridfield > div { margin-bottom: 0; }
-/* line 7, ../scss/frontendify.scss */
-form fieldset.frontendifygrid { overflow-x: auto; }
+@charset "UTF-8";
+/* ========================================================================== $BASE-PICKER ========================================================================== */
+/** Note: the root picker element should *NOT* be styled more than what’s here. */
+/* line 7, ../scss/lib/_default.picker.scss */
+.picker { font-size: 16px; text-align: left; line-height: 1.2; color: #000000; position: absolute; z-index: 10000; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
+/** The picker input element. */
+/* line 22, ../scss/lib/_default.picker.scss */
+.picker__input { cursor: default; margin-top: -5px; }
+
+/** When the picker is opened, the input element is “activated”. */
+/* line 29, ../scss/lib/_default.picker.scss */
+.picker__input.picker__input--active { border-color: #0089ec; }
+
+/** The holder is the only “scrollable” top-level container element. */
+/* line 35, ../scss/lib/_default.picker.scss */
+.picker__holder { width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+/*!
+ * Default mobile-first, responsive styling for pickadate.js
+ * Demo: http://amsul.github.io/pickadate.js
+ */
+/** Note: the root picker element should *NOT* be styled more than what’s here. */
+/** Make the holder and frame fullscreen. */
+/* line 51, ../scss/lib/_default.picker.scss */
+.picker__holder, .picker__frame { top: 0; bottom: 0; left: 0; right: 0; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); }
+
+/** The holder should overlay the entire screen. */
+/* line 64, ../scss/lib/_default.picker.scss */
+.picker__holder { position: fixed; transition: background 0.15s ease-out, -webkit-transform 0s 0.15s; transition: background 0.15s ease-out, transform 0s 0.15s; -webkit-backface-visibility: hidden; }
+
+/** The frame that bounds the box contents of the picker. */
+/* line 73, ../scss/lib/_default.picker.scss */
+.picker__frame { position: absolute; margin: 0 auto; min-width: 256px; max-width: 666px; width: 100%; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); -moz-opacity: 0; opacity: 0; transition: all 0.15s ease-out; }
+
+@media (min-height: 33.875em) { /* line 86, ../scss/lib/_default.picker.scss */
+  .picker__frame { overflow: visible; top: auto; bottom: -100%; max-height: 80%; } }
+@media (min-height: 40.125em) { /* line 94, ../scss/lib/_default.picker.scss */
+  .picker__frame { margin-bottom: 7.5%; } }
+/** The wrapper sets the stage to vertically align the box contents. */
+/* line 101, ../scss/lib/_default.picker.scss */
+.picker__wrap { display: table; width: 100%; height: 100%; }
+
+@media (min-height: 33.875em) { /* line 107, ../scss/lib/_default.picker.scss */
+  .picker__wrap { display: block; } }
+/** The box contains all the picker contents. */
+/* line 114, ../scss/lib/_default.picker.scss */
+.picker__box { background: #ffffff; display: table-cell; vertical-align: middle; }
+
+@media (min-height: 26.5em) { /* line 120, ../scss/lib/_default.picker.scss */
+  .picker__box { font-size: 1.25em; } }
+@media (min-height: 33.875em) { /* line 125, ../scss/lib/_default.picker.scss */
+  .picker__box { display: block; font-size: 1.33em; border: 1px solid #777777; border-top-color: #898989; border-bottom-width: 0; border-radius: 5px 5px 0 0; box-shadow: 0 12px 36px 16px rgba(0, 0, 0, 0.24); } }
+@media (min-height: 40.125em) { /* line 136, ../scss/lib/_default.picker.scss */
+  .picker__box { font-size: 1.5em; border-bottom-width: 1px; border-radius: 5px; } }
+/** When the picker opens... */
+/* line 145, ../scss/lib/_default.picker.scss */
+.picker--opened .picker__holder { -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0); background: transparent; -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#1E000000,endColorstr=#1E000000)"; zoom: 1; background: rgba(0, 0, 0, 0.32); transition: background 0.15s ease-out; }
+
+/* line 155, ../scss/lib/_default.picker.scss */
+.picker--opened .picker__frame { -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; filter: alpha(opacity=100); -moz-opacity: 1; opacity: 1; }
+
+@media (min-height: 33.875em) { /* line 165, ../scss/lib/_default.picker.scss */
+  .picker--opened .picker__frame { top: auto; bottom: 0; } }
+/* line 2, ../scss/lib/_default.pickadate.scss */
+.picker__footer, .picker__header, .picker__table { text-align: center; }
+
+/* line 6, ../scss/lib/_default.pickadate.scss */
+.picker__day--highlighted, .picker__select--month:focus, .picker__select--year:focus { border-color: #0089ec; }
+
+/* line 10, ../scss/lib/_default.pickadate.scss */
+.picker__box { padding: 0 1em; }
+
+/* line 14, ../scss/lib/_default.pickadate.scss */
+.picker__header { position: relative; margin-top: 0.75em; }
+
+/* line 19, ../scss/lib/_default.pickadate.scss */
+.picker__month, .picker__year { font-weight: 500; display: inline-block; margin-left: .25em; margin-right: 0.25em; }
+
+/* line 26, ../scss/lib/_default.pickadate.scss */
+.picker__year { color: #999; font-size: .8em; font-style: italic; }
+
+/* line 32, ../scss/lib/_default.pickadate.scss */
+.picker__select--month, .picker__select--year { border: 1px solid #b7b7b7; height: 2em; padding: .5em; margin-left: .25em; margin-right: 0.25em; }
+
+/* line 40, ../scss/lib/_default.pickadate.scss */
+.picker__select--month { width: 35%; }
+
+/* line 44, ../scss/lib/_default.pickadate.scss */
+.picker__select--year { width: 22.5%; }
+
+/* line 48, ../scss/lib/_default.pickadate.scss */
+.picker__nav--next, .picker__nav--prev { position: absolute; padding: .5em 1.25em; width: 1em; height: 1em; box-sizing: content-box; top: -0.25em; }
+
+/* line 57, ../scss/lib/_default.pickadate.scss */
+.picker__nav--prev { left: -1em; padding-right: 1.25em; }
+
+/* line 62, ../scss/lib/_default.pickadate.scss */
+.picker__nav--next { right: -1em; padding-left: 1.25em; }
+
+@media (min-width: 24.5em) { /* line 68, ../scss/lib/_default.pickadate.scss */
+  .picker__select--month, .picker__select--year { margin-top: -0.5em; }
+  /* line 72, ../scss/lib/_default.pickadate.scss */
+  .picker__nav--next, .picker__nav--prev { top: -0.33em; }
+  /* line 76, ../scss/lib/_default.pickadate.scss */
+  .picker__nav--prev { padding-right: 1.5em; }
+  /* line 80, ../scss/lib/_default.pickadate.scss */
+  .picker__nav--next { padding-left: 1.5em; } }
+/* line 85, ../scss/lib/_default.pickadate.scss */
+.picker__nav--next:before, .picker__nav--prev:before { content: " "; border-top: .5em solid transparent; border-bottom: .5em solid transparent; border-right: .75em solid #000; width: 0; height: 0; display: block; margin: 0 auto; }
+
+/* line 96, ../scss/lib/_default.pickadate.scss */
+.picker__nav--next:before { border-right: 0; border-left: 0.75em solid #000; }
+
+/* line 101, ../scss/lib/_default.pickadate.scss */
+.picker__nav--next:hover, .picker__nav--prev:hover { cursor: pointer; color: #000; background: #b1dcfb; }
+
+/* line 107, ../scss/lib/_default.pickadate.scss */
+.picker__nav--disabled, .picker__nav--disabled:before, .picker__nav--disabled:before:hover, .picker__nav--disabled:hover { cursor: default; background: 0 0; border-right-color: #f5f5f5; border-left-color: #f5f5f5; }
+
+/* line 114, ../scss/lib/_default.pickadate.scss */
+.picker--focused .picker__day--highlighted, .picker__day--highlighted:hover, .picker__day--infocus:hover, .picker__day--outfocus:hover { color: #000; cursor: pointer; background: #b1dcfb; }
+
+/* line 120, ../scss/lib/_default.pickadate.scss */
+.picker__table { border-collapse: collapse; border-spacing: 0; table-layout: fixed; font-size: inherit; width: 100%; margin-top: .75em; margin-bottom: 0.5em; }
+
+@media (min-height: 33.875em) { /* line 131, ../scss/lib/_default.pickadate.scss */
+  .picker__table { margin-bottom: 0.75em; } }
+/* line 136, ../scss/lib/_default.pickadate.scss */
+.picker__table td { margin: 0; padding: 0; }
+
+/* line 141, ../scss/lib/_default.pickadate.scss */
+.picker__weekday { width: 14.285714286%; font-size: .75em; padding-bottom: .25em; color: #999; font-weight: 500; }
+
+@media (min-height: 33.875em) { /* line 150, ../scss/lib/_default.pickadate.scss */
+  .picker__weekday { padding-bottom: 0.5em; } }
+/* line 155, ../scss/lib/_default.pickadate.scss */
+.picker__day { padding: .3125em 0; font-weight: 200; border: 1px solid transparent; }
+
+/* line 161, ../scss/lib/_default.pickadate.scss */
+.picker__day--today { position: relative; }
+
+/* line 165, ../scss/lib/_default.pickadate.scss */
+.picker__day--today:before { content: " "; position: absolute; top: 2px; right: 2px; width: 0; height: 0; border-top: .5em solid #0059bc; border-left: 0.5em solid transparent; }
+
+/* line 176, ../scss/lib/_default.pickadate.scss */
+.picker__day--disabled:before { border-top-color: #aaa; }
+
+/* line 180, ../scss/lib/_default.pickadate.scss */
+.picker__day--outfocus { color: #ddd; }
+
+/* line 184, ../scss/lib/_default.pickadate.scss */
+.picker--focused .picker__day--selected, .picker__day--selected, .picker__day--selected:hover { background: #0089ec; color: #fff; }
+
+/* line 189, ../scss/lib/_default.pickadate.scss */
+.picker--focused .picker__day--disabled, .picker__day--disabled, .picker__day--disabled:hover { background: #f5f5f5; border-color: #f5f5f5; color: #ddd; cursor: default; }
+
+/* line 196, ../scss/lib/_default.pickadate.scss */
+.picker__day--highlighted.picker__day--disabled, .picker__day--highlighted.picker__day--disabled:hover { background: #bbb; }
+
+/* line 200, ../scss/lib/_default.pickadate.scss */
+.picker__button--clear, .picker__button--close, .picker__button--today { border: 1px solid #fff; background: #fff; font-size: .8em; padding: .66em 0; font-weight: 700; width: 33%; display: inline-block; vertical-align: bottom; }
+
+/* line 211, ../scss/lib/_default.pickadate.scss */
+.picker__button--clear:hover, .picker__button--close:hover, .picker__button--today:hover { cursor: pointer; color: #000; background: #b1dcfb; border-bottom-color: #b1dcfb; }
+
+/* line 218, ../scss/lib/_default.pickadate.scss */
+.picker__button--clear:focus, .picker__button--close:focus, .picker__button--today:focus { background: #b1dcfb; border-color: #0089ec; outline: 0; }
+
+/* line 224, ../scss/lib/_default.pickadate.scss */
+.picker__button--clear:before, .picker__button--close:before, .picker__button--today:before { position: relative; display: inline-block; height: 0; }
+
+/* line 230, ../scss/lib/_default.pickadate.scss */
+.picker__button--clear:before, .picker__button--today:before { content: " "; margin-right: 0.45em; }
+
+/* line 235, ../scss/lib/_default.pickadate.scss */
+.picker__button--today:before { top: -.05em; width: 0; border-top: .66em solid #0059bc; border-left: 0.66em solid transparent; }
+
+/* line 242, ../scss/lib/_default.pickadate.scss */
+.picker__button--clear:before { top: -.25em; width: .66em; border-top: 3px solid #e20; }
+
+/* line 248, ../scss/lib/_default.pickadate.scss */
+.picker__button--close:before { content: "\D7"; top: -.1em; vertical-align: top; font-size: 1.1em; margin-right: .35em; color: #777; }
+
+/* line 257, ../scss/lib/_default.pickadate.scss */
+.picker__button--today[disabled], .picker__button--today[disabled]:hover { background: #f5f5f5; border-color: #f5f5f5; color: #ddd; cursor: default; }
+
+/* line 264, ../scss/lib/_default.pickadate.scss */
+.picker__button--today[disabled]:before { border-top-color: #aaa; }
+
+/* ========================================================================== $BASE-TIME-PICKER ========================================================================== */
+/** The list of times. */
+/* line 7, ../scss/lib/_default.pickatime.scss */
+.picker__list { list-style: none; padding: 0.75em 0 4.2em; margin: 0; }
+
+/** The times on the clock. */
+/* line 16, ../scss/lib/_default.pickatime.scss */
+.picker__list-item { border-bottom: 1px solid #dddddd; border-top: 1px solid #dddddd; margin-bottom: -1px; position: relative; background: #ffffff; padding: .75em 1.25em; }
+
+@media (min-height: 46.75em) { /* line 26, ../scss/lib/_default.pickatime.scss */
+  .picker__list-item { padding: .5em 1em; } }
+/* Hovered time */
+/* line 32, ../scss/lib/_default.pickatime.scss */
+.picker__list-item:hover { cursor: pointer; color: #000000; background: #b1dcfb; border-color: #0089ec; z-index: 10; }
+
+/* Highlighted and hovered/focused time */
+/* line 41, ../scss/lib/_default.pickatime.scss */
+.picker__list-item--highlighted { border-color: #0089ec; z-index: 10; }
+
+/* line 46, ../scss/lib/_default.pickatime.scss */
+.picker__list-item--highlighted:hover, .picker--focused .picker__list-item--highlighted { cursor: pointer; color: #000000; background: #b1dcfb; }
+
+/* Selected and hovered/focused time */
+/* line 54, ../scss/lib/_default.pickatime.scss */
+.picker__list-item--selected, .picker__list-item--selected:hover, .picker--focused .picker__list-item--selected { background: #0089ec; color: #ffffff; z-index: 10; }
+
+/* Disabled time */
+/* line 63, ../scss/lib/_default.pickatime.scss */
+.picker__list-item--disabled, .picker__list-item--disabled:hover, .picker--focused .picker__list-item--disabled { background: #f5f5f5; border-color: #f5f5f5; color: #dddddd; cursor: default; border-color: #dddddd; z-index: auto; }
+
+/** The clear button */
+/* line 77, ../scss/lib/_default.pickatime.scss */
+.picker--time .picker__button--clear { display: block; width: 80%; margin: 1em auto 0; padding: 1em 1.25em; background: none; border: 0; font-weight: 500; font-size: .67em; text-align: center; text-transform: uppercase; color: #666; }
+
+/* line 91, ../scss/lib/_default.pickatime.scss */
+.picker--time .picker__button--clear:hover, .picker--time .picker__button--clear:focus { color: #000000; background: #b1dcfb; background: #ee2200; border-color: #ee2200; cursor: pointer; color: #ffffff; outline: none; }
+
+/* line 102, ../scss/lib/_default.pickatime.scss */
+.picker--time .picker__button--clear:before { top: -0.25em; color: #666; font-size: 1.25em; font-weight: bold; }
+
+/* line 109, ../scss/lib/_default.pickatime.scss */
+.picker--time .picker__button--clear:hover:before, .picker--time .picker__button--clear:focus:before { color: #ffffff; border-color: #ffffff; }
+
+/* ========================================================================== $DEFAULT-TIME-PICKER ========================================================================== */
+/** The frame the bounds the time picker. */
+/* line 121, ../scss/lib/_default.pickatime.scss */
+.picker--time .picker__frame { min-width: 256px; max-width: 320px; }
+
+/** The picker box. */
+/* line 129, ../scss/lib/_default.pickatime.scss */
+.picker--time .picker__box { font-size: 1em; background: #f2f2f2; padding: 0; }
+
+@media (min-height: 40.125em) { /* line 136, ../scss/lib/_default.pickatime.scss */
+  .picker--time .picker__box { margin-bottom: 5em; } }
+/* line 2, ../scss/_DateField.scss */
+input[type="date"].frontendify-datefield { line-height: 1em; padding: 0 1em; min-width: 8em; max-width: 11em; margin-top: 2px; }
+
+/** Core styles for the basic GridField form field without any specific style.  @package framework @subpackage scss @todo Add radial gradient to default delete button state @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins? */
+/** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
+/** ----------------------------------------------- Colours ------------------------------------------------ */
+/* Keep as solid colours transparent borders wont work in ie */
+/* Only for use as shadows as they wont work in older browsers */
+/*$color-optional: #a1d2eb !default; */
+/** ----------------------------------------------- Textures ----------------------------------------------- */
+/** ----------------------------------------------- Typography. ------------------------------------------------ */
+/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
+/** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
+/*Mixin used to generate slightly smaller text and forms
+Used in side panels and action tabs
+*/
+/* line 14, ../scss/_GridField.scss */
+form .ss-gridfield > div { margin-bottom: 36px; }
+
+/* line 18, ../scss/_GridField.scss */
+form .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 0; }
+
+/* line 22, ../scss/_GridField.scss */
+form .ss-gridfield > div.addNewGridFieldButton .action { margin-bottom: 12px; }
+
+/* line 26, ../scss/_GridField.scss */
+form .ss-gridfield > div.ss-gridfield-buttonrow-before { margin-bottom: 0; }
+
+/* line 30, ../scss/_GridField.scss */
+form .ss-gridfield > div.ss-gridfield-buttonrow-before .action, form .ss-gridfield > div.ss-gridfield-buttonrow-before input { margin-bottom: 12px; }
+
+/* line 34, ../scss/_GridField.scss */
+form .ss-gridfield > div.ss-gridfield-buttonrow-after { margin-bottom: 0; }
+
+/* line 38, ../scss/_GridField.scss */
+form .ss-gridfield > div.ss-gridfield-buttonrow-after .action, form .ss-gridfield > div.ss-gridfield-buttonrow-after input { margin-top: 12px; }
+
+/* line 42, ../scss/_GridField.scss */
+form .ss-gridfield[data-selectable] tr.ui-selected, form .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
+
+/* line 46, ../scss/_GridField.scss */
+form .ss-gridfield[data-selectable] td { cursor: pointer; }
+
+/* line 50, ../scss/_GridField.scss */
+form .ss-gridfield span button.action_gridfield_relationfind { display: none; }
+
+/* line 54, ../scss/_GridField.scss */
+form .ss-gridfield p button.action_export span.btn-icon-download-csv { height: 17px; }
+
+/* line 58, ../scss/_GridField.scss */
+form .ss-gridfield .right { float: right; }
+
+/* line 62, ../scss/_GridField.scss */
+form .ss-gridfield .right > * { float: right; margin-left: 8px; }
+
+/* line 67, ../scss/_GridField.scss */
+form .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 3px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }
+
+/* line 75, ../scss/_GridField.scss */
+form .ss-gridfield .left { float: left; }
+
+/* line 79, ../scss/_GridField.scss */
+form .ss-gridfield .left > * { margin-right: 8px; float: left; }
+
+/* line 84, ../scss/_GridField.scss */
+form .ss-gridfield { overflow-x: auto; }
+
+/* line 88, ../scss/_GridField.scss */
+form .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
+
+/* line 93, ../scss/_GridField.scss */
+form .ss-gridfield .grid-levelup a.list-parent-link { background: transparent url(../../framework/images/gridfield-level-up.png) no-repeat 0 0; display: block; }
+
+/* line 98, ../scss/_GridField.scss */
+form .ss-gridfield .add-existing-autocompleter span { float: left; display: inline-block; vertical-align: top; *vertical-align: auto; *zoom: 1; *display: inline; }
+
+/* line 107, ../scss/_GridField.scss */
+form .ss-gridfield .add-existing-autocompleter input.relation-search { width: 270px; height: 32px; margin-bottom: 12px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+
+/* line 115, ../scss/_GridField.scss */
+form .ss-gridfield .add-existing-autocompleter button.action_gridfield_relationadd { height: 32px; margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: none; }
+
+/* line 123, ../scss/_GridField.scss */
+form .ss-gridfield .grid-csv-button, form .ss-gridfield .grid-print-button { margin-bottom: 0; font-size: 12px; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; }
+
+/* line 134, ../scss/_GridField.scss */
+form table.ss-gridfield-table { display: table; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; padding: 0; border-collapse: separate; border-bottom: 0 none; width: 100%; }
+
+/* line 145, ../scss/_GridField.scss */
+form table.ss-gridfield-table thead { color: #323e46; background: transparent; }
+
+/* line 150, ../scss/_GridField.scss */
+form table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
+
+/* line 154, ../scss/_GridField.scss */
+form table.ss-gridfield-table thead tr.filter-header .fieldgroup .fieldgroup-field { padding: 0; }
+
+/* line 158, ../scss/_GridField.scss */
+form table.ss-gridfield-table thead tr:first-child th:first-child { -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px; }
+
+/* line 164, ../scss/_GridField.scss */
+form table.ss-gridfield-table thead tr:first-child th:last-child { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
+
+/* line 170, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody { background: #FFF; }
+
+/* line 174, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody tr { cursor: pointer; }
+
+/* line 178, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td { width: auto; max-width: 500px; word-wrap: break-word; }
+
+/* line 184, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-buttons { width: 1px; padding: 0 8px; text-align: right; white-space: nowrap; vertical-align: middle; }
+
+/* line 192, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
+
+/* line 199, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../../framework/images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
+
+/* line 204, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #0071c4; }
+
+/* line 208, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 10px; margin-right: 6px; margin-top: -1px; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; }
+
+/* line 223, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+
+/* line 229, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+
+/* line 235, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-deletedonlive { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+
+/* line 241, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+
+/* line 247, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
+
+/* line 253, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 1px 0; width: auto; text-shadow: none; }
+
+/* line 262, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td button.ui-state-hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+
+/* line 269, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+
+/* line 276, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td button.gridfield-button-delete { width: 20px; margin: 0; }
+
+/* line 281, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td button.gridfield-button-delete span.btn-icon-decline { left: 2px; }
+
+/* line 285, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td a.view-link, form table.ss-gridfield-table tbody td a.edit-link { display: inline-block; width: 20px; height: 20px; border: 0; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
+
+/* line 295, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td a.view-link { background: url(../../framework/admin/images/btn-icon/magnifier.png) no-repeat 0 1px; }
+
+/* line 299, ../scss/_GridField.scss */
+form table.ss-gridfield-table tbody td a.edit-link { background: url(../../framework/admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px; }
+
+/* line 303, ../scss/_GridField.scss */
+form table.ss-gridfield-table tfoot { color: #323e46; }
+
+/* line 307, ../scss/_GridField.scss */
+form table.ss-gridfield-table tfoot tr td { background: #b0bec7; padding: .7em; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+
+/* line 313, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.title th { position: relative; background: #98aab6; border-bottom: 1px solid #899eab; padding: 5px; min-height: 40px; background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk4YWFiNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(#b0bec7, #98aab6); background-image: -webkit-linear-gradient(#b0bec7, #98aab6); background-image: linear-gradient(#b0bec7, #98aab6); text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.4); }
+
+/* line 328, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.title th h2 { padding: 0px; font-size: 16.8px; color: #fff; margin: 1px 8px 0; display: inline-block; float: left; }
+
+/* line 337, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.sortable-header { background: #dbe3e8; }
+
+/* line 341, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.sortable-header th { padding: 0; font-weight: normal; }
+
+/* line 346, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.sortable-header th .ss-ui-button { font-weight: normal; }
+
+/* line 350, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr:hover { background: #FFFAD6; }
+
+/* line 354, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr:first-child { background: transparent; }
+
+/* line 358, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr:first-child:hover { background: #FFFAD6; }
+
+/* line 362, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.ss-gridfield-even { background: #F0F4F7; }
+
+/* line 366, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
+
+/* line 370, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.ss-gridfield-even:hover { background: #FFFAD6; }
+
+/* line 374, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.even { background: #F0F4F7; }
+
+/* line 378, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.even:hover { background: #FFFAD6; }
+
+/* line 382, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 5px; border-right: 1px solid rgba(0, 0, 0, 0.1); text-align: left; }
+
+/* line 391, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th div.fieldgroup, form table.ss-gridfield-table tr th div.fieldgroup-field { width: 100%; position: relative; }
+
+/* line 396, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }
+
+/* line 401, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 49px; box-shadow: none; border: none; }
+
+/* line 407, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th div.fieldgroup.filter-buttons div { width: auto; display: inline; }
+
+/* line 412, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid #a4b4bf; border-left: 1px solid #a4b4bf; color: #fff; background: #98aab6; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+
+/* line 421, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.main span { text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); padding-left: 8px; padding-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; margin-right: 8px; }
+
+/* line 432, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.main.col-listChildrenLink { border-right: none; }
+
+/* line 436, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.extra, form table.ss-gridfield-table tr th.action { padding: 0; cursor: default; }
+
+/* line 441, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.extra { position: relative; background: #637276; background: rgba(0, 0, 0, 0.7); padding: 5px; border-top: rgba(0, 0, 0, 0.2); }
+
+/* line 449, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.extra input { height: 28px; }
+
+/* line 453, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.extra button.ss-ui-button { padding: .3em; line-height: 1; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; position: relative; border-bottom-width: 0; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; }
+
+/* line 466, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.extra select { margin: 0; }
+
+/* line 470, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.first { -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px; }
+
+/* line 476, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th.last { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
+
+/* line 482, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.action_gridfield_relationadd:hover { color: #444 !important; /* Not sure why IE think it needs this */ }
+
+/* line 486, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button:hover { color: #ccc !important; /* Not sure why IE think it needs this */ }
+
+/* line 490, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { color: #fff !important; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+
+/* line 497, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-gridfield-sort { background: transparent url(../../framework/images/arrows.png) no-repeat right 6px; border: none; width: 100%; text-align: left; padding: 2px 8px 2px 0; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); color: #fff; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; }
+
+/* line 510, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { background-position: right -34px; }
+
+/* line 514, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-desc { background-position: right -72px; }
+
+/* line 518, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-asc { background-position: right -116px; }
+
+/* line 522, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter { background-color: #55a4d2; border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI4NzA5OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -moz-linear-gradient(#338dc1, #287099); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-linear-gradient(#338dc1, #287099); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, linear-gradient(#338dc1, #287099); width: 26px; border-top: 1px solid #4199cd; }
+
+/* line 538, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.hover-alike:active, form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter:active, form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.hover-alike, form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter:hover { background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzU1YTRkMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #55a4d2), color-stop(100%, #338dc1)); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -moz-linear-gradient(#55a4d2, #338dc1); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-linear-gradient(#55a4d2, #338dc1); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, linear-gradient(#55a4d2, #338dc1); }
+
+/* line 546, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger { margin-left: 12px; border: none; background: url(../../framework/images/icons/filter-icons.png) no-repeat -17px 6px; padding-right: 46px; margin: 0 6px; }
+
+/* line 554, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger span { opacity: 0.4; position: absolute; width: 10px; left: 30px; top: 40%; background: url(../../framework/admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px; }
+
+/* line 563, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger:hover { background: url(../../framework/images/icons/filter-icons.png) no-repeat -17px -38px; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+
+/* line 570, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger:hover span { opacity: 0.9; }
+
+/* line 574, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close { background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px; border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; width: 25px; opacity: 0.8; margin-right: -5px; }
+
+/* line 586, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close.hover-alike:active, form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close:active, form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close.hover-alike, form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close:hover { opacity: 1; background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMC4xIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g"); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.1)), color-stop(100%, rgba(255, 255, 255, 0.1))); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, -moz-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, -webkit-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)); }
+
+/* line 595, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset { border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; position: absolute; top: -21px; right: -1px; width: 20px; height: 20px; display: none; }
+
+/* line 609, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset.filtered { display: block; background: url(../../framework/admin/images/btn-icon/cross.png) no-repeat 0px 0px; opacity: 0.5; }
+
+/* line 615, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset.filtered:hover { opacity: 0.8; }
+
+/* line 619, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset.filtered:active { opacity: 1; }
+
+/* line 623, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort { height: 25px; padding: 4px; border: 1px solid #313232; }
+
+/* line 629, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort::-webkit-input-placeholder { font-style: italic; color: #ced5d7; }
+
+/* line 634, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort:-moz-placeholder { font-style: italic; color: #ced5d7; }
+
+/* line 639, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort:-ms-input-placeholder { font-style: italic; color: #ced5d7; }
+
+/* line 644, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort:placeholder { font-style: italic; color: #ced5d7; }
+
+/* line 649, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+
+/* line 655, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th span.non-sortable { display: block; padding: 6px 8px; }
+
+/* line 660, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td { border-right: 1px solid rgba(0, 0, 0, 0.1); padding: 8px 8px; color: #666; }
+
+/* line 666, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all { -moz-border-radius-bottomleft: 5px; -webkit-border-bottom-left-radius: 5px; border-bottom-left-radius: 5px; -moz-border-radius-bottomright: 5px; -webkit-border-bottom-right-radius: 5px; border-bottom-right-radius: 5px; background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk4YWFiNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(#b0bec7, #98aab6); background-image: -webkit-linear-gradient(#b0bec7, #98aab6); background-image: linear-gradient(#b0bec7, #98aab6); padding: 4px 12px; }
+
+/* line 682, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-footer-message { text-align: center; padding-top: 6px; color: white; }
+
+/* line 688, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination { padding-top: 1px; position: absolute; left: 50%; margin-left: -116px; z-index: 5; }
+
+/* line 696, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination .pagination-page-number { color: white; text-align: center; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); }
+
+/* line 702, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination .pagination-page-number input { width: 35px; height: 18px; margin-bottom: -6px; padding: 0px; border: 1px solid #899eab; border-bottom: 1px solid #a7b7c1; }
+
+/* line 711, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border: none; width: 10px; margin: 0 10px; display: inline; float: none; }
+
+/* line 722, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button span { text-indent: -9999em; }
+
+/* line 726, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-previouspage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat -23px 8px; }
+
+/* line 730, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-nextpage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat -47px 8px; }
+
+/* line 734, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-firstpage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat 0px 8px; }
+
+/* line 738, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-lastpage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat -73px 8px; }
+
+/* line 742, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ssui-button-disabled { z-index: -1; }
+
+/* line 746, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr td.bottom-all .pagination-records-number { float: right; padding: 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); }
+
+/* line 753, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr.last td { border-bottom: 0 none; }
+
+/* line 757, ../scss/_GridField.scss */
+form table.ss-gridfield-table td:first-child { border-left: 1px solid rgba(0, 0, 0, 0.1); }
+
+/* line 761, ../scss/_GridField.scss */
+form table.ss-gridfield-table td:last-child { border-right: 1px solid rgba(0, 0, 0, 0.1); }
+
+/* line 765, ../scss/_GridField.scss */
+form table.ss-gridfield-table td.col-StripThumbnail { padding: 2px 4px; width: 32px; height: 32px; }
+
+/* line 771, ../scss/_GridField.scss */
+form table.ss-gridfield-table td.col-StripThumbnail img { width: 32px; height: 32px; display: block; }
+
+/* line 777, ../scss/_GridField.scss */
+form table.ss-gridfield-table .ui-button { width: 20px; height: 20px; }
+
+/* line 781, ../scss/_GridField.scss */
+form table.ss-gridfield-table .ui-button .ui-icon.btn-icon-add { background: url(/frontendify/images/icons/add.png) no-repeat; }
+
+/* line 785, ../scss/_GridField.scss */
+form table.ss-gridfield-table .action.gridfield-button-delete { background: url(/frontendify/images/icons/cross-circle.png) no-repeat; }
+
+/* line 789, ../scss/_GridField.scss */
+form .ss-gridfield .ui-button .ui-icon.btn-icon-chain--plus { background: url(/frontendify/images/icons/chain--plus.png) no-repeat; }
+
+/* line 793, ../scss/_GridField.scss */
+form .ss-gridfield .ui-button .ui-icon.btn-icon-chain--minus { background: url(/frontendify/images/icons/chain--minus.png) no-repeat; }
+
+/* line 797, ../scss/_GridField.scss */
+form .ss-gridfield-buttonrow .btn-icon-download-csv { background: url(/frontendify/images/icons/download-csv.png) no-repeat; }
+
+/* line 801, ../scss/_GridField.scss */
+form table.ss-gridfield-table tr th input.ss-gridfield-sort { width: 100%; max-width: 512px; height: auto; margin: 0; outline: none; border-radius: 4px; line-height: 16px; }
+
+/* line 815, ../scss/_GridField.scss */
+form table.ss-gridfield-table thead tr.filter-header .fieldgroup .fieldgroup-field { float: left; }
+
+/** GridFieldAddExistingSearchButton */
+/* line 823, ../scss/_GridField.scss */
+.add-existing-search-dialog { min-width: inherit !important; }
+
+/* line 827, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-form .field { border: none; box-shadow: none; margin-bottom: 0; padding-bottom: 0; }
+
+/* line 834, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-form .field label { padding-bottom: 4px; }
+
+/* line 838, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-form .Actions { margin-top: 10px; padding: 0; }
+
+/* line 843, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-items li a { background: #FFF; border-bottom-width: 1px; border-color: #CCC; border-left-width: 1px; border-right-width: 1px; border-style: solid; display: block; padding: 6px; }
+
+/* line 854, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-items li:first-child a { border-top-left-radius: 4px; border-top-right-radius: 4px; border-top-width: 1px; }
+
+/* line 860, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-items li:last-child a { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
+
+/* line 865, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-items li a:hover { background: #F4F4F4; }
+
+/* line 869, ../scss/_GridField.scss */
+.add-existing-search-dialog .add-existing-search-pagination li { background: #FFF; display: block; float: left; margin-right: 2px; margin-top: 12px; padding: 6px; }
+
+/** GridFieldAddNewInlineButton */
+/* line 882, ../scss/_GridField.scss */
+.ss-gridfield-inline-new { background: #EFE; }
+
+/* line 886, ../scss/_GridField.scss */
+.ss-gridfield-inline-new:nth-child(2n) { background: #DFD; }
+
+/** GridFieldAddNewMultiClass */
+/* line 894, ../scss/_GridField.scss */
+.ss-gridfield-add-new-multi-class { margin-bottom: 8px !important; }
+
+/* line 898, ../scss/_GridField.scss */
+.ss-gridfield-add-new-multi-class .field { border: none; box-shadow: none; float: left; margin: 0 4px 0 0; }
+
+/** GridFieldEditableColumns */
+/* line 909, ../scss/_GridField.scss */
+.ss-gridfield-editable .readonly { padding-top: 0 !important; }
+
+/* line 913, ../scss/_GridField.scss */
+.ss-gridfield-editable input.text, .ss-gridfield-editable textarea, .ss-gridfield-editable select, .ss-gridfield-editable .TreeDropdownField { margin: 0 !important; max-width: none !important; }
+
+/* line 921, ../scss/_GridField.scss */
+.ss-gridfield-editable select.dropdown { border: 1px solid #b3b3b3; background-color: #fff; padding: 7px 7px; padding-left: 4px; line-height: 16px; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
+
+/* line 932, ../scss/_GridField.scss */
+.ss-gridfield-add-new-inline { margin-bottom: 12px; }
+
+/* line 936, ../scss/_GridField.scss */
+.ss-gridfield-add-new-inline span.readonly { color: #FFF !important; }
+
+/* line 940, ../scss/_GridField.scss */
+.ss-gridfield-add-new-inline .col-buttons { text-align: right; }
+
+/** GridFieldOrderableRows */
+/* line 948, ../scss/_GridField.scss */
+.ss-gridfield-orderable thead tr th.col-Reorder span { padding: 0 !important; margin-left: 8px; }
+
+/* line 953, ../scss/_GridField.scss */
+.ss-gridfield-orderable .col-reorder { position: relative; padding: 0 !important; width: 16px !important; }
+
+/* line 959, ../scss/_GridField.scss */
+.ss-gridfield-orderable .col-reorder .handle { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
+
+/* line 968, ../scss/_GridField.scss */
+.ss-gridfield-orderable .col-reorder .handle .icon { position: absolute; top: 50%; left: 50%; width: 5px; height: 11px; margin: -5px 0 0 -2px; background-image: url("../../framework/thirdparty/jquery-ui-themes/smoothness/images/ui-icons_222222_256x240.png"); background-position: -5px -227px; }
+
+/* line 979, ../scss/_GridField.scss */
+.ss-gridfield-orderhelper { border-bottom: 1px solid rgba(0, 0, 0, 0.1); border-top: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); }
+
+/* line 985, ../scss/_GridField.scss */
+.ss-gridfield-orderable tfoot .ui-droppable { padding-left: 12px; padding-right: 12px; }
+
+/* line 990, ../scss/_GridField.scss */
+.ss-gridfield-orderable tfoot .ui-droppable-active { background-color: #D4CF90 !important; }
+
+/* line 994, ../scss/_GridField.scss */
+.ss-gridfield-orderable tfoot .ss-gridfield-previouspage { background-position: -16px 9px !important; margin-left: 0; }
+
+/* line 999, ../scss/_GridField.scss */
+.ss-gridfield-orderable tfoot .ss-gridfield-nextpage { background-position: -40px 9px !important; margin-right: 0; }
+
+/** GridFieldConfigurablePaginator */
+/* line 1007, ../scss/_GridField.scss */
+.ss-gridfield-configurable-paginator .pagination-page-size { color: #fff; float: left; padding: 6px 0; }
+
+/* line 1013, ../scss/_GridField.scss */
+.ss-gridfield-configurable-paginator .pagination-page-size-select { margin-left: 0; width: auto; }
+
+/* line 1018, ../scss/_GridField.scss */
+.ss-gridfield-configurable-paginator .ss-gridfield-pagesize-submit { display: none; }
+
+/* line 1022, ../scss/_GridField.scss */
+.ss-gridfield-configurable-paginator .pagination-page-number input { text-align: center; }
+
 /* line 10, ../scss/frontendify.scss */
+form .ss-gridfield > div { margin-bottom: 0; }
+/* line 14, ../scss/frontendify.scss */
+form fieldset.frontendifygrid { overflow-x: auto; }
+/* line 17, ../scss/frontendify.scss */
 form fieldset.frontendifygrid .frontendify-datefilter { text-align: center; }
-/* line 13, ../scss/frontendify.scss */
+/* line 20, ../scss/frontendify.scss */
 form fieldset.frontendifygrid .frontendify-datefilter input { padding: 0 1em; }
-/* line 18, ../scss/frontendify.scss */
-form fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, form fieldset.frontendifygrid table.ss-gridfield-table td.col-ID { display: none; padding: 4px; }
 /* line 25, ../scss/frontendify.scss */
+form fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, form fieldset.frontendifygrid table.ss-gridfield-table td.col-ID { display: none; padding: 4px; }
+/* line 32, ../scss/frontendify.scss */
 form ::-webkit-datetime-edit-year-field:not([aria-valuenow]), form ::-webkit-datetime-edit-month-field:not([aria-valuenow]), form ::-webkit-datetime-edit-day-field:not([aria-valuenow]) { color: transparent; }
