@@ -10,7 +10,8 @@
 			format: 'dd/mm/yyyy',
 			selectYears: 2,
 			firstDay: 1,
-			selectMonths: true
+			selectMonths: true,
+			container: 'body'
 
 	        }).addClass('datefieldified');
 
