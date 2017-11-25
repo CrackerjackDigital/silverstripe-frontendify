@@ -1,21 +1,19 @@
 <?php
 
-use Milkyway\SS\GridFieldUtils\SaveAllButton;
-
-class FrontendifyGridFieldSaveAllButton extends SaveAllButton
+class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButton
 {
 	public function getActions( $gridField ) {
-		return [ 'save' ] + parent::getActions( $gridField);
+		return [ 'publish' ] + parent::getActions( $gridField);
 	}
 
 	public function handleAction( GridField $gridField, $actionName, $arguments, $data, &$line = 0, &$results = [] ) {
 		if ( in_array($actionName, $this->getActions( $gridField))) {
-			$this->saveAllRecords( $gridField, $arguments, $data, $line, $results );
+			$this->publishRecords( $gridField, $arguments, $data, $line, $results );
 		}
 		return true;
 	}
 
-	public function saveAllRecords( GridField $grid, $arguments, $data, &$line = 0, &$results = [] ) {
+	public function publishRecords( GridField $grid, $arguments, $data, &$line = 0, &$results = [] ) {
 		if ( isset( $data[ $grid->Name ] ) ) {
 			$currValue = $grid->Value();
 			$grid->setValue( $data[ $grid->Name ] );
@@ -23,7 +21,7 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 
 			foreach ( $grid->getConfig()->getComponents() as $component ) {
 				if ( $component instanceof GridField_SaveHandler ) {
-					$component->handleSave( $grid, $model, false, $line, $results );
+					$component->handlePublish( $grid, $model, $line, $results );
 				}
 			}
 			$grid->setValue( $currValue );
@@ -45,7 +43,7 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 		}
 
 		if ( ! $this->buttonName ) {
-			$this->buttonName = _t( 'GridField.SAVE', 'Save' );
+			$this->buttonName = _t( 'GridField.PUBLISH', 'Publish' );
 		}
 
 		$button = GridField_FormAction::create(
@@ -58,10 +56,10 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 		$button->setAttribute('type', 'button');
 
 		$button->setAttribute( 'data-icon', 'disk' )
-			->addExtraClass( 'btn frontendify-saveallbutton ui-state-default new new-link ui-button-text-icon-primary' );
+			->addExtraClass( 'btn frontendify-publishbutton ui-state-default new new-link ui-button-text-icon-primary' );
 
 		if ( $this->removeChangeFlagOnFormOnSave ) {
-			$button->addExtraClass( 'js-mwm-gridfield--saveall' );
+			$button->addExtraClass( 'js-mwm-gridfield--publish' );
 		}
 
 		return [

@@ -69,6 +69,10 @@ class FrontendifyGridField extends FrontEndGridField {
 			if ( $canDelete ) {
 				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
 			}
+			if ( $model->hasExtension( 'Versioned' ) && $model->canPublish() ) {
+				$config->addComponent( new FrontendifyGridFieldPublishButton( 'buttons-before-right' ) );
+			}
+
 			if ($canCreate || $canEdit) {
 				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
 			}

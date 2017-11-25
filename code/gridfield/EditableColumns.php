@@ -6,11 +6,8 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	}
 
 	public function getHTMLFragments( $grid ) {
+		// override requirements we don't need
 		$grid->addExtraClass( 'ss-gridfield-editable' );
-	}
-
-	public function getColumnAttributes( $gridField, $record, $columnName ) {
-		return parent::getColumnAttributes( $gridField, $record, $columnName );
 	}
 
 	/**
@@ -21,7 +18,20 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	 * @param int                  $line
 	 * @param array                $results
 	 */
+	public function handlePublish( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
+		$publish = $record->hasExtension('Versioned')
+			&& $record->canPublish();
+
+		return $this->process( $grid, $record, $publish, $line, $results );
+
+	}
+
 	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
+		return $this->process( $grid, $record, false, $line, $results);
+
+	}
+
+	public function process( GridField $grid, DataObjectInterface $record, $publish, &$line = 0, &$results = [] ) {
 		$list  = $grid->getList();
 		$value = $grid->Value();
 
@@ -64,6 +74,9 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 			}
 			try {
 				$item->write();
+				if ($publish) {
+					$item->publish('Stage', 'Live');
+				}
 				$list->add( $item, $extra );
 
 				$results[ $line ] = [

@@ -1,6 +1,6 @@
 <?php
 
-abstract class FrontendfiyGridField_Controller extends Page_Controller {
+abstract class FrontendifyGridField_Controller extends Page_Controller {
 	const GridModelClass = '';
 	const URLSegment     = '';
 

@@ -12,37 +12,54 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		$this->editableColumns = $editableColumns;
 	}
 
-	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
-		$list  = $grid->getList();
-		$value = $grid->Value();
+	public function handlePublish( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
+		$publish = $record->hasExtension('Versioned')
+		           && $record->canPublish();
 
-		if ( ! isset( $value[ __CLASS__ ] ) || ! is_array( $value[ __CLASS__ ] ) ) {
+		return $this->process( $grid, $publish, $line, $results );
+	}
+	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
+		return $this->process( $grid, false, $line, $results );
+	}
+
+	protected function process( GridField $grid, $publish, &$line = 0, &$results = [] ) {
+		$modelClass = $grid->getModelClass();
+		$model = singleton( $modelClass );
+
+		if ( ! $model->canCreate() ) {
 			return;
 		}
 
-		$class = $grid->getModelClass();
+		$value = $grid->Value();
+
+		$dataKey = GridFieldEditableColumns::class;
+
+		if ( ! isset( $dataKey) || ! is_array( $dataKey) ) {
+			return;
+		}
+		$rows = $value[ $dataKey ];
+
+		$list  = $grid->getList();
+
 		/** @var GridFieldEditableColumns $editable */
 		$editable = $grid->getConfig()->getComponentByType( 'GridFieldEditableColumns' );
 		/** @var GridFieldOrderableRows $sortable */
 		$sortable = $grid->getConfig()->getComponentByType( 'GridFieldOrderableRows' );
 
-		if ( ! singleton( $class )->canCreate() ) {
-			return;
-		}
-		foreach ( $value[ __CLASS__ ] as $fields ) {
+		foreach ( $rows as $row ) {
 			$line ++;
 
-			$item  = $class::create();
-			$extra = array();
+			$item  = $modelClass::create();
+			$extra = [];
 
 			$form = $editable->getForm( $grid, $item );
-			$form->loadDataFrom( $fields, Form::MERGE_CLEAR_MISSING );
+			$form->loadDataFrom( $row, Form::MERGE_CLEAR_MISSING );
 			$form->saveInto( $item );
 
 			// Check if we are also sorting these records
 			if ( $sortable ) {
 				$sortField = $sortable->getSortField();
-				$item->setField( $sortField, $fields[ $sortField ] );
+				$item->setField( $sortField, $row[ $sortField ] );
 			}
 
 			if ( $list instanceof ManyManyList ) {
@@ -50,29 +67,32 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 			}
 			try {
 				$item->write();
+				if ($publish) {
+					$item->publish('Stage', 'Live');
+				}
 				$list->add( $item, $extra );
 
 				$results[ $line ] = [
 					'id'      => $item->ID,
-					'index' => $line,
+					'index'   => $line,
 					'type'    => 'success',
-					'message' => 'saved'
+					'message' => 'saved',
 				];
 
 			} catch ( ValidationException $e ) {
 				$results[ $line ] = [
 					'id'      => $item->ID,
-					'index' => $line,
+					'index'   => $line,
 					'type'    => 'error',
-					'message' => join( ',', $e->getResult()->messageList() )
+					'message' => join( ',', $e->getResult()->messageList() ),
 				];
 
 			} catch ( Exception $e ) {
 				$results[ $line ] = [
 					'id'      => $item->ID,
-					'index' => $line,
+					'index'   => $line,
 					'type'    => 'error',
-					'message' => $e->getMessage()
+					'message' => $e->getMessage(),
 				];
 			}
 		}
@@ -87,7 +107,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 	 */
 	public function getHTMLFragments( $grid ) {
 		if ( $grid->getList() && ! singleton( $grid->getModelClass() )->canCreate() ) {
-			return array();
+			return [];
 		}
 
 		$fragment = $this->getFragment();
@@ -100,14 +120,14 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 //		GridFieldExtensions::include_requirements();
 		$this->requirements();
 
-		$data = new ArrayData( array(
+		$data = new ArrayData( [
 			'Title' => $this->getTitle(),
-		) );
+		] );
 
-		return array(
+		return [
 			$fragment => $data->renderWith( __CLASS__ ),
-			'after'   => $this->getRowTemplate( $grid, $editable )
-		);
+			'after'   => $this->getRowTemplate( $grid, $editable ),
+		];
 	}
 
 	/**
@@ -135,7 +155,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		foreach ( $grid->getColumns() as $column ) {
 			if ( in_array( $column, $handled ) ) {
 				$field = $fields->fieldByName( $column );
-				if ($field) {
+				if ( $field ) {
 					$field->setName( sprintf(
 						'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), __CLASS__, $field->getName()
 					) );
@@ -166,11 +186,11 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 				$attrs .= sprintf( ' %s="%s"', $attr, Convert::raw2att( $val ) );
 			}
 
-			$columns->push( new ArrayData( array(
+			$columns->push( new ArrayData( [
 				'Content'    => $content,
 				'Attributes' => $attrs,
-				'IsActions'  => $column == 'Actions'
-			) ) );
+				'IsActions'  => $column == 'Actions',
+			] ) );
 		}
 
 		return $columns->renderWith( 'FrontendifyGridFieldAddNewInlineRow' );
