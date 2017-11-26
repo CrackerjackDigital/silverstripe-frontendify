@@ -3,7 +3,7 @@
 class FrontendifyGridField extends FrontEndGridField {
 	use frontendify_requirements, frontendify_config;
 
-	const GridModelClass = '';
+	const GridModelClass  = '';
 	const FrontendifyType = 'GridField';
 
 	private static $frontendify_block = [
@@ -24,23 +24,23 @@ class FrontendifyGridField extends FrontEndGridField {
 	/**
 	 * FrontendifyGridField constructor.
 	 *
-	 * @param DataObject $model
+	 * @param DataObject            $model
 	 * @param \SS_List|null         $dataList
-	 * @param array|boolean|null                  $editableColumns if false then read-only mode, null means get from model, otherwise use these
+	 * @param array|boolean|null    $editableColumns if false then read-only mode, null means get from model, otherwise use these
 	 * @param null                  $canCreate
 	 * @param \GridFieldConfig|null $config
 	 */
 	public function __construct( $model, \SS_List $dataList = null, $editableColumns = null, $canCreate = null, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 
-		$modelClass = get_class($model);
-		$title = $model->i18n_plural_name();
+		$modelClass = get_class( $model );
 
-		parent::__construct( $modelClass, $title, $dataList, $config );
+		// no title by default
+		parent::__construct( $modelClass, '', $dataList, $config );
 
 		$model = singleton( $modelClass );
 
-		$editableColumns = is_null($editableColumns) ? $model->provideEditableColumns() : $editableColumns;
+		$editableColumns = is_null( $editableColumns ) ? $model->provideEditableColumns() : $editableColumns;
 
 		$canCreate = ( is_null( $canCreate ) && $model->canCreate() ) || (bool) $canCreate;
 
@@ -51,19 +51,19 @@ class FrontendifyGridField extends FrontEndGridField {
 		$config = $this->getConfig();
 		if ( $editableColumns ) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
-				->removeComponentsByType( GridFieldPaginator::class )
-				->removeComponentsByType( GridFieldPageCount::class );
+			       ->removeComponentsByType( GridFieldPaginator::class )
+			       ->removeComponentsByType( GridFieldPageCount::class );
 
 			$config->removeComponentsByType( GridFieldAddNewButton::class )
-				->removeComponentsByType( GridFieldEditButton::class )
-				->removeComponentsByType( GridFieldDeleteAction::class );
+			       ->removeComponentsByType( GridFieldEditButton::class )
+			       ->removeComponentsByType( GridFieldDeleteAction::class );
 
 			if ( $canCreate || $canEdit ) {
 				$config->removeComponentsByType( GridFieldDataColumns::class )
-					->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) );
+				       ->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) );
 			}
 
-			$config->addComponent( new FrontendifyGridFieldFilterRow());
+			$config->addComponent( new FrontendifyGridFieldFilterRow() );
 
 			// add new needs to come after editable columns so saving is kept in line order
 			if ( $canCreate ) {
@@ -76,7 +76,7 @@ class FrontendifyGridField extends FrontEndGridField {
 				$config->addComponent( new FrontendifyGridFieldPublishButton( 'buttons-before-right' ) );
 			}
 
-			if ($canCreate || $canEdit) {
+			if ( $canCreate || $canEdit ) {
 				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
 			}
 
@@ -142,6 +142,7 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		return $grid;
 	}
+
 	/**
 	 * @return \FrontendifyGridField
 	 * @throws \InvalidArgumentException
@@ -153,8 +154,9 @@ class FrontendifyGridField extends FrontEndGridField {
 		$grid = static::create(
 			$model,
 			null,
-			static::edit_columns($model)
+			static::edit_columns( $model )
 		);
+
 		return $grid;
 	}
 
@@ -166,7 +168,7 @@ class FrontendifyGridField extends FrontEndGridField {
 	 *
 	 * @return array
 	 */
-	public static function edit_columns($model) {
+	public static function edit_columns( $model ) {
 		$columns = array_merge(
 			[
 				'ID'       => [
@@ -191,7 +193,6 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		return $columns;
 	}
-
 
 	public function FieldHolder( $properties = [] ) {
 		$this->requirements();
