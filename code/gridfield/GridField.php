@@ -9,7 +9,7 @@ class FrontendifyGridField extends FrontEndGridField {
 	private static $frontendify_block = [
 		'/framework/css/GridField.css',
 		'/framework/javascript/GridField.js',
-		'/frontendgridfield/css/GridField.css',
+		'/frontendgridfield/css/FrontEndGridField.css',
 		'/frontendgridfield/javascript/FrontEndGridField.js',
 		'/gridfieldextensions/javascript/GridFieldExtensions.js',
 	];

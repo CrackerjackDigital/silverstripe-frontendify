@@ -13,6 +13,11 @@
 					index = 1,
 					stashed = [];
 
+				rows.find('.ss-gridfield-item')
+					.removeClass('error')
+					.removeClass('warning')
+					.removeClass('success');
+
 				// save all rows, for errors we need to be able to restore the pre-saved value
 				// as the response from the server only contains valid rows without changes if
 				// an error has occured.
@@ -20,8 +25,6 @@
 					var id = $(this).data('id'),
 						action = id ? 'update' : 'new',
 						row = $(this).clone();
-
-					row.removeClass('error').removeClass('success');
 
 					stashed[index] = {
 						'id': id,
@@ -69,8 +72,6 @@
 							result,
 							index;
 
-						debugger;
-
 						for (index in results) {
 							result = results[index];
 							stash = _.find(stashed, {index: result.index});
@@ -79,7 +80,6 @@
 
 							row.addClass(result.type).find('td.col-Messages').text(result.message);
 						}
-
 
 						if (focusedElName) {
 							grid.find(':input[name="' + focusedElName + '"]').focus();
