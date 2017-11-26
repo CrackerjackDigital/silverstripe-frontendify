@@ -3,6 +3,13 @@
 class FrontendifyGridField extends FrontEndGridField {
 	use frontendify_requirements, frontendify_config;
 
+	const ModeRead   = 0;
+	const ModeUpdate = 1;
+	const ModeCreate = 2;
+	const ModeDelete = 4;
+
+	const ModeEdit = self::ModeUpdate | self::ModeCreate | self::ModeDelete;
+
 	const GridModelClass  = '';
 	const FrontendifyType = 'GridField';
 
@@ -26,11 +33,11 @@ class FrontendifyGridField extends FrontEndGridField {
 	 *
 	 * @param DataObject            $model
 	 * @param \SS_List|null         $dataList
-	 * @param array|boolean|null    $editableColumns if false then read-only mode, null means get from model, otherwise use these
-	 * @param null                  $canCreate
+	 * @param array|boolean|null    $columns if false then read-only mode, null means get from model, otherwise use these
+	 * @param null                  $mode
 	 * @param \GridFieldConfig|null $config
 	 */
-	public function __construct( $model, \SS_List $dataList = null, $editableColumns = null, $canCreate = null, \GridFieldConfig $config = null ) {
+	public function __construct( $model, \SS_List $dataList = null, $columns = false, $mode = self::ModeRead, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 
 		$modelClass = get_class( $model );
@@ -40,16 +47,18 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$model = singleton( $modelClass );
 
-		$editableColumns = is_null( $editableColumns ) ? $model->provideEditableColumns() : $editableColumns;
+		$columns = is_null( $columns ) ? $model->provideEditableColumns() : $columns;
 
-		$canCreate = ( is_null( $canCreate ) && $model->canCreate() ) || (bool) $canCreate;
+		$mode = ( is_null( $mode ) && $model->canCreate() ) || (bool) $mode;
+
+		$canCreate = $model->canCreate();
 
 		$canEdit = $model->canEdit();
 
 		$canDelete = $model->canDelete();
 
 		$config = $this->getConfig();
-		if ( $editableColumns ) {
+		if ( $mode ) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
 			       ->removeComponentsByType( GridFieldPaginator::class )
 			       ->removeComponentsByType( GridFieldPageCount::class );
@@ -58,25 +67,25 @@ class FrontendifyGridField extends FrontEndGridField {
 			       ->removeComponentsByType( GridFieldEditButton::class )
 			       ->removeComponentsByType( GridFieldDeleteAction::class );
 
-			if ( $canCreate || $canEdit ) {
+			if ( ($mode & self::ModeUpdate) && $canEdit ) {
 				$config->removeComponentsByType( GridFieldDataColumns::class )
-				       ->addComponent( new FrontendifyGridFieldEditableColumns( $editableColumns ) );
+				       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) );
 			}
 
 			$config->addComponent( new FrontendifyGridFieldFilterRow() );
 
 			// add new needs to come after editable columns so saving is kept in line order
-			if ( $canCreate ) {
-				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $editableColumns, 'buttons-before-right' ) );
+			if ( ($mode & self::ModeCreate) && $canCreate) {
+				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $columns, 'buttons-before-right' ) );
 			}
-			if ( $canDelete ) {
+			if ( ($mode & self::ModeDelete) && $canDelete) {
 				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
 			}
 			if ( $model->hasExtension( 'Versioned' ) && $model->canPublish() ) {
 				$config->addComponent( new FrontendifyGridFieldPublishButton( 'buttons-before-right' ) );
 			}
 
-			if ( $canCreate || $canEdit ) {
+			if ( $mode) {
 				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
 			}
 
@@ -85,8 +94,14 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldEditButton::class )
 				->removeComponentsByType( GridFieldDeleteAction::class )
 				->removeComponentsByType( GridFieldAddNewButton::class )
+				->removeComponentsByType( GridFieldSaveRowButton::class)
 				->addComponent( new FrontendifyGridFieldFilterRow() );
 
+			if ($columns) {
+				/** @var \GridFieldDataColumns $dataColumns */
+				$dataColumns = $config->getComponentByType( GridFieldDataColumns::class);
+				$dataColumns->setDisplayFields( $columns);
+			}
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
@@ -131,13 +146,14 @@ class FrontendifyGridField extends FrontEndGridField {
 	 * @throws \InvalidArgumentException
 	 */
 
-	public static function view_mode() {
+	public static function view_mode( $columns = false ) {
 		$model = singleton( static::GridModelClass );
 
 		$grid = static::create(
 			$model,
 			null,
-			false
+			$columns,
+			self::ModeRead
 		);
 
 		return $grid;
@@ -148,13 +164,14 @@ class FrontendifyGridField extends FrontEndGridField {
 	 * @throws \InvalidArgumentException
 	 */
 
-	public static function edit_mode() {
+	public static function edit_mode( $columns = null ) {
 		$model = singleton( static::GridModelClass );
 
 		$grid = static::create(
 			$model,
 			null,
-			static::edit_columns( $model )
+			is_null( $columns ) ? static::edit_columns( $model ) : $columns,
+			self::ModeEdit
 		);
 
 		return $grid;
