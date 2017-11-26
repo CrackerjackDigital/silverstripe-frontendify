@@ -49,8 +49,6 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$columns = is_null( $columns ) ? $model->provideEditableColumns() : $columns;
 
-		$mode = ( is_null( $mode ) && $model->canCreate() ) || (bool) $mode;
-
 		$canCreate = $model->canCreate();
 
 		$canEdit = $model->canEdit();
@@ -58,6 +56,11 @@ class FrontendifyGridField extends FrontEndGridField {
 		$canDelete = $model->canDelete();
 
 		$config = $this->getConfig();
+
+		$config
+			->removeComponentsByType( GridFieldPageCount::class)
+			->removeComponentsByType( GridFieldPaginator::class);
+
 		if ( $mode ) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
 			       ->removeComponentsByType( GridFieldPaginator::class )

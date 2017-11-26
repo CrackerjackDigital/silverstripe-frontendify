@@ -6,14 +6,15 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 	// if set then will override use of GridModelClass to figure out template to use
 	const TemplateName = '';
-	const URLSegment     = '';
+	const URLSegment   = '';
 
 	private static $allowed_actions = [
-		'index' => true,
-		'field' => true,
-		'view'  => true,
-		'edit'  => true,
-		'save'  => true,
+		'index'   => true,
+		'field'   => true,
+		'view'    => true,
+		'edit'    => true,
+		'save'    => true,
+		'refresh' => true,
 	];
 
 	private static $url_handlers = [
@@ -22,6 +23,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		'save'              => 'save',
 		'edit'              => 'edit',
 		'view'              => 'view',
+		'refresh'           => 'refresh',
 		''                  => 'index',
 	];
 	/**
@@ -36,6 +38,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	public function init() {
 		parent::init();
 	}
+
 	public function canView() {
 		return Permission::check( 'CAN_VIEW_' . static::GridModelClass );
 	}
@@ -48,6 +51,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 	/**
 	 * If no action is provided then default to either 'edit' mode if can edit or 'View' mode if can view
+	 *
 	 * @return \HTMLText
 	 * @throws \UnexpectedValueException
 	 */
@@ -68,7 +72,8 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 	public function edit( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
-		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit'] );
+
+		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit' ] );
 	}
 
 	public function view( SS_HTTPRequest $request ) {
@@ -101,6 +106,27 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return $this->edit( $request );
 	}
 
+	public function refresh( SS_HTTPRequest $request ) {
+		/** @var \FrontEndGridField $field */
+		if ( $field = $this->field( $request ) ) {
+			$messages = [];
+
+			$response = $this->getResponse();
+
+			if ( $request->isAjax() ) {
+				$response->setStatusCode( 200 );
+				if ( $messages ) {
+					$response->addHeader( 'X-Messages', json_encode( $messages ) );
+				}
+
+				return $field->forTemplate();
+			}
+		}
+
+		return $this->view( $request );
+
+	}
+
 	/**
 	 * Return a form suitable for mode and permissions, preferring 'edit' mode if user can edit, otherwise 'view' mode
 	 *
@@ -112,15 +138,15 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	 *
 	 * @return \Form in 'edit' or 'view' mode
 	 */
-	public function Form($mode = '') {
-		$mode = $mode ?: $this->getRequest()->requestVar( '_mode');
+	public function Form( $mode = '' ) {
+		$mode = $mode ?: $this->getRequest()->requestVar( '_mode' );
 
 		if ( ( $mode == '' || $mode == 'edit' ) && $this->canEdit() ) {
 			return $this->EditForm();
 		} elseif ( ( $mode == '' || $mode == 'view' ) && $this->canView() ) {
 			return $this->ViewForm();
 		} else {
-			$this->setSessionMessage( 'Sorry you aren\'t able to do that, try <a href="/Security/login?BackURL=$url">logging in</a>', 'bad');
+			$this->setSessionMessage( 'Sorry you aren\'t able to do that, try <a href="/Security/login?BackURL=$url">logging in</a>', 'bad' );
 		}
 	}
 
@@ -131,7 +157,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		/** @var \FrontendifyGridField $grid */
 		$grid = $gridFieldClass::edit_mode();
 
-		$this->customiseFilters( $grid);
+		$this->customiseFilters( $grid );
 
 		$grid->setList(
 			$this->applyFilters( $grid, $this->gridFieldData() )
@@ -155,7 +181,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$gridFieldClass = static::GridFieldClass;
 
 		/** @var \FrontendifyGridField $grid */
-		$grid           = $gridFieldClass::view_mode();
+		$grid = $gridFieldClass::view_mode();
 
 		$this->customiseFilters( $grid );
 
@@ -186,6 +212,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			new FrontendifyApplyFilterButton()
 		);
 	}
+
 	/**
 	 * Enumerate grid components and call applyFilter on those which implement the GridFieldFilterInterface
 	 *
@@ -209,6 +236,5 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return $data;
 
 	}
-
 
 }
