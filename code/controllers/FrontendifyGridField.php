@@ -3,6 +3,9 @@
 abstract class FrontendifyGridField_Controller extends Page_Controller {
 	const GridModelClass = '';
 	const GridFieldClass = '';
+
+	// if set then will override use of GridModelClass to figure out template to use
+	const TemplateName = '';
 	const URLSegment     = '';
 
 	private static $allowed_actions = [
@@ -49,7 +52,9 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	 * @throws \UnexpectedValueException
 	 */
 	public function index() {
-		return $this->renderWith( [ static::GridModelClass, 'Page' ] );
+		$template = static::TemplateName ?: static::GridModelClass;
+
+		return $this->renderWith( [ $template, 'Page' ] );
 	}
 
 	public function field( SS_HTTPRequest $request ) {
@@ -61,6 +66,16 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return $gridField;
 	}
 
+	public function edit( SS_HTTPRequest $request ) {
+		$template = static::TemplateName ?: static::GridModelClass;
+		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit'] );
+	}
+
+	public function view( SS_HTTPRequest $request ) {
+		$template = static::TemplateName ?: static::GridModelClass;
+
+		return $this->renderWith( [ $template . '_view', $template, 'Page' ], [ 'Mode' => 'view' ] );
+	}
 
 	public function save( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
@@ -84,14 +99,6 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		}
 
 		return $this->edit( $request );
-	}
-
-	public function edit( SS_HTTPRequest $request ) {
-		return $this->renderWith( [ static::GridModelClass . '_edit', static::GridModelClass, 'Page' ], [ 'Mode' => 'edit'] );
-	}
-
-	public function view( SS_HTTPRequest $request ) {
-		return $this->renderWith( [ static::GridModelClass . '_view', static::GridModelClass, 'Page' ], [ 'Mode' => 'view' ] );
 	}
 
 	/**

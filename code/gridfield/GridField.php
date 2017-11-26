@@ -84,7 +84,8 @@ class FrontendifyGridField extends FrontEndGridField {
 			$config
 				->removeComponentsByType( GridFieldEditButton::class )
 				->removeComponentsByType( GridFieldDeleteAction::class )
-				->removeComponentsByType( GridFieldAddNewButton::class );
+				->removeComponentsByType( GridFieldAddNewButton::class )
+				->addComponent( new FrontendifyGridFieldFilterRow() );
 
 		}
 
