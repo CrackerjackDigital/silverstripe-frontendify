@@ -7,7 +7,7 @@
 			saveall: function (ajaxOpts, successCallback) {
 				var grid = this,
 					form = this.closest('form'),
-					table = grid.find('table.ss-gridfield-table tbody:first'),
+					rows = grid.find('table.ss-gridfield-table tbody:first'),
 					focusedElName = this.find(':input:focus').attr('name'),
 					data = form.find(':input').serializeArray(),
 					index = 1,
@@ -16,7 +16,7 @@
 				// save all rows, for errors we need to be able to restore the pre-saved value
 				// as the response from the server only contains valid rows without changes if
 				// an error has occured.
-				table.find("tr.ss-gridfield-item").each(function () {
+				rows.find("tr.ss-gridfield-item").each(function () {
 					var id = $(this).data('id'),
 						action = id ? 'update' : 'new',
 						row = $(this).clone();
@@ -55,8 +55,6 @@
 					}
 				}
 
-				debugger;
-
 				form.addClass('loading');
 
 				$.ajax($.extend({}, {
@@ -67,39 +65,22 @@
 					success: function (data, textStatus, jqXHR) {
 						var json = jqXHR.getResponseHeader('X-Messages'),
 							results = JSON.parse(json),     // json result for each row submitted (stashed)
-							saved = $(data).children(),
 							stash,
 							result,
 							index;
 
 						debugger;
 
-						$('.frontendify-select2field').not('.select2ified').entwine('frontendify', {
-							onmatch: function () {
-								var self = $(this);
-								self.select2ify();
-							}
-						});
-
-						table.find('.ss-gridfield-item').remove();
-
 						for (index in results) {
 							result = results[index];
 							stash = _.find(stashed, {index: result.index});
 
-							stash.row.addClass(result.type).find('td.col-Messages').text(result.message);
+							row = rows.children().eq(result.index - 1);
 
-							table.append(stash.row);
+							row.addClass(result.type).find('td.col-Messages').text(result.message);
 						}
 
 
-						// Replace the grid field with response, not the form.
-						// TODO Only replaces all its children, to avoid replacing the current scope
-						// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
-//						grid.empty().append($(data).children());
-
-						// Refocus previously focused element. Useful e.g. for finding+adding
-						// multiple relationships via keyboard.
 						if (focusedElName) {
 							grid.find(':input[name="' + focusedElName + '"]').focus();
 						}
@@ -123,7 +104,6 @@
 						}
 					},
 					error: function (e) {
-						debugger;
 						alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
 						form.removeClass('loading');
 					}
@@ -215,8 +195,6 @@
 				e.preventDefault();
 				e.stopPropagation();
 
-
-				debugger;
 
 				if (this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))) {
 					filterState = 'hidden';

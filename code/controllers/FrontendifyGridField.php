@@ -43,16 +43,13 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 	abstract protected function gridFieldData();
 
+	/**
+	 * If no action is provided then default to either 'edit' mode if can edit or 'View' mode if can view
+	 * @return \HTMLText
+	 * @throws \UnexpectedValueException
+	 */
 	public function index() {
-		if ( $this->canEdit() ) {
-			return $this->edit( $this->getRequest() );
-		} elseif ( $this->canView() ) {
-			return $this->view( $this->getRequest() );
-		} else {
-			$this->setSessionMessage( "Sorry, you are not allowed to do that", "error" );
-
-			return $this->renderWith( [ static::GridModelClass, 'Page' ] );
-		}
+		return $this->renderWith( [ static::GridModelClass, 'Page' ] );
 	}
 
 	public function field( SS_HTTPRequest $request ) {
