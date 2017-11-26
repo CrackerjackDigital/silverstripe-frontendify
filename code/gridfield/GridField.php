@@ -3,6 +3,7 @@
 class FrontendifyGridField extends FrontEndGridField {
 	use frontendify_requirements, frontendify_config;
 
+	const GridModelClass = '';
 	const FrontendifyType = 'GridField';
 
 	private static $frontendify_block = [
@@ -23,15 +24,17 @@ class FrontendifyGridField extends FrontEndGridField {
 	/**
 	 * FrontendifyGridField constructor.
 	 *
-	 * @param string                $modelClass
-	 * @param null|string           $title
+	 * @param DataObject $model
 	 * @param \SS_List|null         $dataList
 	 * @param array|boolean|null                  $editableColumns if false then read-only mode, null means get from model, otherwise use these
 	 * @param null                  $canCreate
 	 * @param \GridFieldConfig|null $config
 	 */
-	public function __construct( $modelClass, $title, \SS_List $dataList = null, $editableColumns = null, $canCreate = null, \GridFieldConfig $config = null ) {
+	public function __construct( $model, \SS_List $dataList = null, $editableColumns = null, $canCreate = null, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
+
+		$modelClass = get_class($model);
+		$title = $model->i18n_plural_name();
 
 		parent::__construct( $modelClass, $title, $dataList, $config );
 
@@ -121,6 +124,73 @@ class FrontendifyGridField extends FrontEndGridField {
 			$actionName
 		) );
 	}
+
+	/**
+	 * @return \FrontendifyGridField
+	 * @throws \InvalidArgumentException
+	 */
+
+	public static function view_mode() {
+		$model = singleton( static::GridModelClass );
+
+		$grid = static::create(
+			$model,
+			null,
+			false
+		);
+
+		return $grid;
+	}
+	/**
+	 * @return \FrontendifyGridField
+	 * @throws \InvalidArgumentException
+	 */
+
+	public static function edit_mode() {
+		$model = singleton( static::GridModelClass );
+
+		$grid = static::create(
+			$model,
+			null,
+			static::edit_columns($model)
+		);
+		return $grid;
+	}
+
+	/**
+	 * Add some extra columns required across all models to those provided by the model, such as
+	 * 'ID' and 'Messages'.
+	 *
+	 * @param DataObject $model
+	 *
+	 * @return array
+	 */
+	public static function edit_columns($model) {
+		$columns = array_merge(
+			[
+				'ID'       => [
+					'title'    => '',
+					'callback' => function ( $item ) {
+						$field = new HiddenField( 'ID', '' );
+
+						return $field->setAttribute( 'data-id', $item->ID );
+					},
+				],
+				'Messages' => [
+					'title'    => '',
+					'callback' => function ( $item ) {
+						$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
+
+						return $field;
+					},
+				],
+			],
+			$model->provideEditableColumns()
+		);
+
+		return $columns;
+	}
+
 
 	public function FieldHolder( $properties = [] ) {
 		$this->requirements();

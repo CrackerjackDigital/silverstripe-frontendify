@@ -1,15 +1,15 @@
 <?php
 
-class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButton
-{
+class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButton {
 	public function getActions( $gridField ) {
-		return [ 'publish' ] + parent::getActions( $gridField);
+		return [ 'publish' ] + parent::getActions( $gridField );
 	}
 
 	public function handleAction( GridField $gridField, $actionName, $arguments, $data, &$line = 0, &$results = [] ) {
-		if ( in_array($actionName, $this->getActions( $gridField))) {
+		if ( in_array( $actionName, $this->getActions( $gridField ) ) ) {
 			$this->publishRecords( $gridField, $arguments, $data, $line, $results );
 		}
+
 		return true;
 	}
 
@@ -38,6 +38,10 @@ class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButto
 	public function getHTMLFragments( $gridField ) {
 		$singleton = singleton( $gridField->getModelClass() );
 
+		if ( $singleton->hasExtension( 'Versioned' ) && ! $singleton->canPublish() ) {
+			return [];
+		}
+
 		if ( ! $singleton->canEdit() && ! $singleton->canCreate() ) {
 			return [];
 		}
@@ -53,10 +57,10 @@ class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButto
 			$this->actionName,
 			null
 		);
-		$button->setAttribute('type', 'button');
+		$button->setAttribute( 'type', 'button' );
 
 		$button->setAttribute( 'data-icon', 'disk' )
-			->addExtraClass( 'btn frontendify-publishbutton ui-state-default new new-link ui-button-text-icon-primary' );
+		       ->addExtraClass( 'btn frontendify-publishbutton ui-state-default new new-link ui-button-text-icon-primary' );
 
 		if ( $this->removeChangeFlagOnFormOnSave ) {
 			$button->addExtraClass( 'js-mwm-gridfield--publish' );

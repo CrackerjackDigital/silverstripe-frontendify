@@ -2,6 +2,7 @@
 
 abstract class FrontendifyGridField_Controller extends Page_Controller {
 	const GridModelClass = '';
+	const GridFieldClass = '';
 	const URLSegment     = '';
 
 	private static $allowed_actions = [
@@ -29,34 +30,9 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		# e.g. 'DateFilter' => 'StartDate:GreaterThan'
 	];
 
-	abstract public function gridFieldData();
-
 	public function init() {
 		parent::init();
 	}
-
-	/**
-	 * Enumerate grid components and call applyFilter on those which implement the GridFieldFilterInterface
-	 * @param \GridField $grid
-	 * @param DataList   $data
-	 *
-	 * @param array      $extraFilters e.g. [ 'EntryDate:GreaterThan' => null, 'Status' => 'Pending' ]
-	 *
-	 * @return mixed
-	 */
-	public function applyFilters( $grid, $data, $extraFilters = [] ) {
-		$request = $this->getRequest();
-
-		$components = $grid->getComponents();
-		foreach ( $components as $component ) {
-			if ( $component instanceof GridFieldFilterInterface ) {
-				$component->applyFilter( $request, $data );
-			}
-		}
-		return $data;
-
-	}
-
 	public function canView() {
 		return Permission::check( 'CAN_VIEW_' . static::GridModelClass );
 	}
@@ -64,6 +40,8 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	public function canEdit() {
 		return Permission::check( 'CAN_EDIT_' . static::GridModelClass );
 	}
+
+	abstract protected function gridFieldData();
 
 	public function index() {
 		if ( $this->canEdit() ) {
@@ -85,6 +63,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 		return $gridField;
 	}
+
 
 	public function save( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
@@ -118,146 +97,113 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return $this->renderWith( [ static::GridModelClass . '_view', static::GridModelClass, 'Page' ], [ 'Mode' => 'view' ] );
 	}
 
-	public function Form() {
-		if ( $this->canEdit() ) {
+	/**
+	 * Return a form suitable for mode and permissions, preferring 'edit' mode if user can edit, otherwise 'view' mode
+	 *
+	 * Mode can be specified in template e.g. 'view' which will always be honoured if can view,
+	 * otherwise it can be specified in request with get or post var '_mode'. When template is rendered it also
+	 * received a variable 'Mode' which can be passed back in to this call.
+	 *
+	 * @param string $mode
+	 *
+	 * @return \Form in 'edit' or 'view' mode
+	 */
+	public function Form($mode = '') {
+		$mode = $mode ?: $this->getRequest()->requestVar( '_mode');
+
+		if ( ( $mode == '' || $mode == 'edit' ) && $this->canEdit() ) {
 			return $this->EditForm();
-		} elseif ( $this->canView() ) {
+		} elseif ( ( $mode == '' || $mode == 'view' ) && $this->canView() ) {
 			return $this->ViewForm();
+		} else {
+			$this->setSessionMessage( 'Sorry you aren\'t able to do that, try <a href="/Security/login?BackURL=$url">logging in</a>', 'bad');
 		}
 	}
 
-	public function GridField() {
-		if ( $this->canEdit() ) {
-			return $this->EditGridField();
-		} elseif ( $this->canView() ) {
-			return $this->ViewGridField();
-		}
+	protected function EditForm() {
+		/** @var \FrontendifyGridField $gridFieldClass */
+		$gridFieldClass = static::GridFieldClass;
+
+		/** @var \FrontendifyGridField $grid */
+		$grid = $gridFieldClass::edit_mode();
+
+		$this->customiseFilters( $grid);
+
+		$grid->setList(
+			$this->applyFilters( $grid, $this->gridFieldData() )
+		);
+
+		$form = new Form(
+			$this,
+			'Form',
+			new FieldList( [ $grid ] ),
+			new FieldList()
+		);
+
+		$form->setFormAction( '/' . static::URLSegment . '/save' );
+		$form->addExtraClass( 'frontendify' );
+
+		return $form;
 	}
 
-	public function EditForm() {
-		if ( $this->canEdit() ) {
-			$grid = $this->EditGridField();
+	protected function ViewForm() {
+		/** @var \FrontendifyGridField $gridFieldClass */
+		$gridFieldClass = static::GridFieldClass;
 
-			$form = new Form(
-				$this,
-				'Form',
-				new FieldList( [ $grid ] ),
-				new FieldList()
-			);
+		/** @var \FrontendifyGridField $grid */
+		$grid           = $gridFieldClass::view_mode();
 
-			$form->setFormAction( '/' . static::URLSegment . '/save' );
-			$form->addExtraClass( 'frontendify' );
+		$this->customiseFilters( $grid );
 
-			return $form;
+		$grid->setList(
+			$this->applyFilters( $grid, $this->gridFieldData() )
+		);
 
-		}
+		$form = new Form(
+			$this,
+			'Form',
+			new FieldList( [ $grid ] ),
+			new FieldList()
+		);
+		$form->setFormAction( '/' . static::URLSegment . '/view' );
+		$form->addExtraClass( 'frontendify' );
+
+		return $form;
 	}
 
 	/**
 	 * Add extra filters etc in derived class, or dont' do anything to remove filters
+	 *
 	 * @param \GridField $grid
 	 */
-	protected function customiseFilters(GridField $grid) {
+	protected function customiseFilters( GridField $grid ) {
 		$grid->getConfig()->addComponents(
 			new FrontendifyGridFieldDateFilter(),
 			new FrontendifyApplyFilterButton()
 		);
 	}
-
 	/**
-	 * @return \FrontendifyGridField
-	 * @throws \InvalidArgumentException
+	 * Enumerate grid components and call applyFilter on those which implement the GridFieldFilterInterface
+	 *
+	 * @param \GridField $grid
+	 * @param DataList   $data
+	 *
+	 * @param array      $extraFilters e.g. [ 'EntryDate:GreaterThan' => null, 'Status' => 'Pending' ]
+	 *
+	 * @return mixed
 	 */
+	protected function applyFilters( $grid, $data, $extraFilters = [] ) {
+		$request = $this->getRequest();
 
-	public function EditGridField() {
-		if ( $this->canEdit() ) {
-			$model = singleton( static::GridModelClass );
-
-			$grid = FrontendifyGridField::create(
-				static::GridModelClass,
-				$model->i18n_plural_name(),
-				null,
-				$this->getEditColumns()
-			);
-			$this->customiseFilters( $grid );
-
-			$grid->setList(
-				$this->applyFilters( $grid, $this->gridFieldData() )
-			);
-
-			return $grid;
+		$components = $grid->getComponents();
+		foreach ( $components as $component ) {
+			if ( $component instanceof GridFieldFilterInterface ) {
+				$component->applyFilter( $request, $data, $extraFilters );
+			}
 		}
-	}
 
-	public function getEditColumns() {
-		$model   = singleton( static::GridModelClass );
-		$columns = array_merge(
-			[
-				'ID'       => [
-					'title'    => '',
-					'callback' => function ( $item ) {
-						$field = new HiddenField( 'ID', '' );
+		return $data;
 
-						return $field->setAttribute( 'data-id', $item->ID );
-					},
-				],
-				'Messages' => [
-					'title'    => '',
-					'callback' => function ( $item ) {
-						$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
-
-						return $field;
-					},
-				],
-			],
-			$model->provideEditableColumns()
-		);
-
-		return $columns;
-	}
-
-	public function ViewForm() {
-		if ( $this->canView() ) {
-			$grid = $this->ViewGridField();
-
-			$form = new Form(
-				$this,
-				'Form',
-				new FieldList( [ $grid ] ),
-				new FieldList()
-			);
-			$form->setFormAction( '/' . static::URLSegment . '/view' );
-			$form->addExtraClass( 'frontendify' );
-
-			return $form;
-
-		}
-	}
-
-	/**
-	 * @return \FrontendifyGridField
-	 * @throws \InvalidArgumentException
-	 */
-
-	public function ViewGridField() {
-		if ( $this->canView() ) {
-			$model = singleton( static::GridModelClass );
-
-			$grid = FrontendifyGridField::create(
-				static::GridModelClass,
-				$model->i18n_plural_name(),
-				null,
-				false
-			);
-			$this->customiseFilters( $grid );
-
-			$grid->setList(
-				$this->applyFilters( $grid, $this->gridFieldData() )
-			);
-
-			return $grid;
-
-		}
 	}
 
 

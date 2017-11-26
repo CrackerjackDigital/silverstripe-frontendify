@@ -6,8 +6,7 @@
 	$.fn.datefieldify = function () {
 		console.log('datefieldify');
 		$(selector).pickadate({
-			formatSubmit: 'yyyy-mm-dd',
-			format: 'dd/mm/yyyy',
+			format: 'yyyy-mm-dd',
 			selectYears: 2,
 			firstDay: 1,
 			selectMonths: true,

@@ -32,7 +32,9 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	}
 
 	public function process( GridField $grid, DataObjectInterface $record, $publish, &$line = 0, &$results = [] ) {
-		$list  = $grid->getList();
+		$modelClass = $grid->getModelClass();
+		$model      = singleton( $modelClass );
+
 		$value = $grid->Value();
 
 		$dataKey = GridFieldEditableColumns::class;
@@ -40,13 +42,17 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		if ( ! isset( $value[ $dataKey ] ) || ! is_array( $value[ $dataKey ] ) ) {
 			return;
 		}
+		$rows = $value[ $dataKey ];
+
+		$list = $grid->getList();
+
 		/** @var GridFieldOrderableRows $sortable */
 		$sortable = $grid->getConfig()->getComponentByType( 'GridFieldOrderableRows' );
 
-		foreach ( $value[ $dataKey ] as $id => $fields ) {
+		foreach ( $rows as $id => $row ) {
 			$line ++;
 
-			if ( ! is_numeric( $id ) || ! is_array( $fields ) ) {
+			if ( ! is_numeric( $id ) || ! is_array( $row ) ) {
 				continue;
 			}
 
@@ -60,13 +66,13 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 			$extra = array();
 
-			$form->loadDataFrom( $fields, Form::MERGE_CLEAR_MISSING );
+			$form->loadDataFrom( $row, Form::MERGE_CLEAR_MISSING );
 			$form->saveInto( $item );
 
 			// Check if we are also sorting these records
 			if ( $sortable ) {
 				$sortField = $sortable->getSortField();
-				$item->setField( $sortField, $fields[ $sortField ] );
+				$item->setField( $sortField, $row[ $sortField ] );
 			}
 
 			if ( $list instanceof ManyManyList ) {

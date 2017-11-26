@@ -19,11 +19,12 @@ class FrontendifyGridFieldSaveAllButton extends SaveAllButton
 		if ( isset( $data[ $grid->Name ] ) ) {
 			$currValue = $grid->Value();
 			$grid->setValue( $data[ $grid->Name ] );
+
 			$model = singleton( $grid->List->dataClass() );
 
 			foreach ( $grid->getConfig()->getComponents() as $component ) {
 				if ( $component instanceof GridField_SaveHandler ) {
-					$component->handleSave( $grid, $model, false, $line, $results );
+					$component->handleSave( $grid, $model, $line, $results );
 				}
 			}
 			$grid->setValue( $currValue );

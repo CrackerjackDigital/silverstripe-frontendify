@@ -7,8 +7,7 @@
 			console.log('timefieldify');
 			$(selector).pickatime({
 				clear: 'Clear',
-				format: 'HH:i (A)',
-				formatSubmit: 'HH:i'
+				format: 'HH:i',
 			}).addClass('timefieldified');
 
 		};

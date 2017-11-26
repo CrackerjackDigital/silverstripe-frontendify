@@ -74,7 +74,7 @@
 
 						debugger;
 
-						$('.frontendify-select2field').entwine('frontendify', {
+						$('.frontendify-select2field').not('.select2ified').entwine('frontendify', {
 							onmatch: function () {
 								var self = $(this);
 								self.select2ify();
@@ -196,6 +196,7 @@
 
 				$('.frontendify-select2field', $(this)).not('.select2ified').select2ify();
 				$(".frontendify-datefield", $(this)).not('.datefieldified').datefieldify();
+				$(".frontendify-timefield", $(this)).not('.timefieldified').datefieldify();
 
 			}
 		});

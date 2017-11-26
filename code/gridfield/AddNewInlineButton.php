@@ -13,18 +13,19 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 	}
 
 	public function handlePublish( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
-		$publish = $record->hasExtension('Versioned')
+		$publish = $record->hasExtension( 'Versioned' )
 		           && $record->canPublish();
 
 		return $this->process( $grid, $publish, $line, $results );
 	}
+
 	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
 		return $this->process( $grid, false, $line, $results );
 	}
 
 	protected function process( GridField $grid, $publish, &$line = 0, &$results = [] ) {
 		$modelClass = $grid->getModelClass();
-		$model = singleton( $modelClass );
+		$model      = singleton( $modelClass );
 
 		if ( ! $model->canCreate() ) {
 			return;
@@ -32,14 +33,14 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 
 		$value = $grid->Value();
 
-		$dataKey = GridFieldEditableColumns::class;
+		$dataKey = static::class;
 
-		if ( ! isset( $dataKey) || ! is_array( $dataKey) ) {
+		if ( ! isset( $value[ $dataKey ] ) || ! is_array( $value[ $dataKey ] ) ) {
 			return;
 		}
 		$rows = $value[ $dataKey ];
 
-		$list  = $grid->getList();
+		$list = $grid->getList();
 
 		/** @var GridFieldEditableColumns $editable */
 		$editable = $grid->getConfig()->getComponentByType( 'GridFieldEditableColumns' );
@@ -67,8 +68,8 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 			}
 			try {
 				$item->write();
-				if ($publish) {
-					$item->publish('Stage', 'Live');
+				if ( $publish ) {
+					$item->publish( 'Stage', 'Live' );
 				}
 				$list->add( $item, $extra );
 
