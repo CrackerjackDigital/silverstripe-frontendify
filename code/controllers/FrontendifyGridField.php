@@ -58,7 +58,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	public function index() {
 		$template = static::TemplateName ?: static::GridModelClass;
 
-		return $this->renderWith( [ $template, 'Page' ] );
+		return $this->renderWith( [ $template, 'Page' ], [ 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
 	public function field( SS_HTTPRequest $request ) {
@@ -73,13 +73,13 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	public function edit( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
 
-		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit' ] );
+		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit', 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
 	public function view( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
 
-		return $this->renderWith( [ $template . '_view', $template, 'Page' ], [ 'Mode' => 'view' ] );
+		return $this->renderWith( [ $template . '_view', $template, 'Page' ], [ 'Mode' => 'view', 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
 	public function save( SS_HTTPRequest $request ) {
@@ -89,7 +89,17 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 			if ( $request->isPOST() ) {
 				$data = $request->postVars();
-				$field->handleAlterAction( 'save', [], $data, $messages );
+				// default to url action, can be overriden by alter action post var
+				$action = $request->param('Action');
+
+				foreach ($data as $name => $value) {
+					// this seems really messy way to figure out?
+					if (substr($name, 0, strlen('action_gridFieldAlterAction')) == 'action_gridFieldAlterAction') {
+						$action = strtolower( $value);
+						break;
+					}
+				}
+				$field->handleAlterAction( $action, [], $data, $messages );
 			}
 			$response = $this->getResponse();
 

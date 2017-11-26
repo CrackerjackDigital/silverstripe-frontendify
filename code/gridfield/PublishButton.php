@@ -1,8 +1,14 @@
 <?php
 
 class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButton {
+	protected $actionName = 'publish';
+
+	public function __construct( $targetFragment = 'before', $publish = true, $action = 'publish' ) {
+		parent::__construct($targetFragment, $publish, $action);
+	}
+
 	public function getActions( $gridField ) {
-		return [ 'publish' ] + parent::getActions( $gridField );
+		return [ $this->actionName ] + parent::getActions( $gridField );
 	}
 
 	public function handleAction( GridField $gridField, $actionName, $arguments, $data, &$line = 0, &$results = [] ) {
