@@ -1,6 +1,6 @@
 <?php
 
-class FrontendifyApplyFilterButton
+class FrontendifyApplyFilterAction
 	implements GridField_HTMLProvider, GridFieldFilterInterface {
 
 	public function getHTMLFragments($gridField) {

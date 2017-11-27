@@ -90,12 +90,12 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			if ( $request->isPOST() ) {
 				$data = $request->postVars();
 				// default to url action, can be overriden by alter action post var
-				$action = $request->param('Action');
+				$action = $request->param( 'Action' );
 
-				foreach ($data as $name => $value) {
+				foreach ( $data as $name => $value ) {
 					// this seems really messy way to figure out?
-					if (substr($name, 0, strlen('action_gridFieldAlterAction')) == 'action_gridFieldAlterAction') {
-						$action = strtolower( $value);
+					if ( substr( $name, 0, strlen( 'action_gridFieldAlterAction' ) ) == 'action_gridFieldAlterAction' ) {
+						$action = strtolower( $value );
 						break;
 					}
 				}
@@ -167,7 +167,8 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		/** @var \FrontendifyGridField $grid */
 		$grid = $gridFieldClass::edit_mode();
 
-		$this->customiseFilters( $grid );
+		$this->customiseButtons( $grid, FrontendifyGridField::ModeEdit );
+		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
 		$grid->setList(
 			$this->applyFilters( $grid, $this->gridFieldData() )
@@ -193,7 +194,8 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		/** @var \FrontendifyGridField $grid */
 		$grid = $gridFieldClass::view_mode();
 
-		$this->customiseFilters( $grid );
+		$this->customiseButtons( $grid, FrontendifyGridField::ModeView );
+		$this->customiseFilters( $grid, FrontendifyGridField::ModeView );
 
 		$grid->setList(
 			$this->applyFilters( $grid, $this->gridFieldData() )
@@ -212,14 +214,25 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Add extra filters etc in derived class, or dont' do anything to remove filters
+	 * Change buttons on grid for this controller.
 	 *
 	 * @param \GridField $grid
+	 * @param int        $mode one of the FrontendifyGridField::ModeABC constants
 	 */
-	protected function customiseFilters( GridField $grid ) {
+	protected function customiseButtons( GridField $grid, $mode ) {
+		//
+	}
+
+	/**
+	 * Add extra filters etc in derived class, or override to NOP to not add filters
+	 *
+	 * @param \GridField $grid
+	 * @param int        $mode one of the FrontendifyGridField::ModeABC constants
+	 */
+	protected function customiseFilters( GridField $grid, $mode ) {
 		$grid->getConfig()->addComponents(
 			new FrontendifyGridFieldDateFilter(),
-			new FrontendifyApplyFilterButton()
+			new FrontendifyApplyFilterAction()
 		);
 	}
 

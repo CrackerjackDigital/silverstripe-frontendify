@@ -8,6 +8,8 @@ class FrontendifyGridField extends FrontEndGridField {
 	const ModeCreate = 2;
 	const ModeDelete = 4;
 
+	// convenience
+	const ModeView = self::ModeRead;
 	const ModeEdit = self::ModeUpdate | self::ModeCreate | self::ModeDelete;
 
 	const GridModelClass  = '';
