@@ -11,6 +11,25 @@
 			margin-bottom: 0;
 		}
 	}
+	.ss-gridfield-buttonrow {
+		line-height: 3em;
+
+		label {
+			display: none;
+		}
+		.fieldholder-small {
+			display: inline-block;
+
+			label {
+				display: none;
+			}
+
+			.select2-container {
+				width: 200px;
+			}
+		}
+	}
+
 	fieldset.frontendifygrid {
 		overflow-x: auto;
 

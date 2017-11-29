@@ -8,24 +8,24 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	const TemplateName = '';
 	const URLSegment   = '';
 
+	private static $url_handlers = [
+		'grid-edit/field/$Name!' => 'field',
+		'grid-save/field/$Name!' => 'grid_save',
+		'grid-save'              => 'grid_save',
+		'grid-view'              => 'grid_view',
+		'grid-edit'              => 'grid_edit',
+		'grid-refresh'           => 'grid_refresh',
+		''                       => 'index',
+	];
 	private static $allowed_actions = [
-		'index'   => true,
-		'field'   => true,
-		'view'    => true,
-		'edit'    => true,
-		'save'    => true,
-		'refresh' => true,
+		'index'       => true,
+		'field'       => true,
+		'grid_view'    => true,
+		'grid_edit'    => true,
+		'grid_save'    => true,
+		'grid_refresh' => true,
 	];
 
-	private static $url_handlers = [
-		'edit/field/$Name!' => 'field',
-		'save/field/$Name!' => 'save',
-		'save'              => 'save',
-		'edit'              => 'edit',
-		'view'              => 'view',
-		'refresh'           => 'refresh',
-		''                  => 'index',
-	];
 	/**
 	 * Default filters, if value is null then postVar for the field name will be used
 	 *
@@ -70,19 +70,19 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return $gridField;
 	}
 
-	public function edit( SS_HTTPRequest $request ) {
+	public function grid_edit( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
 
 		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit', 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
-	public function view( SS_HTTPRequest $request ) {
+	public function grid_view( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
 
 		return $this->renderWith( [ $template . '_view', $template, 'Page' ], [ 'Mode' => 'view', 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
-	public function save( SS_HTTPRequest $request ) {
+	public function grid_save( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
 		if ( $field = $this->field( $request ) ) {
 			$messages = [];
@@ -113,10 +113,10 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			}
 		}
 
-		return $this->edit( $request );
+		return $this->grid_edit( $request );
 	}
 
-	public function refresh( SS_HTTPRequest $request ) {
+	public function grid_refresh( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
 		if ( $field = $this->field( $request ) ) {
 			$messages = [];
@@ -133,7 +133,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			}
 		}
 
-		return $this->view( $request );
+		return $this->grid_view( $request );
 
 	}
 
@@ -181,7 +181,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			new FieldList()
 		);
 
-		$form->setFormAction( '/' . static::URLSegment . '/save' );
+		$form->setFormAction( '/' . static::URLSegment . '/grid-save' );
 		$form->addExtraClass( 'frontendify' );
 
 		return $form;
@@ -207,7 +207,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			new FieldList( [ $grid ] ),
 			new FieldList()
 		);
-		$form->setFormAction( '/' . static::URLSegment . '/view' );
+		$form->setFormAction( '/' . static::URLSegment . '/grid-view' );
 		$form->addExtraClass( 'frontendify' );
 
 		return $form;

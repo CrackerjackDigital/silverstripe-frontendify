@@ -579,12 +579,22 @@ input[type="date"].frontendify-datefield { line-height: 1em; padding: 0 1em; min
 /* line 10, ../scss/frontendify.scss */
 .frontendify .ss-gridfield > div { margin-bottom: 0; }
 /* line 14, ../scss/frontendify.scss */
-.frontendify fieldset.frontendifygrid { overflow-x: auto; }
+.frontendify .ss-gridfield-buttonrow { line-height: 3em; }
 /* line 17, ../scss/frontendify.scss */
-.frontendify fieldset.frontendifygrid .frontendify-datefilter { text-align: center; }
+.frontendify .ss-gridfield-buttonrow label { display: none; }
 /* line 20, ../scss/frontendify.scss */
+.frontendify .ss-gridfield-buttonrow .fieldholder-small { display: inline-block; }
+/* line 23, ../scss/frontendify.scss */
+.frontendify .ss-gridfield-buttonrow .fieldholder-small label { display: none; }
+/* line 27, ../scss/frontendify.scss */
+.frontendify .ss-gridfield-buttonrow .fieldholder-small .select2-container { width: 200px; }
+/* line 33, ../scss/frontendify.scss */
+.frontendify fieldset.frontendifygrid { overflow-x: auto; }
+/* line 36, ../scss/frontendify.scss */
+.frontendify fieldset.frontendifygrid .frontendify-datefilter { text-align: center; }
+/* line 39, ../scss/frontendify.scss */
 .frontendify fieldset.frontendifygrid .frontendify-datefilter input { padding: 0 1em; }
-/* line 25, ../scss/frontendify.scss */
+/* line 44, ../scss/frontendify.scss */
 .frontendify fieldset.frontendifygrid table.ss-gridfield-table th.col-ID, .frontendify fieldset.frontendifygrid table.ss-gridfield-table td.col-ID { display: none; padding: 4px; }
-/* line 32, ../scss/frontendify.scss */
+/* line 51, ../scss/frontendify.scss */
 .frontendify ::-webkit-datetime-edit-year-field:not([aria-valuenow]), .frontendify ::-webkit-datetime-edit-month-field:not([aria-valuenow]), .frontendify ::-webkit-datetime-edit-day-field:not([aria-valuenow]) { color: transparent; }

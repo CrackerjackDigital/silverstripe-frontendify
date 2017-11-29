@@ -1,3 +1,3 @@
 <button $AttributesHTML>
-	$LeftTitle<i class="glyphicon glyphicon-calendar"></i>$RightTitle
+	$LeftTitle<i class="glyphicon glyphicon-{$glyph}"></i>$RightTitle
 </button>

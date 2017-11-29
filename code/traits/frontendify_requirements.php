@@ -4,6 +4,23 @@ trait frontendify_requirements {
 
 	abstract public function config();
 
+	public function getName() {
+		return get_called_class();
+	}
+
+	/**
+	 * Return an array of closures which can be called to generate the actual javascript.
+	 * The closure will be passed a unique ID which can be used on the page and in the script.
+	 *
+	 * e.g. [ function($id) { return <<<SCRIPT ...
+	 * >>> ];
+	 *
+	 * @return array
+	 */
+	protected function custom_javascripts() {
+		return [];
+	}
+
 	public function requirements() {
 		$type = self::FrontendifyType;
 
@@ -49,6 +66,11 @@ trait frontendify_requirements {
 				default:
 					throw new FrontendifyException( "Can't handle '$requirement'" );
 			}
+		}
+		$id = $this->getName();
+
+		foreach ($this->custom_javascripts() as $function) {
+			Requirements::customScript( $function($id));
 		}
 	}
 }

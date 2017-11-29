@@ -1,7 +1,7 @@
 (function ($) {
 	var selector = '.frontendify-select2field';
 
-	$.fn.select2ify = function () {
+	$.fn.select2ify = function (data) {
 		var self = $(this),
 			placeholder = self.attr('placeholder'),
 			seperator = self.data('frontendify-tag-seperator') || ',',
@@ -10,9 +10,11 @@
 				tags: tags,
 				tokenSeparators: [seperator],
 				placeholder: placeholder,
-				allowClear: true
+				allowClear: true,
+				data: data || []
 			} : {
-				placeholder: placeholder
+				placeholder: placeholder,
+				data: data || []
 			};
 
 		self.select2(

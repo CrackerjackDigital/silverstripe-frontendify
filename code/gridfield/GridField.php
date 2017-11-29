@@ -36,8 +36,10 @@ class FrontendifyGridField extends FrontEndGridField {
 	 * @param DataObject            $model
 	 * @param \SS_List|null         $dataList
 	 * @param array|boolean|null    $columns if false then read-only mode, null means get from model, otherwise use these
-	 * @param null                  $mode
+	 * @param int|null              $mode
 	 * @param \GridFieldConfig|null $config
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct( $model, \SS_List $dataList = null, $columns = false, $mode = self::ModeRead, \GridFieldConfig $config = null ) {
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
@@ -78,6 +80,7 @@ class FrontendifyGridField extends FrontEndGridField {
 			}
 
 			$config->addComponent( new FrontendifyGridFieldFilterRow() );
+			$config->addComponent( new FrontendifyGridFieldCentreButtons() );
 
 			// add new needs to come after editable columns so saving is kept in line order
 			if ( ($mode & self::ModeCreate) && $canCreate) {
@@ -100,7 +103,8 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldDeleteAction::class )
 				->removeComponentsByType( GridFieldAddNewButton::class )
 				->removeComponentsByType( GridFieldSaveRowButton::class)
-				->addComponent( new FrontendifyGridFieldFilterRow() );
+				->addComponent( new FrontendifyGridFieldFilterRow() )
+				->addComponent( new FrontendifyGridFieldCentreButtons() );
 
 			if ($columns) {
 				/** @var \GridFieldDataColumns $dataColumns */
