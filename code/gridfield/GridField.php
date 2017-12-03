@@ -143,11 +143,8 @@ class FrontendifyGridField extends FrontEndGridField {
 				}
 			}
 		}
-
-		throw new InvalidArgumentException( sprintf(
-			'Can\'t handle action "%s"',
-			$actionName
-		) );
+		// don't know what to do with that, fail gracefully.
+		return false;
 	}
 
 	/**

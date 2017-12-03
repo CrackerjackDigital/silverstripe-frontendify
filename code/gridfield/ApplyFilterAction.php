@@ -4,7 +4,7 @@ class FrontendifyApplyFilterAction
 	implements GridField_HTMLProvider, GridFieldFilterInterface {
 
 	public function getHTMLFragments($gridField) {
-		$field = ( new GridField_FormAction( $gridField, 'ApplyFilter', 'Filter', 'filter', [] ) )
+		$field = ( new GridField_FormAction( $gridField, 'ApplyFilter', 'Apply', 'apply', [] ) )
 			->addExtraClass( 'frontendify-filter-apply btn ui-state-default' )
 			->addExtraClass( 'frontendify-filterbutton' );
 

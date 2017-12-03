@@ -111,4 +111,57 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		}
 	}
 
+	public function getColumnContent( $grid, $record, $col ) {
+		if ( ! $record->canEdit() ) {
+			return parent::getColumnContent( $grid, $record, $col );
+		}
+
+		$fields = $this->getForm( $grid, $record )->Fields();
+
+		if ( ! $this->displayFields ) {
+			// If setDisplayFields() not used, utilize $summary_fields
+			// in a way similar to base class
+			$colRelation = explode( '.', $col );
+			$value       = $grid->getDataFieldValue( $record, $colRelation[0] );
+			$field       = $fields->fieldByName( $colRelation[0] );
+			if ( ! $field || $field->isReadonly() || $field->isDisabled() ) {
+				return parent::getColumnContent( $grid, $record, $col );
+			}
+
+			// Ensure this field is available to edit on the record
+			// (ie. Maybe its readonly due to certain circumstances, or removed and not editable)
+			$cmsFields = $record->getCMSFields();
+			$cmsField  = $cmsFields->dataFieldByName( $colRelation[0] );
+			if ( ! $cmsField || $cmsField->isReadonly() || $cmsField->isDisabled() ) {
+				return parent::getColumnContent( $grid, $record, $col );
+			}
+			$field = clone $field;
+		} else {
+			$value = $grid->getDataFieldValue( $record, $col );
+
+			$rel   = ( strpos( $col, '.' ) !== false );
+
+			$field = ( $rel ) ? clone $fields->fieldByName( $col ) : new ReadonlyField( $col );
+
+			if ( ! $field ) {
+				throw new Exception( "Could not find the field '$col'" );
+			}
+		}
+
+		if ( array_key_exists( $col, $this->fieldCasting ) ) {
+			$value = $grid->getCastedValue( $value, $this->fieldCasting[ $col ] );
+		}
+
+		$value = $this->formatValue( $grid, $record, $col, $value );
+
+		$field->setName( $this->getFieldName( $field->getName(), $grid, $record ) );
+		$field->setValue( $value );
+
+		if ( $field instanceof HtmlEditorField ) {
+			return $field->FieldHolder();
+		}
+
+		return $field->forTemplate();
+	}
+
 }

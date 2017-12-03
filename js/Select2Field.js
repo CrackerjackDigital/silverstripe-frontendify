@@ -13,8 +13,7 @@
 				allowClear: true,
 				data: data || []
 			} : {
-				placeholder: placeholder,
-				data: data || []
+				placeholder: placeholder
 			};
 
 		self.select2(

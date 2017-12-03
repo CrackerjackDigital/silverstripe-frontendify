@@ -31,7 +31,7 @@ class FrontendifyGridFieldDateFilter
 	public function getValue() {
 		$request = Controller::curr()->getRequest();
 		if ($request->isPOST()) {
-			$value = $request->postVar($this->filterFieldName());
+			$value = $request->requestVar($this->filterFieldName());
 		} else {
 			$value = $this->defaultValue();
 		}
