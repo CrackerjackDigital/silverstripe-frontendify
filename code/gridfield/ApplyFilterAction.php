@@ -13,7 +13,7 @@ class FrontendifyApplyFilterAction
 		];
 	}
 
-	public function applyFilter( $request, &$data ) {
+	public function applyFilter( $request, &$data, $defaultFilters = [] ) {
 
 	}
 }

@@ -230,13 +230,14 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	 */
 	protected function customiseFilters( GridField $grid, $mode ) {
 		$grid->getConfig()->addComponents(
-			new FrontendifyGridFieldDateFilter(),
+			new FrontendifyGridFieldDateFilter(['CrewSchedule' => 'StartDate']),
 			new FrontendifyApplyFilterAction()
 		);
 	}
 
 	/**
 	 * Enumerate grid components and call applyFilter on those which implement the GridFieldFilterInterface
+	 * passing in the data for the gridfield population data
 	 *
 	 * @param \GridField $grid
 	 * @param DataList   $data

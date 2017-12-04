@@ -51,7 +51,7 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$model = singleton( $modelClass );
 
-		$columns = is_null( $columns ) ? $model->provideEditableColumns() : $columns;
+		$columns = $columns ?: $this->editableColumns();
 
 		$canCreate = $model->canCreate();
 
@@ -62,8 +62,8 @@ class FrontendifyGridField extends FrontEndGridField {
 		$config = $this->getConfig();
 
 		$config
-			->removeComponentsByType( GridFieldPageCount::class)
-			->removeComponentsByType( GridFieldPaginator::class);
+			->removeComponentsByType( GridFieldPageCount::class )
+			->removeComponentsByType( GridFieldPaginator::class );
 
 		if ( $mode ) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
@@ -74,7 +74,7 @@ class FrontendifyGridField extends FrontEndGridField {
 			       ->removeComponentsByType( GridFieldEditButton::class )
 			       ->removeComponentsByType( GridFieldDeleteAction::class );
 
-			if ( ($mode & self::ModeUpdate) && $canEdit ) {
+			if ( ( $mode & self::ModeUpdate ) && $canEdit ) {
 				$config->removeComponentsByType( GridFieldDataColumns::class )
 				       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) );
 			}
@@ -83,17 +83,17 @@ class FrontendifyGridField extends FrontEndGridField {
 			$config->addComponent( new FrontendifyGridFieldCentreButtons() );
 
 			// add new needs to come after editable columns so saving is kept in line order
-			if ( ($mode & self::ModeCreate) && $canCreate) {
+			if ( ( $mode & self::ModeCreate ) && $canCreate ) {
 				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $columns, 'buttons-before-right' ) );
 			}
-			if ( ($mode & self::ModeDelete) && $canDelete) {
+			if ( ( $mode & self::ModeDelete ) && $canDelete ) {
 				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
 			}
 			if ( $model->hasExtension( 'Versioned' ) && $model->canPublish() ) {
 				$config->addComponent( new FrontendifyGridFieldPublishButton( 'buttons-before-right' ) );
 			}
 
-			if ( $mode) {
+			if ( $mode ) {
 				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
 			}
 
@@ -102,19 +102,28 @@ class FrontendifyGridField extends FrontEndGridField {
 				->removeComponentsByType( GridFieldEditButton::class )
 				->removeComponentsByType( GridFieldDeleteAction::class )
 				->removeComponentsByType( GridFieldAddNewButton::class )
-				->removeComponentsByType( GridFieldSaveRowButton::class)
+				->removeComponentsByType( GridFieldSaveRowButton::class )
 				->addComponent( new FrontendifyGridFieldFilterRow() )
 				->addComponent( new FrontendifyGridFieldCentreButtons() );
 
-			if ($columns) {
+			if ( $columns ) {
 				/** @var \GridFieldDataColumns $dataColumns */
-				$dataColumns = $config->getComponentByType( GridFieldDataColumns::class);
-				$dataColumns->setDisplayFields( $columns);
+				$dataColumns = $config->getComponentByType( GridFieldDataColumns::class );
+				$dataColumns->setDisplayFields( $columns );
 			}
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
 		$this->setTitle( '' );
+	}
+
+	public function applyFilters($request, &$data, $defaultFilters = []) {
+		$components = $this->getComponents();
+		foreach ($components as $component) {
+			if ($component instanceof GridFieldFilterInterface) {
+				$component->applyFilter( $request, $data, $defaultFilters);
+			}
+		}
 	}
 
 	/**
@@ -143,13 +152,15 @@ class FrontendifyGridField extends FrontEndGridField {
 				}
 			}
 		}
+
 		// don't know what to do with that, fail gracefully.
 		return false;
 	}
 
 	/**
+	 * @param bool $columns override the default 'viewable' columns
+	 *
 	 * @return \FrontendifyGridField
-	 * @throws \InvalidArgumentException
 	 */
 
 	public static function view_mode( $columns = false ) {
@@ -158,7 +169,7 @@ class FrontendifyGridField extends FrontEndGridField {
 		$grid = static::create(
 			$model,
 			null,
-			is_null( $columns ) ? static::view_columns( $model ) : $columns,
+			$columns,
 			self::ModeRead
 		);
 
@@ -166,17 +177,19 @@ class FrontendifyGridField extends FrontEndGridField {
 	}
 
 	/**
+	 * @param null $columns override the default 'editable' columns
+	 *
 	 * @return \FrontendifyGridField
-	 * @throws \InvalidArgumentException
 	 */
 
 	public static function edit_mode( $columns = null ) {
 		$model = singleton( static::GridModelClass );
+		$gridClass = get_called_class();
 
-		$grid = static::create(
+		$grid = new static(
 			$model,
 			null,
-			is_null( $columns ) ? static::edit_columns( $model ) : $columns,
+			$columns,
 			self::ModeEdit
 		);
 
@@ -191,56 +204,46 @@ class FrontendifyGridField extends FrontEndGridField {
 	 *
 	 * @return array
 	 */
-	public static function edit_columns( $model ) {
-		$columns = array_merge(
-			[
-				'ID'       => [
-					'title'    => '',
-					'callback' => function ( $item ) {
-						$field = new HiddenField( 'ID', '' );
+	public function editableColumns() {
+		return [
+			'ID'       => [
+				'title'    => '',
+				'callback' => function ( $item ) {
+					$field = new HiddenField( 'ID', '' );
 
-						return $field->setAttribute( 'data-id', $item->ID );
-					},
-				],
-				'Messages' => [
-					'title'    => '',
-					'callback' => function ( $item ) {
-						$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
-
-						return $field;
-					},
-				],
+					return $field->setAttribute( 'data-id', $item->ID );
+				},
 			],
-			$model->provideEditableColumns()
-		);
+			'Messages' => [
+				'title'    => '',
+				'callback' => function ( $item ) {
+					$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
 
-		return $columns;
+					return $field;
+				},
+			],
+		];
 	}
 
-	public static function view_columns($model) {
-		$columns = array_merge(
-			[
-				'ID'       => [
-					'title'    => '',
-					'callback' => function ( $item ) {
-						$field = new HiddenField( 'ID', '' );
+	public function viewableColumns( ) {
+		return [
+			'ID'       => [
+				'title'    => '',
+				'callback' => function ( $item ) {
+					$field = new HiddenField( 'ID', '' );
 
-						return $field->setAttribute( 'data-id', $item->ID );
-					},
-				],
-				'Messages' => [
-					'title'    => '',
-					'callback' => function ( $item ) {
-						$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
-
-						return $field;
-					},
-				],
+					return $field->setAttribute( 'data-id', $item->ID );
+				},
 			],
-			$model->provideViewColumns()
-		);
+			'Messages' => [
+				'title'    => '',
+				'callback' => function ( $item ) {
+					$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
 
-		return $columns;
+					return $field;
+				},
+			],
+		];
 	}
 
 	public function FieldHolder( $properties = [] ) {
