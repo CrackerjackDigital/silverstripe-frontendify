@@ -4,10 +4,6 @@ trait frontendify_requirements {
 
 	abstract public function config();
 
-	public function getName() {
-		return get_called_class();
-	}
-
 	/**
 	 * Return an array of closures which can be called to generate the actual javascript.
 	 * The closure will be passed a unique ID which can be used on the page and in the script.
@@ -22,9 +18,9 @@ trait frontendify_requirements {
 	}
 
 	public function requirements() {
-		$type = self::FrontendifyType;
+		$type = static::FrontendifyType;
 
-		$blocks = self::config()->get('frontendify_block') ?: [];
+		$blocks = static::config()->get('frontendify_block') ?: [];
 		foreach ($blocks as $block) {
 			if ( substr( $block, 0, 1 ) == '/' ) {
 				$block = substr( $block, 1 );
@@ -35,8 +31,8 @@ trait frontendify_requirements {
 		}
 
 		// get requirements for ths component added via e.g. frontendify_reqreuirments['Select2Field'] = [ 'js/Select2Field.js' ]
-		$requirements = ( $all = ( self::config()->get( "frontendify_require" ) ?: [] ) )
-			? ( isset( $all[ self::FrontendifyType ] ) ? $all[ self::FrontendifyType ] : [] )
+		$requirements = ( $all = ( static::config()->get( "frontendify_require" ) ?: [] ) )
+			? ( isset( $all[ static::FrontendifyType ] ) ? $all[ static::FrontendifyType ] : [] )
 			: [];
 
 		$requirements = array_merge(
@@ -67,7 +63,7 @@ trait frontendify_requirements {
 					throw new FrontendifyException( "Can't handle '$requirement'" );
 			}
 		}
-		$id = $this->getName();
+		$id = uniqid();
 
 		foreach ($this->custom_javascripts() as $function) {
 			Requirements::customScript( $function($id));

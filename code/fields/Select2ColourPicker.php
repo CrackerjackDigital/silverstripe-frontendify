@@ -3,46 +3,14 @@
 class FrontendifySelect2ColourPicker extends FrontendifySelect2Field {
 	const FrontendifyType = 'Select2ColourPicker';
 
-	private static $colours = [
-		'#FBCEB1' => 'Apricot',
-		'#FFB347' => 'Pastel Orange',
-		'#F0EAD6' => 'Pearl',
-		'#E5E4E2' => 'Platinum',
-		'#FDFD96' => 'Pastel Yellow',
-		'#DFFF00' => 'Chartreuse',
-		'#ACE1AF' => 'Celadon',
-		'#7FFFD4' => 'Aquamarine',
-		'#00FFFF' => 'Cyan',
-		'#CCCCFF' => 'Lavender Blue',
-		'#F49AC2' => 'Pastel Magenta',
-		'#FFD1DC' => 'Pastel Pink',
-		'#FFC1CC' => 'Bubble Gum',
-		'#FFE5B4' => 'Peach',
-	];
+	// map of [ hex value => colour name ], will be set as source if no source is passed in constructor
+	private static $colours = [];
 
-	/**
-	 * Return an array with a closure which will generate a script to select2ify the
-	 * field by passed in id and with array of colours as data.
-	 *
-	 * @return array
-	 */
-	public function custom_javascripts() {
-		static $colours;
-
-		if (is_null($colours)) {
-			$colours = $this->config()->get( 'colours' ) ?: [];
-			asort( $colours );
-			$colours = json_encode( $colours );
-		}
-
-		return [
-			function ( $id ) use ($colours) {
-				return '
-					$(function() {
-						$("#' . $id . '").select2ify(' . $colours . ');
-					})(jQuery);
-				';
-			}
-		];
+	public function __construct( $name, $title = null, $source = null, $value = null, $form = null, $emptyString = null ) {
+		$source = $this->decodeList(
+			$source ?: ( $this->config()->get( 'colours' ) ?: [] )
+		);
+		parent::__construct( $name, $title, $source, $value, $form, $emptyString );
 	}
+
 }

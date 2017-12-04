@@ -73,13 +73,13 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	public function grid_edit( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
 
-		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'Mode' => 'edit', 'ExtraPageClass' => 'frontendify-grid-page' ] );
+		return $this->renderWith( [ $template . '_edit', $template, 'Page' ], [ 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
 	public function grid_view( SS_HTTPRequest $request ) {
 		$template = static::TemplateName ?: static::GridModelClass;
 
-		return $this->renderWith( [ $template . '_view', $template, 'Page' ], [ 'Mode' => 'view', 'ExtraPageClass' => 'frontendify-grid-page' ] );
+		return $this->renderWith( [ $template . '_view', $template, 'Page' ], [ 'ExtraPageClass' => 'frontendify-grid-page' ] );
 	}
 
 	public function grid_save( SS_HTTPRequest $request ) {
@@ -141,15 +141,14 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	 * Return a form suitable for mode and permissions, preferring 'edit' mode if user can edit, otherwise 'view' mode
 	 *
 	 * Mode can be specified in template e.g. 'view' which will always be honoured if can view,
-	 * otherwise it can be specified in request with get or post var '_mode'. When template is rendered it also
-	 * received a variable 'Mode' which can be passed back in to this call.
+	 * otherwise it can be specified in request with get or post var '_mode'.
 	 *
 	 * @param string $mode
 	 *
 	 * @return \Form in 'edit' or 'view' mode
 	 */
 	public function Form( $mode = '' ) {
-		$mode = $mode ?: $this->getRequest()->requestVar( '_mode' );
+		$mode = $this->getRequest()->requestVar( '_mode' ) ?: $mode;
 
 		if ( ( $mode == '' || $mode == 'edit' ) && $this->canEdit() ) {
 			return $this->EditForm();

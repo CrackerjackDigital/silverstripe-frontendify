@@ -6,15 +6,20 @@
 			placeholder = self.attr('placeholder'),
 			seperator = self.data('frontendify-tag-seperator') || ',',
 			tags = self.data('frontendify-tags') || '',
-			options = tags ? {
-				tags: tags,
-				tokenSeparators: [seperator],
-				placeholder: placeholder,
-				allowClear: true,
-				data: data || []
-			} : {
+			defaults = {
 				placeholder: placeholder
-			};
+			},
+			options = $.merge(
+				defaults,
+				tags ? {
+					tags: tags,
+					tokenSeparators: [seperator],
+					placeholder: placeholder,
+					allowClear: true,
+					data: data || []
+				} : {
+				}
+			);
 
 		self.select2(
 			options
@@ -31,6 +36,9 @@
 		onmatch: function () {
 			var self = $(this);
 			self.select2ify();
+		},
+		onchange: function() {
+			console.log('changed');
 		}
 	});
 	$(selector).select2ify();

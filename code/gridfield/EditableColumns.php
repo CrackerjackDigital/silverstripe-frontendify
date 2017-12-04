@@ -1,8 +1,12 @@
 <?php
 
 class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
-	public function __construct( $displayFields = [] ) {
-		$this->displayFields = $displayFields;
+
+	// set in constructor to 'edit' or 'view'
+	protected $mode;
+
+	public function __construct( $fields = []) {
+		$this->displayFields = $fields;
 	}
 
 	public function getHTMLFragments( $grid ) {
@@ -112,41 +116,18 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	}
 
 	public function getColumnContent( $grid, $record, $col ) {
-		if ( ! $record->canEdit() ) {
-			return parent::getColumnContent( $grid, $record, $col );
-		}
+		static $fields;
 
-		$fields = $this->getForm( $grid, $record )->Fields();
+		$fields = $fields ?: $this->getForm( $grid, $record )->Fields();
 
-		if ( ! $this->displayFields ) {
-			// If setDisplayFields() not used, utilize $summary_fields
-			// in a way similar to base class
-			$colRelation = explode( '.', $col );
-			$value       = $grid->getDataFieldValue( $record, $colRelation[0] );
-			$field       = $fields->fieldByName( $colRelation[0] );
-			if ( ! $field || $field->isReadonly() || $field->isDisabled() ) {
-				return parent::getColumnContent( $grid, $record, $col );
-			}
-
-			// Ensure this field is available to edit on the record
-			// (ie. Maybe its readonly due to certain circumstances, or removed and not editable)
-			$cmsFields = $record->getCMSFields();
-			$cmsField  = $cmsFields->dataFieldByName( $colRelation[0] );
-			if ( ! $cmsField || $cmsField->isReadonly() || $cmsField->isDisabled() ) {
-				return parent::getColumnContent( $grid, $record, $col );
-			}
+		$field = $fields->fieldByName( $col );
+		if ($field) {
 			$field = clone $field;
 		} else {
-			$value = $grid->getDataFieldValue( $record, $col );
-
-			$rel   = ( strpos( $col, '.' ) !== false );
-
-			$field = ( $rel ) ? clone $fields->fieldByName( $col ) : new ReadonlyField( $col );
-
-			if ( ! $field ) {
-				throw new Exception( "Could not find the field '$col'" );
-			}
+			$field = new ReadonlyField( $col);
 		}
+
+		$value = $grid->getDataFieldValue( $record, $col );
 
 		if ( array_key_exists( $col, $this->fieldCasting ) ) {
 			$value = $grid->getCastedValue( $value, $this->fieldCasting[ $col ] );
@@ -163,5 +144,4 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 		return $field->forTemplate();
 	}
-
 }

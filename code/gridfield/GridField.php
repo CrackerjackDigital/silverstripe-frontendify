@@ -158,7 +158,7 @@ class FrontendifyGridField extends FrontEndGridField {
 		$grid = static::create(
 			$model,
 			null,
-			$columns,
+			is_null( $columns ) ? static::view_columns( $model ) : $columns,
 			self::ModeRead
 		);
 
@@ -212,6 +212,32 @@ class FrontendifyGridField extends FrontEndGridField {
 				],
 			],
 			$model->provideEditableColumns()
+		);
+
+		return $columns;
+	}
+
+	public static function view_columns($model) {
+		$columns = array_merge(
+			[
+				'ID'       => [
+					'title'    => '',
+					'callback' => function ( $item ) {
+						$field = new HiddenField( 'ID', '' );
+
+						return $field->setAttribute( 'data-id', $item->ID );
+					},
+				],
+				'Messages' => [
+					'title'    => '',
+					'callback' => function ( $item ) {
+						$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
+
+						return $field;
+					},
+				],
+			],
+			$model->provideViewColumns()
 		);
 
 		return $columns;
