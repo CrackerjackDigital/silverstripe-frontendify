@@ -144,4 +144,10 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 		return $field->forTemplate();
 	}
+
+	protected function getFieldName( $name, GridField $grid, DataObjectInterface $record ) {
+		return sprintf(
+			'%s[%s][%s][%s]', $grid->getName(), __CLASS__, $record->ID ?: $record->RowIndex, $name
+		);
+	}
 }

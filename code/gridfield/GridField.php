@@ -42,6 +42,8 @@ class FrontendifyGridField extends FrontEndGridField {
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct( $model, \SS_List $dataList = null, $columns = false, $mode = self::ModeRead, \GridFieldConfig $config = null ) {
+		$this->setModelClass( static::GridModelClass);
+
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
 
 		$modelClass = get_class( $model );
@@ -209,7 +211,7 @@ class FrontendifyGridField extends FrontEndGridField {
 			'ID'       => [
 				'title'    => '',
 				'callback' => function ( $item ) {
-					$field = new HiddenField( 'ID', '' );
+					$field = new HiddenField( 'ID', '', $item->ID ?: uniqid(static::GridModelClass) );
 
 					return $field->setAttribute( 'data-id', $item->ID );
 				},
