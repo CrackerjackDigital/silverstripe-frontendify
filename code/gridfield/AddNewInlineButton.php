@@ -153,6 +153,8 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 
 		$fields = $editable->getFields( $grid, $record );
 
+		$grid->invokeWithExtensions( 'customiseAddNewFields', $fields);
+
 		foreach ( $grid->getColumns() as $column ) {
 			if ( in_array( $column, $handled ) ) {
 				$field = $fields->fieldByName( $column );
@@ -193,6 +195,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 				'IsActions'  => $column == 'Actions',
 			] ) );
 		}
+		$grid->invokeWithExtensions( 'customiseAddNewColumns', $columns);
 
 		return $columns->renderWith( 'FrontendifyGridFieldAddNewInlineRow' );
 	}
