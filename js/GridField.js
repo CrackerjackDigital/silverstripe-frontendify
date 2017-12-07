@@ -81,7 +81,7 @@
 							row = rows.children().eq(result.index - 1);
 
 							row.addClass(result.type).find('td.col-Messages').text(result.message);
-							if (result.id !== stash.id) {
+							if (result.id && (result.id !== stash.id)) {
 								row.find('.col-ID input').val(result.id);
 							}
 						}
