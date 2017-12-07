@@ -230,7 +230,11 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	 */
 	protected function customiseFilters( GridField $grid, $mode ) {
 		$grid->getConfig()->addComponents(
-			new FrontendifyGridFieldDateFilter(['CrewSchedule' => 'StartDate']),
+			new FrontendifyGridFieldDateFilter( [
+				CrewSchedule::class => function ( CrewSchedule $item, $date ) {
+					return $date >= $item->StartDate && $date <= $item->EndDate;
+				}
+			] ),
 			new FrontendifyApplyFilterAction()
 		);
 	}

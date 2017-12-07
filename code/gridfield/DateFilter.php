@@ -2,60 +2,25 @@
 
 class FrontendifyGridFieldDateFilter
 	implements GridField_HTMLProvider, GridFieldFilterInterface {
+	use gridfield_filter;
+
 	const FilterFieldName = 'DateFilter';
 
 	protected $modelFields = [];
 
-	protected $defaultValue;
+	protected $filterDefaultValue;
 
-	protected $operation = 'GreaterThan';
-
-	public function __construct( $modelFields, $defaultValue = null, $operation = 'LessThan:Not' ) {
-		$this->modelFields = $modelFields;
-		$this->defaultValue = $defaultValue;
-		$this->operation   = $operation;
+	public function __construct( $modelFields, $defaultValue = null) {
+		$this->modelFields        = $modelFields;
+		$this->filterDefaultValue = $defaultValue;
 	}
 
-	public function fieldName() {
+	public function filterName() {
 		return static::FilterFieldName;
 	}
 
-	public function defaultValue() {
-		return $this->defaultValue;
-	}
-
-	public function getValue() {
-		$request = Controller::curr()->getRequest();
-		if ($request->isPOST()) {
-			$value = $request->requestVar(static::FilterFieldName);
-		} else {
-			$value = $this->defaultValue();
-		}
-		return $value;
-	}
-
-	/**
-	 * @param \SS_HTTPRequest $request
-	 * @param \DataList       $data
-	 *
-	 * @param array           $defaultFilters to apply if no value in request map of model class to filters
-	 *                                        e.g. [ 'Member' => [ 'IsHappy' => 1 ]]
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	public function applyFilter( $request, &$data, $defaultFilters = [] ) {
-		$value = $this->getValue();
-		$modelClass = $data->dataClass();
-
-		if ( ! empty( $value ) ) {
-			if ( isset( $this->modelFields[ $modelClass ] ) ) {
-				$data = $data->filter( [
-					$this->modelFields[ $modelClass ] => $value,
-				] );
-			}
-		} elseif ( isset( $defaultFilters[ $modelClass ] )) {
-			$data = $data->filter( $defaultFilters[$modelClass] );
-		}
+	public function filterDefaultValue() {
+		return $this->filterDefaultValue;
 	}
 
 	/**
@@ -78,9 +43,9 @@ class FrontendifyGridFieldDateFilter
 	 * @return array
 	 */
 	public function getHTMLFragments( $gridField ) {
-		$value = $this->getValue();
+		$value = $this->filterValue();
 
-		$field = ( new FrontendifyDateField( $this->fieldName(), '', $value ) )
+		$field = ( new FrontendifyDateField( $this->filterName(), '', $value ) )
 			->addExtraClass( 'frontendify-filter' )
 			->addExtraClass( 'frontendify-datefilter-date' );
 
