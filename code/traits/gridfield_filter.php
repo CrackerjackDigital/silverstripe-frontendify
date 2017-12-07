@@ -12,7 +12,7 @@ trait gridfield_filter {
 	public function filterValue() {
 		$request = Controller::curr()->getRequest();
 
-		$value   = $request->requestVar(
+		$value = $request->requestVar(
 			$this->filterName()
 		) ?: $this->filterDefaultValue();
 
@@ -29,10 +29,8 @@ trait gridfield_filter {
 	 * @throws \InvalidArgumentException
 	 * @throws \LogicException
 	 */
-	public function applyFilter( $request, &$data, $defaultFilters = [] ) {
-		$value      = $this->filterValue();
-
-		$modelClass = $data->dataClass();
+	public function applyFilter( $request, $modelClass, &$data, $defaultFilters = [] ) {
+		$value = $this->filterValue();
 
 		if ( isset( $this->modelFields[ $modelClass ] ) ) {
 			$filter = $this->modelFields[ $modelClass ];
@@ -40,7 +38,7 @@ trait gridfield_filter {
 			$filter = $defaultFilters[ $modelClass ];
 		}
 
-		if (!is_null($value) && isset($filter)) {
+		if ( ! is_null( $value ) && isset( $filter ) ) {
 			if ( is_callable( $filter ) ) {
 				$data = $data->filterByCallback( function ( $model ) use ( $filter, $value ) {
 					return $filter( $model, $value );

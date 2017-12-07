@@ -256,7 +256,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$components = $grid->getComponents();
 		foreach ( $components as $component ) {
 			if ( $component instanceof GridFieldFilterInterface ) {
-				$component->applyFilter( $request, $data, $extraFilters );
+				$component->applyFilter( $request, static::GridModelClass, $data, $extraFilters );
 			}
 		}
 

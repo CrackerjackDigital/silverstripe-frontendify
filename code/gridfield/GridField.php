@@ -44,7 +44,7 @@ class FrontendifyGridField extends FrontEndGridField {
 	public function __construct( $model, \SS_List $dataList = null, $columns = false, $mode = self::ModeRead, \GridFieldConfig $config = null ) {
 		$this->setModelClass( static::GridModelClass);
 
-		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 10 );
+		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 25 );
 
 		$modelClass = get_class( $model );
 
@@ -63,16 +63,13 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$config = $this->getConfig();
 
-		$config
-			->removeComponentsByType( GridFieldPageCount::class )
-			->removeComponentsByType( GridFieldPaginator::class );
+//		$config
+//			->removeComponentsByType( GridFieldPageCount::class )
+//			->removeComponentsByType( GridFieldPaginator::class );
 
 		if ( $mode ) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
-			       ->removeComponentsByType( GridFieldPaginator::class )
-			       ->removeComponentsByType( GridFieldPageCount::class );
-
-			$config->removeComponentsByType( GridFieldAddNewButton::class )
+			       ->removeComponentsByType( GridFieldAddNewButton::class )
 			       ->removeComponentsByType( GridFieldEditButton::class )
 			       ->removeComponentsByType( GridFieldDeleteAction::class );
 
