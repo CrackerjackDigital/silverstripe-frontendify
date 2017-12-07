@@ -251,6 +251,63 @@
 		});
 
 
+		$('.frontendify-gridfield .action.frontendify-publishbutton').entwine({
+			onclick: function (e) {
+				var filterState = 'show'; //filterstate should equal current state.
+
+				e.preventDefault();
+				e.stopPropagation();
+
+				if (this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))) {
+					filterState = 'hidden';
+				}
+				this.getFrontendifyGridField().saveall({
+					data: [{
+						name: this.attr('name'),
+						value: this.val(),
+						filter: filterState
+					}]
+				});
+
+				return false;
+			},
+			/**
+			 * Get the url this action should submit to
+			 */
+			actionurl: function () {
+				var btn = this.closest(':button'),
+					grid = this.getFrontendifyGridField(),
+					form = this.closest('form'),
+					data = form.find(':input.gridstate').serialize(),
+					csrf = form.find('input[name="SecurityID"]').val();
+
+				// Add current button
+				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+				// Add csrf
+				if (csrf) {
+					data += "&SecurityID=" + encodeURIComponent(csrf);
+				}
+
+				// Include any GET parameters from the current URL, as the view
+				// state might depend on it. For example, a list pre-filtered
+				// through external search criteria might be passed to GridField.
+				if (window.location.search) {
+					data = window.location.search.replace(/^\?/, '') + '&' + data;
+				}
+
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
+				return $.path.makeUrlAbsolute(
+					grid.data('url') + connector + data,
+					$('base').attr('href')
+				);
+			}
+
+		});
+
+
 		/**
 		 * GridFieldEditableColumns disable row clicks
 		 */

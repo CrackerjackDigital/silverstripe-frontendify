@@ -91,17 +91,27 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 					$extra = array_intersect_key( $form->getData(), (array) $list->getExtraFields() );
 				}
 				$item->write();
+
 				if ( $publish ) {
 					$item->publish( 'Stage', 'Live' );
+
+					$results[ $line ] = [
+						'id'      => $item->ID,
+						'index'   => $line,
+						'type'    => 'success',
+						'message' => 'published'
+					];
+				} else {
+					$results[ $line ] = [
+						'id'      => $item->ID,
+						'index'   => $line,
+						'type'    => 'success',
+						'message' => $id ? 'updated' : 'scheduled',
+					];
+
 				}
 				$list->add( $item, $extra );
 
-				$results[ $line ] = [
-					'id'      => $item->ID,
-					'index'   => $line,
-					'type'    => 'success',
-					'message' => $id ? 'updated' : 'scheduled',
-				];
 
 			} catch ( ValidationException $e ) {
 				if ( $id ) {
@@ -112,11 +122,12 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 						'message' => join( ',', $e->getResult()->messageList() ),
 					];
 				} else {
+
 					$results[ $line ] = [
 						'id'      => $item->ID,
 						'index'   => $line,
-						'type'    => 'success',
-						'message' => 'not scheduled',
+						'type'    => 'warning',
+						'message' => $publish ? 'not published' : 'not scheduled',
 					];
 
 				}
