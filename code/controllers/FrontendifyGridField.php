@@ -47,7 +47,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return Permission::check( 'CAN_EDIT_' . static::GridModelClass );
 	}
 
-	abstract protected function gridFieldData();
+	abstract protected function gridFieldData( GridField $grid );
 
 	/**
 	 * If no action is provided then default to either 'edit' mode if can edit or 'View' mode if can view
@@ -170,7 +170,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
 		$grid->setList(
-			$this->applyFilters( $grid, $this->gridFieldData() )
+			$this->applyFilters( $grid, $this->gridFieldData($grid) )
 		);
 
 		$form = new Form(
@@ -197,7 +197,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeView );
 
 		$grid->setList(
-			$this->applyFilters( $grid, $this->gridFieldData() )
+			$this->applyFilters( $grid, $this->gridFieldData($grid ) )
 		);
 
 		$form = new Form(
