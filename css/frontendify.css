@@ -280,7 +280,7 @@ input[type="date"].frontendify-datefield { line-height: 1em; padding: 0 1em; min
 /* line 70, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .left > * { margin-right: 8px; float: left; }
 /* line 75, ../scss/_GridField.scss */
-.frontendify .ss-gridfield { overflow-x: hidden; }
+.frontendify .ss-gridfield { overflow-x: auto; }
 /* line 79, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
 /* line 84, ../scss/_GridField.scss */

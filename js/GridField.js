@@ -72,6 +72,8 @@
 							result,
 							index;
 
+						debugger;
+
 						for (index in results) {
 							result = results[index];
 							stash = _.find(stashed, {index: result.index});
@@ -79,6 +81,9 @@
 							row = rows.children().eq(result.index - 1);
 
 							row.addClass(result.type).find('td.col-Messages').text(result.message);
+							if (result.id !== stash.id) {
+								row.find('.col-ID input').val(result.id);
+							}
 						}
 
 						if (focusedElName) {

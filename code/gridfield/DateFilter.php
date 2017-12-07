@@ -21,7 +21,7 @@ class FrontendifyGridFieldDateFilter
 	}
 
 	public function defaultValue() {
-		return $this->defaultValue ?: date( 'Y-m-d' );
+		return $this->defaultValue;
 	}
 
 	public function getValue() {

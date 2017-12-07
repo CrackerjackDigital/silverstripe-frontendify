@@ -5,7 +5,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	// set in constructor to 'edit' or 'view'
 	protected $mode;
 
-	public function __construct( $fields = []) {
+	public function __construct( $fields = [] ) {
 		$this->displayFields = $fields;
 	}
 
@@ -23,15 +23,15 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	 * @param array                $results
 	 */
 	public function handlePublish( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
-		$publish = $record->hasExtension('Versioned')
-			&& $record->canPublish();
+		$publish = $record->hasExtension( 'Versioned' )
+		           && $record->canPublish();
 
 		return $this->process( $grid, $record, $publish, $line, $results );
 
 	}
 
 	public function handleSave( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
-		return $this->process( $grid, $record, false, $line, $results);
+		return $this->process( $grid, $record, false, $line, $results );
 
 	}
 
@@ -41,7 +41,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 		$value = $grid->Value();
 
-		$dataKey = GridFieldEditableColumns::class;
+		$dataKey = static::class;
 
 		if ( ! isset( $value[ $dataKey ] ) || ! is_array( $value[ $dataKey ] ) ) {
 			return;
@@ -53,39 +53,46 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		/** @var GridFieldOrderableRows $sortable */
 		$sortable = $grid->getConfig()->getComponentByType( 'GridFieldOrderableRows' );
 
-		foreach ( $rows as $id => $row ) {
+		foreach ( $rows as $rowID => $row ) {
 			$line ++;
 
-			if ( ! is_numeric( $id ) || ! is_array( $row ) ) {
+			if ( ! is_numeric( $rowID ) || ! is_array( $row ) ) {
 				continue;
 			}
+			$id = $row['ID'];
 
-			$item = $list->byID( $id );
+			if ( ! $id ) {
+				// this is a new model, create it
+				$item = new $modelClass( $row );
+			} else {
+				$item = $list->byID( $id );
+			}
 
 			if ( ! $item || ! $item->canEdit() ) {
 				continue;
 			}
 
-			$form = $this->getForm( $grid, $item );
-
-			$extra = array();
-
-			$form->loadDataFrom( $row, Form::MERGE_CLEAR_MISSING );
-			$form->saveInto( $item );
-
-			// Check if we are also sorting these records
-			if ( $sortable ) {
-				$sortField = $sortable->getSortField();
-				$item->setField( $sortField, $row[ $sortField ] );
-			}
-
-			if ( $list instanceof ManyManyList ) {
-				$extra = array_intersect_key( $form->getData(), (array) $list->getExtraFields() );
-			}
 			try {
+
+				$form = $this->getForm( $grid, $item );
+
+				$extra = [];
+
+				$form->loadDataFrom( $row, Form::MERGE_CLEAR_MISSING );
+				$form->saveInto( $item );
+
+				// Check if we are also sorting these records
+				if ( $sortable ) {
+					$sortField = $sortable->getSortField();
+					$item->setField( $sortField, $row[ $sortField ] );
+				}
+
+				if ( $list instanceof ManyManyList ) {
+					$extra = array_intersect_key( $form->getData(), (array) $list->getExtraFields() );
+				}
 				$item->write();
-				if ($publish) {
-					$item->publish('Stage', 'Live');
+				if ( $publish ) {
+					$item->publish( 'Stage', 'Live' );
 				}
 				$list->add( $item, $extra );
 
@@ -93,16 +100,26 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 					'id'      => $item->ID,
 					'index'   => $line,
 					'type'    => 'success',
-					'message' => 'updated',
+					'message' => $id ? 'updated' : 'scheduled',
 				];
 
 			} catch ( ValidationException $e ) {
-				$results[ $line ] = [
-					'id'      => $item->ID,
-					'index'   => $line,
-					'type'    => 'error',
-					'message' => join( ',', $e->getResult()->messageList() ),
-				];
+				if ( $id ) {
+					$results[ $line ] = [
+						'id'      => $item->ID,
+						'index'   => $line,
+						'type'    => 'error',
+						'message' => join( ',', $e->getResult()->messageList() ),
+					];
+				} else {
+					$results[ $line ] = [
+						'id'      => $item->ID,
+						'index'   => $line,
+						'type'    => 'success',
+						'message' => 'not scheduled',
+					];
+
+				}
 
 			} catch ( Exception $e ) {
 				$results[ $line ] = [
@@ -121,10 +138,10 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		$fields = $fields ?: $this->getForm( $grid, $record )->Fields();
 
 		$field = $fields->fieldByName( $col );
-		if ($field) {
+		if ( $field ) {
 			$field = clone $field;
 		} else {
-			$field = new ReadonlyField( $col);
+			$field = new ReadonlyField( $col );
 		}
 
 		$value = $grid->getDataFieldValue( $record, $col );
