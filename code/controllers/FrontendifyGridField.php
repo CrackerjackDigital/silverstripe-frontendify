@@ -25,11 +25,6 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		'grid_save'    => true,
 		'grid_refresh' => true,
 	];
-	/**
-	 * if true then gridfielddata is already filtered, no need to apply filters automatically
-	 * @var bool
-	 */
-	private static $does_own_filtering = false;
 
 	/**
 	 * Default filters, if value is null then postVar for the field name will be used
@@ -175,8 +170,8 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
 		$data = $this->gridFieldData( $grid);
-		if (!$this->config()->get('does_own_filtering')) {
-			$data = $this->applyFilters( $grid, $data);
+		if (!$grid->config()->get('does_own_filtering')) {
+			$data = $this->applyFilters( $grid, $data );
 		}
 
 		$grid->setList($data);

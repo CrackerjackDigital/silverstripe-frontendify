@@ -8,6 +8,8 @@ trait gridfield_filter {
 
 	abstract public function filterAllValue();
 
+	abstract public function filterIgnoreValues();
+
 	/**
 	 * @return mixed should be null if no value to filter on
 	 */
@@ -34,7 +36,7 @@ trait gridfield_filter {
 	public function applyFilter( $request, $modelClass, &$data, $defaultFilters = [] ) {
 		$value = $this->filterValue();
 
-		if (! is_null( $value ) && $value != $this->filterAllValue()) {
+		if (! is_null( $value ) && $value != $this->filterAllValue() && !in_array($value, $this->filterIgnoreValues())) {
 
 			if ( isset( $this->modelFields[ $modelClass ] ) ) {
 				$filter = $this->modelFields[ $modelClass ];

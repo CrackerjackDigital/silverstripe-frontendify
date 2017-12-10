@@ -30,6 +30,8 @@ class FrontendifyGridField extends FrontEndGridField {
 		],
 	];
 
+	private static $does_own_filtering = false;
+
 	/**
 	 * FrontendifyGridField constructor.
 	 *
