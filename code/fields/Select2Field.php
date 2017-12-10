@@ -40,15 +40,14 @@ class FrontendifySelect2Field extends DropdownField {
 	}
 
 	public function setSource( $source ) {
-		parent::setSource( $this->decodeList( $source ) );
+		parent::setSource( $this->decode_list( $source ) );
 
 		return $this;
 	}
 
 
-	protected function decodeValues( $list ) {
-		$decoded = $this->decodeList( $list );
-
+	protected static function decode_values( $list ) {
+		$decoded = static::decode_list( $list );
 		return is_array( $decoded ) ? array_keys( $decoded ) : $decoded;
 	}
 

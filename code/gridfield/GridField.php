@@ -42,7 +42,7 @@ class FrontendifyGridField extends FrontEndGridField {
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct( $model, \SS_List $dataList = null, $columns = false, $mode = self::ModeRead, \GridFieldConfig $config = null ) {
-		$this->setModelClass( static::GridModelClass);
+		$this->setModelClass( static::GridModelClass );
 
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 25 );
 
@@ -63,23 +63,25 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$config = $this->getConfig();
 
-//		$config
-//			->removeComponentsByType( GridFieldPageCount::class )
-//			->removeComponentsByType( GridFieldPaginator::class );
+		$config
+			->removeComponentsByType( GridFieldPageCount::class )
+			->removeComponentsByType( GridFieldPaginator::class );
 
 		if ( $mode ) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
 			       ->removeComponentsByType( GridFieldAddNewButton::class )
 			       ->removeComponentsByType( GridFieldEditButton::class )
-			       ->removeComponentsByType( GridFieldDeleteAction::class );
+			       ->removeComponentsByType( GridFieldDeleteAction::class )
+			       ->removeComponentsByType( GridFieldButtonRow::class );
+
+			$config->addComponent( new FrontendifyGridFieldFilterRow() );
+//			$config->addComponent( new FrontendifyGridFieldCentreButtons() );
+			$config->addComponent( new GridFieldButtonRow() );
 
 			if ( ( $mode & self::ModeUpdate ) && $canEdit ) {
 				$config->removeComponentsByType( GridFieldDataColumns::class )
 				       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) );
 			}
-
-			$config->addComponent( new FrontendifyGridFieldFilterRow() );
-			$config->addComponent( new FrontendifyGridFieldCentreButtons() );
 
 			// add new needs to come after editable columns so saving is kept in line order
 			if ( ( $mode & self::ModeCreate ) && $canCreate ) {
@@ -116,11 +118,11 @@ class FrontendifyGridField extends FrontEndGridField {
 		$this->setTitle( '' );
 	}
 
-	public function applyFilters($request, &$data, $defaultFilters = []) {
+	public function applyFilters( $request, &$data, $defaultFilters = [] ) {
 		$components = $this->getComponents();
-		foreach ($components as $component) {
-			if ($component instanceof GridFieldFilterInterface) {
-				$component->applyFilter( $request, $data, $defaultFilters);
+		foreach ( $components as $component ) {
+			if ( $component instanceof GridFieldFilterInterface ) {
+				$component->applyFilter( $request, $data, $defaultFilters );
 			}
 		}
 	}
@@ -207,7 +209,7 @@ class FrontendifyGridField extends FrontEndGridField {
 			'ID'       => [
 				'title'    => '',
 				'callback' => function ( $item ) {
-					$field = new HiddenField( 'ID', '', $item->ID ?: uniqid(static::GridModelClass) );
+					$field = new HiddenField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
 
 					return $field->setAttribute( 'data-id', $item->ID );
 				},
@@ -223,7 +225,7 @@ class FrontendifyGridField extends FrontEndGridField {
 		];
 	}
 
-	public function viewableColumns( ) {
+	public function viewableColumns() {
 		return [
 			'ID'       => [
 				'title'    => '',

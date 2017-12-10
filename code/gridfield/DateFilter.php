@@ -23,6 +23,10 @@ class FrontendifyGridFieldDateFilter
 		return $this->filterDefaultValue;
 	}
 
+	public function filterAllValue() {
+		return null;
+	}
+
 	/**
 	 * Returns a map where the keys are fragment names and the values are
 	 * pieces of HTML to add to these fragments.
@@ -47,7 +51,8 @@ class FrontendifyGridFieldDateFilter
 
 		$field = ( new FrontendifyDateField( $this->filterName(), '', $value ) )
 			->addExtraClass( 'frontendify-filter' )
-			->addExtraClass( 'frontendify-datefilter-date' );
+			->addExtraClass( 'frontendify-datefilter-date' )
+			->setAttribute('placeholder', 'on date');
 
 		return [
 			self::TargetFragment => $field->SmallFieldHolder(),

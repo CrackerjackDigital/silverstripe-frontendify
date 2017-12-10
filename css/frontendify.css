@@ -252,328 +252,322 @@ input[type="date"].frontendify-datefield { line-height: 1em; padding: 0 1em; min
 /* line 9, ../scss/_GridField.scss */
 .frontendify .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 0; }
 /* line 13, ../scss/_GridField.scss */
-.frontendify .ss-gridfield > div.addNewGridFieldButton .action { margin-bottom: 12px; }
-/* line 17, ../scss/_GridField.scss */
-.frontendify .ss-gridfield > div.ss-gridfield-buttonrow-before { margin-bottom: 0; }
-/* line 21, ../scss/_GridField.scss */
-.frontendify .ss-gridfield > div.ss-gridfield-buttonrow-before .action, .frontendify .ss-gridfield > div.ss-gridfield-buttonrow-before input { margin-bottom: 12px; }
-/* line 25, ../scss/_GridField.scss */
-.frontendify .ss-gridfield > div.ss-gridfield-buttonrow-after { margin-bottom: 0; }
-/* line 29, ../scss/_GridField.scss */
-.frontendify .ss-gridfield > div.ss-gridfield-buttonrow-after .action, .frontendify .ss-gridfield > div.ss-gridfield-buttonrow-after input { margin-top: 12px; }
-/* line 33, ../scss/_GridField.scss */
+.frontendify .ss-gridfield > div.ss-gridfield-buttonrow { margin-bottom: 0; overflow: hidden; padding: 0.25em 1em; line-height: 2em; border: 1px solid #ccc; border-radius: 0.5em; display: inline-block; float: right; }
+/* line 23, ../scss/_GridField.scss */
+.frontendify .ss-gridfield > div.ss-gridfield-buttonrow.frontendify-filter-row { float: left; }
+/* line 27, ../scss/_GridField.scss */
 .frontendify .ss-gridfield[data-selectable] tr.ui-selected, .frontendify .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
-/* line 37, ../scss/_GridField.scss */
+/* line 31, ../scss/_GridField.scss */
 .frontendify .ss-gridfield[data-selectable] td { cursor: pointer; }
-/* line 41, ../scss/_GridField.scss */
+/* line 35, ../scss/_GridField.scss */
 .frontendify .ss-gridfield span button.action_gridfield_relationfind { display: none; }
-/* line 45, ../scss/_GridField.scss */
+/* line 39, ../scss/_GridField.scss */
 .frontendify .ss-gridfield p button.action_export span.btn-icon-download-csv { height: 17px; }
-/* line 49, ../scss/_GridField.scss */
+/* line 43, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .right { float: right; }
-/* line 53, ../scss/_GridField.scss */
+/* line 47, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .right > * { float: right; margin-left: 8px; }
-/* line 58, ../scss/_GridField.scss */
+/* line 52, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 3px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }
-/* line 66, ../scss/_GridField.scss */
+/* line 60, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .left { float: left; }
-/* line 70, ../scss/_GridField.scss */
+/* line 64, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .left > * { margin-right: 8px; float: left; }
-/* line 75, ../scss/_GridField.scss */
+/* line 69, ../scss/_GridField.scss */
 .frontendify .ss-gridfield { overflow-x: auto; }
-/* line 79, ../scss/_GridField.scss */
+/* line 73, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
-/* line 84, ../scss/_GridField.scss */
+/* line 78, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .grid-levelup a.list-parent-link { background: transparent url(../../framework/images/gridfield-level-up.png) no-repeat 0 0; display: block; }
-/* line 89, ../scss/_GridField.scss */
+/* line 83, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .add-existing-autocompleter span { float: left; display: inline-block; vertical-align: top; *vertical-align: auto; *zoom: 1; *display: inline; }
-/* line 98, ../scss/_GridField.scss */
+/* line 92, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .add-existing-autocompleter input.relation-search { width: 270px; height: 32px; margin-bottom: 12px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
-/* line 106, ../scss/_GridField.scss */
+/* line 100, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .add-existing-autocompleter button.action_gridfield_relationadd { height: 32px; margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: none; }
-/* line 114, ../scss/_GridField.scss */
+/* line 108, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .grid-csv-button, .frontendify .ss-gridfield .grid-print-button { margin-bottom: 0; font-size: 12px; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; }
-/* line 125, ../scss/_GridField.scss */
+/* line 119, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table { display: table; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; padding: 0; border-collapse: separate; border-bottom: 0 none; width: 100%; }
-/* line 135, ../scss/_GridField.scss */
+/* line 129, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table thead { color: #323e46; background: transparent; }
-/* line 139, ../scss/_GridField.scss */
+/* line 133, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
-/* line 143, ../scss/_GridField.scss */
+/* line 137, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table thead tr.filter-header .fieldgroup .fieldgroup-field { padding: 0; }
-/* line 147, ../scss/_GridField.scss */
+/* line 141, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table thead tr:first-child th:first-child { -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px; }
-/* line 153, ../scss/_GridField.scss */
+/* line 147, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table thead tr:first-child th:last-child { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
-/* line 161, ../scss/_GridField.scss */
+/* line 154, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody { background: #FFF; }
-/* line 164, ../scss/_GridField.scss */
+/* line 157, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody tr { cursor: pointer; }
-/* line 168, ../scss/_GridField.scss */
+/* line 161, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td { width: auto; max-width: 500px; word-wrap: break-word; }
-/* line 174, ../scss/_GridField.scss */
+/* line 167, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-buttons { width: 1px; padding: 0 8px; text-align: right; white-space: nowrap; vertical-align: middle; }
-/* line 182, ../scss/_GridField.scss */
+/* line 175, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
-/* line 189, ../scss/_GridField.scss */
+/* line 182, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../../framework/images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
-/* line 194, ../scss/_GridField.scss */
+/* line 187, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #0071c4; }
-/* line 198, ../scss/_GridField.scss */
+/* line 191, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 10px; margin-right: 6px; margin-top: -1px; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; }
-/* line 213, ../scss/_GridField.scss */
+/* line 206, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-/* line 219, ../scss/_GridField.scss */
+/* line 212, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-/* line 225, ../scss/_GridField.scss */
+/* line 218, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-deletedonlive { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
-/* line 231, ../scss/_GridField.scss */
+/* line 224, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
-/* line 237, ../scss/_GridField.scss */
+/* line 230, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
-/* line 243, ../scss/_GridField.scss */
+/* line 236, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 1px 0; width: auto; text-shadow: none; }
-/* line 252, ../scss/_GridField.scss */
+/* line 245, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td button.ui-state-hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-/* line 259, ../scss/_GridField.scss */
+/* line 252, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-/* line 266, ../scss/_GridField.scss */
+/* line 259, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td button.gridfield-button-delete { width: 20px; margin: 0; }
-/* line 271, ../scss/_GridField.scss */
+/* line 264, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td button.gridfield-button-delete span.btn-icon-decline { left: 2px; }
-/* line 275, ../scss/_GridField.scss */
+/* line 268, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td a.view-link, .frontendify table.ss-gridfield-table tbody td a.edit-link { display: inline-block; width: 20px; height: 20px; border: 0; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
-/* line 285, ../scss/_GridField.scss */
+/* line 278, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td a.view-link { background: url(../../framework/admin/images/btn-icon/magnifier.png) no-repeat 0 1px; }
-/* line 289, ../scss/_GridField.scss */
+/* line 282, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tbody td a.edit-link { background: url(../../framework/admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px; }
-/* line 294, ../scss/_GridField.scss */
+/* line 287, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tfoot { color: #323e46; }
-/* line 298, ../scss/_GridField.scss */
+/* line 291, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tfoot tr td { background: #b0bec7; padding: .7em; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
-/* line 304, ../scss/_GridField.scss */
+/* line 297, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.title th { position: relative; background: #98aab6; border-bottom: 1px solid #899eab; padding: 5px; min-height: 40px; background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk4YWFiNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(#b0bec7, #98aab6); background-image: -webkit-linear-gradient(#b0bec7, #98aab6); background-image: linear-gradient(#b0bec7, #98aab6); text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.4); }
-/* line 319, ../scss/_GridField.scss */
+/* line 312, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.title th h2 { padding: 0px; font-size: 16.8px; color: #fff; margin: 1px 8px 0; display: inline-block; float: left; }
-/* line 328, ../scss/_GridField.scss */
+/* line 321, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.sortable-header { background: #dbe3e8; }
-/* line 332, ../scss/_GridField.scss */
+/* line 325, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.sortable-header th { padding: 0; font-weight: normal; }
-/* line 337, ../scss/_GridField.scss */
+/* line 330, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.sortable-header th .ss-ui-button { font-weight: normal; }
-/* line 341, ../scss/_GridField.scss */
+/* line 334, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr:hover { background: #FFFAD6; }
-/* line 345, ../scss/_GridField.scss */
+/* line 338, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr:first-child { background: transparent; }
-/* line 349, ../scss/_GridField.scss */
+/* line 342, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr:first-child:hover { background: #FFFAD6; }
-/* line 353, ../scss/_GridField.scss */
+/* line 346, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.ss-gridfield-even { background: #F0F4F7; }
-/* line 357, ../scss/_GridField.scss */
+/* line 350, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
-/* line 361, ../scss/_GridField.scss */
+/* line 354, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.ss-gridfield-even:hover { background: #FFFAD6; }
-/* line 365, ../scss/_GridField.scss */
+/* line 358, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.even { background: #F0F4F7; }
-/* line 369, ../scss/_GridField.scss */
+/* line 362, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.even:hover { background: #FFFAD6; }
-/* line 373, ../scss/_GridField.scss */
+/* line 366, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 5px; border-right: 1px solid rgba(0, 0, 0, 0.1); text-align: left; }
-/* line 382, ../scss/_GridField.scss */
+/* line 375, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th div.fieldgroup, .frontendify table.ss-gridfield-table tr th div.fieldgroup-field { width: 100%; position: relative; }
-/* line 387, ../scss/_GridField.scss */
+/* line 380, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }
-/* line 392, ../scss/_GridField.scss */
+/* line 385, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 49px; box-shadow: none; border: none; }
-/* line 398, ../scss/_GridField.scss */
+/* line 391, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th div.fieldgroup.filter-buttons div { width: auto; display: inline; }
-/* line 403, ../scss/_GridField.scss */
+/* line 396, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid #a4b4bf; border-left: 1px solid #a4b4bf; color: #fff; background: #98aab6; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
-/* line 412, ../scss/_GridField.scss */
+/* line 405, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.main span { text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); padding-left: 8px; padding-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; margin-right: 8px; }
-/* line 423, ../scss/_GridField.scss */
+/* line 416, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.main.col-listChildrenLink { border-right: none; }
-/* line 427, ../scss/_GridField.scss */
+/* line 420, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.extra, .frontendify table.ss-gridfield-table tr th.action { padding: 0; cursor: default; }
-/* line 432, ../scss/_GridField.scss */
+/* line 425, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.extra { position: relative; background: #637276; background: rgba(0, 0, 0, 0.7); padding: 5px; border-top: rgba(0, 0, 0, 0.2); }
-/* line 440, ../scss/_GridField.scss */
+/* line 433, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.extra input { height: 28px; }
-/* line 444, ../scss/_GridField.scss */
+/* line 437, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.extra button.ss-ui-button { padding: .3em; line-height: 1; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; position: relative; border-bottom-width: 0; -moz-border-radius: 2px / 2px; -webkit-border-radius: 2px 2px; border-radius: 2px / 2px; }
-/* line 457, ../scss/_GridField.scss */
+/* line 450, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.extra select { margin: 0; }
-/* line 461, ../scss/_GridField.scss */
+/* line 454, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.first { -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px; }
-/* line 467, ../scss/_GridField.scss */
+/* line 460, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th.last { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
-/* line 473, ../scss/_GridField.scss */
+/* line 466, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.action_gridfield_relationadd:hover { color: #444 !important; /* Not sure why IE think it needs this */ }
-/* line 477, ../scss/_GridField.scss */
+/* line 470, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button:hover { color: #ccc !important; /* Not sure why IE think it needs this */ }
-/* line 481, ../scss/_GridField.scss */
+/* line 474, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { color: #fff !important; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-/* line 488, ../scss/_GridField.scss */
+/* line 481, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-gridfield-sort { background: transparent url(../../framework/images/arrows.png) no-repeat right 6px; border: none; width: 100%; text-align: left; padding: 2px 8px 2px 0; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); color: #fff; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; }
-/* line 501, ../scss/_GridField.scss */
+/* line 494, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { background-position: right -34px; }
-/* line 505, ../scss/_GridField.scss */
+/* line 498, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-desc { background-position: right -72px; }
-/* line 509, ../scss/_GridField.scss */
+/* line 502, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-asc { background-position: right -116px; }
-/* line 513, ../scss/_GridField.scss */
+/* line 506, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter { background-color: #55a4d2; border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI4NzA5OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -moz-linear-gradient(#338dc1, #287099); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-linear-gradient(#338dc1, #287099); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, linear-gradient(#338dc1, #287099); width: 26px; border-top: 1px solid #4199cd; }
-/* line 529, ../scss/_GridField.scss */
+/* line 522, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.hover-alike:active, .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter:active, .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.hover-alike, .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter:hover { background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzU1YTRkMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #55a4d2), color-stop(100%, #338dc1)); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -moz-linear-gradient(#55a4d2, #338dc1); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-linear-gradient(#55a4d2, #338dc1); background: url(../../framework/images/icons/filter-icons.png) no-repeat -15px 4px, linear-gradient(#55a4d2, #338dc1); }
-/* line 537, ../scss/_GridField.scss */
+/* line 530, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger { margin-left: 12px; border: none; background: url(../../framework/images/icons/filter-icons.png) no-repeat -17px 6px; padding-right: 46px; margin: 0 6px; }
-/* line 545, ../scss/_GridField.scss */
+/* line 538, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger span { opacity: 0.4; position: absolute; width: 10px; left: 30px; top: 40%; background: url(../../framework/admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px; }
-/* line 554, ../scss/_GridField.scss */
+/* line 547, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger:hover { background: url(../../framework/images/icons/filter-icons.png) no-repeat -17px -38px; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-/* line 561, ../scss/_GridField.scss */
+/* line 554, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger:hover span { opacity: 0.9; }
-/* line 565, ../scss/_GridField.scss */
+/* line 558, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close { background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px; border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; width: 25px; opacity: 0.8; margin-right: -5px; }
-/* line 577, ../scss/_GridField.scss */
+/* line 570, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close.hover-alike:active, .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close:active, .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close.hover-alike, .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-close:hover { opacity: 1; background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMC4xIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g"); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.1)), color-stop(100%, rgba(255, 255, 255, 0.1))); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, -moz-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, -webkit-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)); background: url(../../framework/images/icons/filter-icons.png) no-repeat 8px -17px, linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)); }
-/* line 586, ../scss/_GridField.scss */
+/* line 579, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset { border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; position: absolute; top: -21px; right: -1px; width: 20px; height: 20px; display: none; }
-/* line 600, ../scss/_GridField.scss */
+/* line 593, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset.filtered { display: block; background: url(../../framework/admin/images/btn-icon/cross.png) no-repeat 0px 0px; opacity: 0.5; }
-/* line 606, ../scss/_GridField.scss */
+/* line 599, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset.filtered:hover { opacity: 0.8; }
-/* line 610, ../scss/_GridField.scss */
+/* line 603, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-reset.filtered:active { opacity: 1; }
-/* line 614, ../scss/_GridField.scss */
+/* line 607, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort { height: 25px; padding: 4px; border: 1px solid #313232; }
-/* line 620, ../scss/_GridField.scss */
+/* line 613, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort::-webkit-input-placeholder { font-style: italic; color: #ced5d7; }
-/* line 625, ../scss/_GridField.scss */
+/* line 618, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort:-moz-placeholder { font-style: italic; color: #ced5d7; }
-/* line 630, ../scss/_GridField.scss */
+/* line 623, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort:-ms-input-placeholder { font-style: italic; color: #ced5d7; }
-/* line 635, ../scss/_GridField.scss */
+/* line 628, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort:placeholder { font-style: italic; color: #ced5d7; }
-/* line 640, ../scss/_GridField.scss */
+/* line 633, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-/* line 646, ../scss/_GridField.scss */
+/* line 639, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th span.non-sortable { display: block; padding: 6px 8px; }
-/* line 651, ../scss/_GridField.scss */
+/* line 644, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td { border-right: 1px solid rgba(0, 0, 0, 0.1); padding: 8px 8px; color: #666; }
-/* line 657, ../scss/_GridField.scss */
+/* line 650, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all { -moz-border-radius-bottomleft: 5px; -webkit-border-bottom-left-radius: 5px; border-bottom-left-radius: 5px; -moz-border-radius-bottomright: 5px; -webkit-border-bottom-right-radius: 5px; border-bottom-right-radius: 5px; background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzk4YWFiNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=="); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(#b0bec7, #98aab6); background-image: -webkit-linear-gradient(#b0bec7, #98aab6); background-image: linear-gradient(#b0bec7, #98aab6); padding: 4px 12px; }
-/* line 673, ../scss/_GridField.scss */
+/* line 666, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-footer-message { text-align: center; padding-top: 6px; color: white; }
-/* line 679, ../scss/_GridField.scss */
+/* line 672, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination { padding-top: 1px; position: absolute; left: 50%; margin-left: -116px; z-index: 5; }
-/* line 687, ../scss/_GridField.scss */
+/* line 680, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination .pagination-page-number { color: white; text-align: center; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); }
-/* line 693, ../scss/_GridField.scss */
+/* line 686, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination .pagination-page-number input { width: 35px; height: 18px; margin-bottom: -6px; padding: 0px; border: 1px solid #899eab; border-bottom: 1px solid #a7b7c1; }
-/* line 702, ../scss/_GridField.scss */
+/* line 695, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border: none; width: 10px; margin: 0 10px; display: inline; float: none; }
-/* line 713, ../scss/_GridField.scss */
+/* line 706, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button span { text-indent: -9999em; }
-/* line 717, ../scss/_GridField.scss */
+/* line 710, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-previouspage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat -23px 8px; }
-/* line 721, ../scss/_GridField.scss */
+/* line 714, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-nextpage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat -47px 8px; }
-/* line 725, ../scss/_GridField.scss */
+/* line 718, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-firstpage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat 0px 8px; }
-/* line 729, ../scss/_GridField.scss */
+/* line 722, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-lastpage { background: url(../../framework/images/icons/pagination-arrows.png) no-repeat -73px 8px; }
-/* line 733, ../scss/_GridField.scss */
+/* line 726, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ssui-button-disabled { z-index: -1; }
-/* line 737, ../scss/_GridField.scss */
+/* line 730, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr td.bottom-all .pagination-records-number { float: right; padding: 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); }
-/* line 744, ../scss/_GridField.scss */
+/* line 737, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr.last td { border-bottom: 0 none; }
-/* line 748, ../scss/_GridField.scss */
+/* line 741, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table td:first-child { border-left: 1px solid rgba(0, 0, 0, 0.1); }
-/* line 752, ../scss/_GridField.scss */
+/* line 745, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table td:last-child { border-right: 1px solid rgba(0, 0, 0, 0.1); }
-/* line 756, ../scss/_GridField.scss */
+/* line 749, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table td.col-StripThumbnail { padding: 2px 4px; width: 32px; height: 32px; }
-/* line 762, ../scss/_GridField.scss */
+/* line 755, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table td.col-StripThumbnail img { width: 32px; height: 32px; display: block; }
-/* line 767, ../scss/_GridField.scss */
+/* line 760, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table .ui-button .ui-icon.btn-icon-cross-circle { background: url(./../images/icons/cross-circle.png) no-repeat; }
-/* line 770, ../scss/_GridField.scss */
+/* line 763, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table tr th input.ss-gridfield-sort { width: 100%; max-width: 512px; height: auto; margin: 0; outline: none; border-radius: 4px; line-height: 16px; }
-/* line 784, ../scss/_GridField.scss */
+/* line 777, ../scss/_GridField.scss */
 .frontendify table.ss-gridfield-table thead tr.filter-header .fieldgroup .fieldgroup-field { float: left; }
-/* line 789, ../scss/_GridField.scss */
+/* line 782, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .ui-button .ui-icon.btn-icon-add { background: url(./../images/icons/add.png) no-repeat; }
-/* line 793, ../scss/_GridField.scss */
+/* line 786, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .ui-button .ui-icon.btn-icon-chain--plus { background: url(./../images/icons/chain--plus.png) no-repeat; }
-/* line 797, ../scss/_GridField.scss */
+/* line 790, ../scss/_GridField.scss */
 .frontendify .ss-gridfield .ui-button .ui-icon.btn-icon-chain--minus { background: url(./../images/icons/chain--minus.png) no-repeat; }
-/* line 801, ../scss/_GridField.scss */
+/* line 794, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-buttonrow .btn-icon-download-csv { background: url(./../images/icons/download-csv.png) no-repeat; }
-/* line 810, ../scss/_GridField.scss */
+/* line 802, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog { min-width: inherit !important; }
-/* line 814, ../scss/_GridField.scss */
+/* line 806, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-form .field { border: none; box-shadow: none; margin-bottom: 0; padding-bottom: 0; }
-/* line 821, ../scss/_GridField.scss */
+/* line 813, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-form .field label { padding-bottom: 4px; }
-/* line 825, ../scss/_GridField.scss */
+/* line 817, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-form .Actions { margin-top: 10px; padding: 0; }
-/* line 830, ../scss/_GridField.scss */
+/* line 822, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-items li a { background: #FFF; border-bottom-width: 1px; border-color: #CCC; border-left-width: 1px; border-right-width: 1px; border-style: solid; display: block; padding: 6px; }
-/* line 841, ../scss/_GridField.scss */
+/* line 833, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-items li:first-child a { border-top-left-radius: 4px; border-top-right-radius: 4px; border-top-width: 1px; }
-/* line 847, ../scss/_GridField.scss */
+/* line 839, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-items li:last-child a { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
-/* line 852, ../scss/_GridField.scss */
+/* line 844, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-items li a:hover { background: #F4F4F4; }
-/* line 856, ../scss/_GridField.scss */
+/* line 848, ../scss/_GridField.scss */
 .frontendify .add-existing-search-dialog .add-existing-search-pagination li { background: #FFF; display: block; float: left; margin-right: 2px; margin-top: 12px; padding: 6px; }
-/* line 869, ../scss/_GridField.scss */
+/* line 861, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-inline-new { background: #EFE; }
-/* line 873, ../scss/_GridField.scss */
+/* line 865, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-inline-new:nth-child(2n) { background: #DFD; }
-/* line 881, ../scss/_GridField.scss */
+/* line 873, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-add-new-multi-class { margin-bottom: 8px !important; }
-/* line 885, ../scss/_GridField.scss */
+/* line 877, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-add-new-multi-class .field { border: none; box-shadow: none; float: left; margin: 0 4px 0 0; }
-/* line 896, ../scss/_GridField.scss */
+/* line 888, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-editable .readonly { padding-top: 0 !important; }
-/* line 900, ../scss/_GridField.scss */
+/* line 892, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-editable input.text, .frontendify .ss-gridfield-editable textarea, .frontendify .ss-gridfield-editable select, .frontendify .ss-gridfield-editable .TreeDropdownField { margin: 0 !important; max-width: none !important; }
-/* line 908, ../scss/_GridField.scss */
+/* line 900, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-editable select.dropdown { border: 1px solid #b3b3b3; background-color: #fff; padding: 7px 7px; padding-left: 4px; line-height: 16px; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
-/* line 919, ../scss/_GridField.scss */
+/* line 911, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-add-new-inline { margin-bottom: 12px; }
-/* line 923, ../scss/_GridField.scss */
+/* line 915, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-add-new-inline span.readonly { color: #FFF !important; }
-/* line 927, ../scss/_GridField.scss */
+/* line 919, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-add-new-inline .col-buttons { text-align: right; }
-/* line 935, ../scss/_GridField.scss */
+/* line 927, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable thead tr th.col-Reorder span { padding: 0 !important; margin-left: 8px; }
-/* line 940, ../scss/_GridField.scss */
+/* line 932, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable .col-reorder { position: relative; padding: 0 !important; width: 16px !important; }
-/* line 946, ../scss/_GridField.scss */
+/* line 938, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable .col-reorder .handle { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
-/* line 955, ../scss/_GridField.scss */
+/* line 947, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable .col-reorder .handle .icon { position: absolute; top: 50%; left: 50%; width: 5px; height: 11px; margin: -5px 0 0 -2px; background-image: url("../../framework/thirdparty/jquery-ui-themes/smoothness/images/ui-icons_222222_256x240.png"); background-position: -5px -227px; }
-/* line 966, ../scss/_GridField.scss */
+/* line 958, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderhelper { border-bottom: 1px solid rgba(0, 0, 0, 0.1); border-top: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); }
-/* line 972, ../scss/_GridField.scss */
+/* line 964, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable tfoot .ui-droppable { padding-left: 12px; padding-right: 12px; }
-/* line 977, ../scss/_GridField.scss */
+/* line 969, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable tfoot .ui-droppable-active { background-color: #D4CF90 !important; }
-/* line 981, ../scss/_GridField.scss */
+/* line 973, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable tfoot .ss-gridfield-previouspage { background-position: -16px 9px !important; margin-left: 0; }
-/* line 986, ../scss/_GridField.scss */
+/* line 978, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-orderable tfoot .ss-gridfield-nextpage { background-position: -40px 9px !important; margin-right: 0; }
-/* line 994, ../scss/_GridField.scss */
+/* line 986, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-configurable-paginator .pagination-page-size { color: #fff; float: left; padding: 6px 0; }
-/* line 1000, ../scss/_GridField.scss */
+/* line 992, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-configurable-paginator .pagination-page-size-select { margin-left: 0; width: auto; }
-/* line 1005, ../scss/_GridField.scss */
+/* line 997, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-configurable-paginator .ss-gridfield-pagesize-submit { display: none; }
-/* line 1009, ../scss/_GridField.scss */
+/* line 1001, ../scss/_GridField.scss */
 .frontendify .ss-gridfield-configurable-paginator .pagination-page-number input { text-align: center; }
 
 /* line 10, ../scss/frontendify.scss */

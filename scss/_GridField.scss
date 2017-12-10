@@ -10,27 +10,21 @@
 		margin-bottom: 0;
 	}
 
-	.ss-gridfield > div.addNewGridFieldButton .action {
-		margin-bottom: 12px;
-	}
-
-	.ss-gridfield > div.ss-gridfield-buttonrow-before {
+	.ss-gridfield > div.ss-gridfield-buttonrow {
 		margin-bottom: 0;
+		overflow: hidden;
+		padding: 0.25em 1em;
+		line-height: 2em;
+		border: 1px solid #ccc;
+		border-radius: 0.5em;
+		display: inline-block;
+		float: right;
+	}
+	.ss-gridfield > div.ss-gridfield-buttonrow.frontendify-filter-row {
+		float: left;
 	}
 
-	.ss-gridfield > div.ss-gridfield-buttonrow-before .action,	.ss-gridfield > div.ss-gridfield-buttonrow-before input {
-		margin-bottom: 12px;
-	}
-
-	.ss-gridfield > div.ss-gridfield-buttonrow-after {
-		margin-bottom: 0;
-	}
-
-	.ss-gridfield > div.ss-gridfield-buttonrow-after .action,	.ss-gridfield > div.ss-gridfield-buttonrow-after input {
-		margin-top: 12px;
-	}
-
-	.ss-gridfield[data-selectable] tr.ui-selected,	.ss-gridfield[data-selectable] tr.ui-selecting {
+	.ss-gridfield[data-selectable] tr.ui-selected, .ss-gridfield[data-selectable] tr.ui-selecting {
 		background: #FFFAD6 !important;
 	}
 
@@ -111,7 +105,7 @@
 		border-left: none;
 	}
 
-	.ss-gridfield .grid-csv-button,	.ss-gridfield .grid-print-button {
+	.ss-gridfield .grid-csv-button, .ss-gridfield .grid-print-button {
 		margin-bottom: 0;
 		font-size: 12px;
 		display: -moz-inline-stack;
@@ -156,7 +150,6 @@
 				border-top-right-radius: 5px;
 			}
 		}
-
 
 		tbody {
 			background: #FFF;
@@ -801,7 +794,6 @@
 	.ss-gridfield-buttonrow .btn-icon-download-csv {
 		background: url(./../images/icons/download-csv.png) no-repeat;
 	}
-
 
 	/**
 	 * GridFieldAddExistingSearchButton

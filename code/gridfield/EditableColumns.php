@@ -17,10 +17,10 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	/**
 	 * Add exception handling around each row save and add any errors to $errors
 	 *
-	 * @param \GridField           $grid
-	 * @param \DataObjectInterface $record
-	 * @param int                  $line
-	 * @param array                $results
+	 * @param \GridField                                  $grid
+	 * @param \DataObjectInterface|\DataObject|\Versioned $record
+	 * @param int                                         $line
+	 * @param array                                       $results
 	 */
 	public function handlePublish( GridField $grid, DataObjectInterface $record, &$line = 0, &$results = [] ) {
 		$publish = $record->hasExtension( 'Versioned' )
@@ -38,6 +38,10 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	public function process( GridField $grid, DataObjectInterface $record, $publish, &$line = 0, &$results = [] ) {
 		$modelClass = $grid->getModelClass();
 		$model      = singleton( $modelClass );
+
+		if ( !$model->canEdit() ) {
+			return;
+		}
 
 		$value = $grid->Value();
 
@@ -68,17 +72,12 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 				$item = $list->byID( $id );
 			}
 
-			if ( ! $item || ! $item->canEdit() ) {
-				continue;
-			}
-
 			try {
 
+				$extra = [];
+				// get form once we will load each item
 				$form = $this->getForm( $grid, $item );
 
-				$extra = [];
-
-				$form->loadDataFrom( $row, Form::MERGE_CLEAR_MISSING );
 				$form->saveInto( $item );
 
 				// Check if we are also sorting these records
@@ -90,16 +89,29 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 				if ( $list instanceof ManyManyList ) {
 					$extra = array_intersect_key( $form->getData(), (array) $list->getExtraFields() );
 				}
+
+				// give us a chance to do custom logic on the row
+				$grid->invokeWithExtensions( 'beforeRowSave', $item, $line, $results);
+
 				$item->write();
 
+				// give us a chance to do custom logic on the row
+				$grid->invokeWithExtensions( 'afterRowSave', $item, $line, $results );
+
 				if ( $publish ) {
+					// give us a chance to do custom logic on the row
+					$grid->invokeWithExtensions( 'beforeRowPublish', $item, $line, $results );
+
 					$item->publish( 'Stage', 'Live' );
+
+					// give us a chance to do custom logic on the row
+					$grid->invokeWithExtensions( 'afterRowPublish', $item, $line, $results );
 
 					$results[ $line ] = [
 						'id'      => $item->ID,
 						'index'   => $line,
 						'type'    => 'success',
-						'message' => 'published'
+						'message' => 'published',
 					];
 				} else {
 					$results[ $line ] = [
@@ -111,7 +123,6 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 				}
 				$list->add( $item, $extra );
-
 
 			} catch ( ValidationException $e ) {
 				if ( $id ) {
@@ -143,6 +154,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		}
 	}
 
+
 	public function getColumnContent( $grid, $record, $col ) {
 		static $fields;
 
@@ -171,6 +183,117 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		}
 
 		return $field->forTemplate();
+	}
+
+	/**
+	 * Gets the form instance for a record.
+	 *
+	 * @param GridField           $grid
+	 * @param DataObjectInterface $record
+	 *
+	 * @return \Form
+	 * @throws \Exception
+	 */
+	public function getForm( GridField $grid, DataObjectInterface $record) {
+		$fields = $this->getFields( $grid, $record );
+
+		$form = new Form( $this, null, $fields, new FieldList() );
+
+		$form->loadDataFrom( $record );
+
+		$form->setFormAction( Controller::join_links(
+			$grid->Link(), 'editable/form', $record->ID
+		) );
+
+		return $form;
+	}
+
+	/**
+	 * Gets the field list for a record.
+	 *
+	 * @param GridField           $grid
+	 * @param DataObjectInterface $record
+	 *
+	 * @return \FieldList
+	 * @throws \Exception
+	 */
+	public function getFields( GridField $grid, DataObjectInterface $record) {
+		$cols   = $this->getDisplayFields( $grid );
+		$fields = new FieldList();
+
+		$list  = $grid->getList();
+		$class = $list ? $list->dataClass() : null;
+
+		foreach ( $cols as $col => $info ) {
+			$field = null;
+
+			if ( $info instanceof Closure ) {
+				$field = call_user_func( $info, $record, $col, $grid );
+			} elseif ( is_array( $info ) ) {
+				if ( isset( $info['callback'] ) ) {
+					$field = call_user_func( $info['callback'], $record, $col, $grid );
+				} elseif ( isset( $info['field'] ) ) {
+					if ( $info['field'] == 'LiteralField' ) {
+						$field = new $info['field']( $col, null );
+					} else {
+						$field = new $info['field']( $col );
+					}
+				}
+
+				if ( ! $field instanceof FormField ) {
+					throw new Exception( sprintf(
+						'The field for column "%s" is not a valid form field',
+						$col
+					) );
+				}
+			}
+
+			if ( ! $field && $list instanceof ManyManyList ) {
+				$extra = $list->getExtraFields();
+
+				if ( $extra && array_key_exists( $col, $extra ) ) {
+					$field = Object::create_from_string( $extra[ $col ], $col )->scaffoldFormField();
+				}
+			}
+
+			if ( ! $field ) {
+				if ( ! $this->displayFields ) {
+					// If setDisplayFields() not used, utilize $summary_fields
+					// in a way similar to base class
+					//
+					// Allows use of 'MyBool.Nice' and 'MyHTML.NoHTML' so that
+					// GridFields not using inline editing still look good or
+					// revert to looking good in cases where the field isn't
+					// available or is readonly
+					//
+					$colRelation = explode( '.', $col );
+					if ( $class && $obj = singleton( $class )->dbObject( $colRelation[0] ) ) {
+						$field = $obj->scaffoldFormField();
+					} else {
+						$field = new ReadonlyField( $colRelation[0] );
+					}
+				} elseif ( $class && $obj = singleton( $class )->dbObject( $col ) ) {
+					$field = $obj->scaffoldFormField();
+				} else {
+					$field = new ReadonlyField( $col );
+				}
+			}
+
+			if ( ! $field instanceof FormField ) {
+				throw new Exception( sprintf(
+					'Invalid form field instance for column "%s"', $col
+				) );
+			}
+
+			// Add CSS class for interactive fields
+			if ( ! ( $field->isReadOnly() || $field instanceof LiteralField ) ) {
+				$field->addExtraClass( 'editable-column-field' );
+			}
+
+			$fields->push( $field );
+		}
+
+		return $fields;
 	}
 
 	protected function getFieldName( $name, GridField $grid, DataObjectInterface $record ) {

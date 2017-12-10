@@ -6,6 +6,8 @@ trait gridfield_filter {
 
 	abstract public function filterDefaultValue();
 
+	abstract public function filterAllValue();
+
 	/**
 	 * @return mixed should be null if no value to filter on
 	 */
@@ -32,21 +34,24 @@ trait gridfield_filter {
 	public function applyFilter( $request, $modelClass, &$data, $defaultFilters = [] ) {
 		$value = $this->filterValue();
 
-		if ( isset( $this->modelFields[ $modelClass ] ) ) {
-			$filter = $this->modelFields[ $modelClass ];
-		} elseif ( isset( $defaultFilters[ $modelClass ] ) ) {
-			$filter = $defaultFilters[ $modelClass ];
-		}
+		if (! is_null( $value ) && $value != $this->filterAllValue()) {
 
-		if ( ! is_null( $value ) && isset( $filter ) ) {
-			if ( is_callable( $filter ) ) {
-				$data = $data->filterByCallback( function ( $model ) use ( $filter, $value ) {
-					return $filter( $model, $value );
-				} );
-			} else {
-				$data = $data->filter( [
-					$filter => $value,
-				] );
+			if ( isset( $this->modelFields[ $modelClass ] ) ) {
+				$filter = $this->modelFields[ $modelClass ];
+			} elseif ( isset( $defaultFilters[ $modelClass ] ) ) {
+				$filter = $defaultFilters[ $modelClass ];
+			}
+
+			if ( isset( $filter ) ) {
+				if ( is_callable( $filter ) ) {
+					$data = $data->filterByCallback( function ( $model ) use ( $filter, $value ) {
+						return $filter( $model, $value );
+					} );
+				} else {
+					$data = $data->filter( [
+						$filter => $value,
+					] );
+				}
 			}
 		}
 	}

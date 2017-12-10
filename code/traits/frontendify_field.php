@@ -26,7 +26,7 @@ trait frontendify_field {
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function decodeList( $list ) {
+	public static function decode_list( $list ) {
 		if ( $list instanceof SS_Map ) {
 			$list = $list->toArray();
 		} elseif ( $list instanceof ArrayList ) {

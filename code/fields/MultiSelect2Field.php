@@ -36,12 +36,12 @@ class FrontendifyMultiSelect2Field extends ListboxField {
 	 */
 	public function __construct( $name, $title = null, $source = [], $values = [], $form = null, $emptyString = null ) {
 		$this->setMultiple( true );
-		$source = $this->decodeList( $source ?: ( $this->config()->get( 'items' ) ?: [] ) );
+		$source = $this->decode_list( $source ?: ( $this->config()->get( 'items' ) ?: [] ) );
 		parent::__construct( $name, $title, $source, $values, $form, $emptyString );
 	}
 
 	public function setSource( $source ) {
-		parent::setSource( $this->decodeList( $source ) );
+		parent::setSource( $this->decode_list( $source ) );
 		return $this;
 	}
 
@@ -50,7 +50,7 @@ class FrontendifyMultiSelect2Field extends ListboxField {
 	}
 
 	public function setValue( $values, $obj = null ) {
-		$values = $this->decodeList( $values );
+		$values = $this->decode_list( $values );
 
 		if ( is_array( $obj ) ) {
 			$values = is_array( $values ) ? array_values( $values ) : $values;
@@ -63,7 +63,7 @@ class FrontendifyMultiSelect2Field extends ListboxField {
 		return $this;
 	}
 
-	protected function decodeList( $list ) {
+	protected function decode_list( $list ) {
 		if ( $list instanceof SS_Map ) {
 			$list = $list->toArray();
 		} elseif ( $list instanceof ArrayList ) {
