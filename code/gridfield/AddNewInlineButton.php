@@ -195,7 +195,6 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 				'IsActions'  => $column == 'Actions',
 			] ) );
 		}
-		$grid->invokeWithExtensions( 'customiseAddNewColumns', $columns);
 
 		return $columns->renderWith( 'FrontendifyGridFieldAddNewInlineRow' );
 	}

@@ -165,7 +165,7 @@ class FrontendifyGridField extends FrontEndGridField {
 	public static function view_mode( $columns = false ) {
 		$model = singleton( static::GridModelClass );
 
-		$grid = static::create(
+		$grid = new static(
 			$model,
 			null,
 			$columns,
@@ -183,7 +183,6 @@ class FrontendifyGridField extends FrontEndGridField {
 
 	public static function edit_mode( $columns = null ) {
 		$model = singleton( static::GridModelClass );
-		$gridClass = get_called_class();
 
 		$grid = new static(
 			$model,
