@@ -12,8 +12,8 @@ class FrontendifyGroupedSelect2Field extends GroupedDropdownField {
 
 	private static $frontendify_require = [
 		self::FrontendifyType => [
-			"js/select2/select2.js",
-			"js/select2/select2.css"
+			"js/lib/select2/select2.min.js",
+			"css/select2.min.css"
 		]
 	];
 

@@ -252,7 +252,7 @@ input[type="date"].frontendify-datefield { line-height: 1em; padding: 0 1em; min
 /* line 9, ../scss/_GridField.scss */
 .frontendify .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 0; }
 /* line 13, ../scss/_GridField.scss */
-.frontendify .ss-gridfield > div.ss-gridfield-buttonrow { margin-bottom: 0; overflow: hidden; padding: 0.25em 1em; line-height: 2em; border: 1px solid #ccc; border-radius: 0.5em; display: inline-block; float: right; }
+.frontendify .ss-gridfield > div.ss-gridfield-buttonrow { margin-bottom: 0; overflow: hidden; padding: 0.5em 1em 0.5em 1em; line-height: 2em; border: 1px solid #ccc; border-radius: 0.5em; display: inline-block; float: right; }
 /* line 23, ../scss/_GridField.scss */
 .frontendify .ss-gridfield > div.ss-gridfield-buttonrow.frontendify-filter-row { float: left; }
 /* line 27, ../scss/_GridField.scss */

@@ -20,7 +20,7 @@ class FrontendifyGridFieldDateFilter
 	}
 
 	public function filterDefaultValue() {
-		return $this->filterDefaultValue ?: date('Y-m-d');
+		return $this->filterDefaultValue;
 	}
 
 	public function filterAllValue() {
