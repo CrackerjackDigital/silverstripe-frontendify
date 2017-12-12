@@ -35,11 +35,20 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 	}
 
-	public function process( GridField $grid, DataObjectInterface $record, $publish, &$line = 0, &$results = [] ) {
+	/**
+	 * @param \FrontendifyGridField $grid
+	 * @param \DataObjectInterface  $record
+	 * @param                       $publish
+	 * @param int                   $line
+	 * @param array                 $results
+	 *
+	 * @throws \LogicException
+	 */
+	public function process( FrontendifyGridField $grid, DataObjectInterface $record, $publish, &$line = 0, &$results = [] ) {
 		$modelClass = $grid->getModelClass();
 		$model      = singleton( $modelClass );
 
-		if ( !$model->canEdit() ) {
+		if ( ! $model->canEdit() ) {
 			return;
 		}
 
@@ -91,21 +100,21 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 				}
 
 				// give us a chance to do custom logic on the row
-				$grid->invokeWithExtensions( 'beforeRowSave', $item, $line, $results);
+				$grid->beforeRowSave( $row, $item, $line, $results );
 
 				$item->write();
 
 				// give us a chance to do custom logic on the row
-				$grid->invokeWithExtensions( 'afterRowSave', $item, $line, $results );
+				$grid->afterRowSave( $row, $item, $line, $results );
 
 				if ( $publish ) {
 					// give us a chance to do custom logic on the row
-					$grid->invokeWithExtensions( 'beforeRowPublish', $item, $line, $results );
+					$grid->beforeRowPublish( $row, $item, $line, $results );
 
 					$item->publish( 'Stage', 'Live' );
 
 					// give us a chance to do custom logic on the row
-					$grid->invokeWithExtensions( 'afterRowPublish', $item, $line, $results );
+					$grid->afterRowPublish( $row, $item, $line, $results );
 
 					$results[ $line ] = [
 						'id'      => $item->ID,
@@ -154,7 +163,6 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		}
 	}
 
-
 	public function getColumnContent( $grid, $record, $col ) {
 		static $fields;
 
@@ -194,7 +202,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	 * @return \Form
 	 * @throws \Exception
 	 */
-	public function getForm( GridField $grid, DataObjectInterface $record) {
+	public function getForm( GridField $grid, DataObjectInterface $record ) {
 		$fields = $this->getFields( $grid, $record );
 
 		$form = new Form( $this, null, $fields, new FieldList() );
@@ -217,7 +225,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 	 * @return \FieldList
 	 * @throws \Exception
 	 */
-	public function getFields( GridField $grid, DataObjectInterface $record) {
+	public function getFields( GridField $grid, DataObjectInterface $record ) {
 		$cols   = $this->getDisplayFields( $grid );
 		$fields = new FieldList();
 

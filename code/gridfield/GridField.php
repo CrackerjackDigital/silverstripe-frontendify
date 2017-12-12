@@ -120,6 +120,22 @@ class FrontendifyGridField extends FrontEndGridField {
 		$this->setTitle( '' );
 	}
 
+	public function beforeRowSave( $row, $model, $lineNumber, &$results ) {
+
+	}
+
+	public function afterRowSave( $row, $model, $lineNumber, &$results ) {
+
+	}
+
+	public function beforeRowPublish( $row, $model, $lineNumber, &$results ) {
+
+	}
+
+	public function afterRowPublish( $row, $model, $lineNumber, &$results ) {
+
+	}
+
 	public function applyFilters( $request, &$data, $defaultFilters = [] ) {
 		$components = $this->getComponents();
 		foreach ( $components as $component ) {
