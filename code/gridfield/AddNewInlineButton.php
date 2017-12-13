@@ -77,7 +77,8 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'id'      => $item->ID,
 					'index'   => $line,
 					'type'    => 'success',
-					'message' => 'saved',
+					'message' => 'added',
+					'icon'    => 'plus-sign',
 				];
 
 			} catch ( ValidationException $e ) {
@@ -153,7 +154,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 
 		$fields = $editable->getFields( $grid, $record );
 
-		$grid->invokeWithExtensions( 'customiseAddNewFields', $fields);
+		$grid->invokeWithExtensions( 'customiseAddNewFields', $fields );
 
 		foreach ( $grid->getColumns() as $column ) {
 			if ( in_array( $column, $handled ) ) {

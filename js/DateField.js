@@ -5,14 +5,17 @@
 
 	$.fn.datefieldify = function () {
 		console.log('datefieldify');
-		$(selector).pickadate({
-			format: 'yyyy-mm-dd',
-			selectYears: 2,
-			firstDay: 1,
-			selectMonths: true,
-			container: 'body'
 
-	        }).addClass('datefieldified');
+		window.requestAnimationFrame(function() {
+			$(selector).pickadate({
+				format: 'yyyy-mm-dd',
+				selectYears: 2,
+				firstDay: 1,
+				selectMonths: true,
+				container: 'body'
+			}).addClass('datefieldified');
+		});
+
 
 	};
 

@@ -18,19 +18,19 @@
 				placeholder: placeholder,
 				allowClear: true,
 				data: data || []
-			} : {
-			},
+			} : {},
 			options || {}
-	);
-
-		console.log(options);
-
-		self.select2(
-			options
 		);
-		self.addClass('select2ified');
+
+		window.requestAnimationFrame(function () {
+
+			self.select2(
+				options
+			);
+			self.addClass('select2ified');
+		});
 	};
-	$.fn.unselect2ify = function() {
+	$.fn.unselect2ify = function () {
 		var self = $(this);
 		self.removeClass('select2ified');
 		self.select2('destroy');
@@ -41,7 +41,7 @@
 			var self = $(this);
 			self.select2ify(options);
 		},
-		onchange: function() {
+		onchange: function () {
 			console.log('changed');
 		}
 	});

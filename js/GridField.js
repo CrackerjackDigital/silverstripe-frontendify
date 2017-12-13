@@ -3,6 +3,14 @@
 		/**
 		 * GridFieldAddNewInlineButton
 		 */
+
+
+		$('.frontendify-gridfield *').entwine({
+			getFrontendifyGridField: function () {
+				return this.closest('.frontendify-gridfield');
+			}
+		});
+
 		$(".frontendify-gridfield").entwine({
 			refresh: function (ajaxOpts, successCallback) {
 				var grid = this,
@@ -130,57 +138,61 @@
 					dataType: 'html',
 					success: function (data, textStatus, jqXHR) {
 						var json = jqXHR.getResponseHeader('X-Messages'),
-							results = JSON.parse(json),     // json result for each row submitted (stashed)
-							stash,
-							result,
-							index,
-							icon,
-							message,
-							row;
+							results = JSON.parse(json);     // json result for each row submitted (stashed)
 
-						for (index in results) {
-							result = results[index];
-							stash = _.find(stashed, {index: result.index});
+						// doit on the repaint
+						window.requestAnimationFrame(function() {
+							var index, row, icon, message, result, stash;
 
-							row = rows.children().eq(result.index - 1);
+							for (index in results) {
+								result = results[index];
+								stash = _.find(stashed, {index: result.index});
 
-							if (result.id && (result.id !== stash.id)) {
-								row.find('.col-ID input').val(result.id);
+								row = rows.children().eq(result.index - 1);
+
+								// remove added rows and replace with row from data
+								if (result.id && (result.id !== stash.id)) {
+									row.remove();
+									row = $(data).find('tr[data-id="' + result.id + '"]');
+									rows.append(row);
+									row.find('.col-ID').data('id', result.id).find('input').val(result.id);
+								}
+								// set class on the row
+								row.addClass(result.type);
+
+								// set message on trow
+								message = result.message || '';
+								row.find('td.col-Messages').text(result.message);
+
+								icon = result.icon || '';
+								row.find('td.col-Icon').html('<i class="glyphicon glyphicon-' + icon + '"></i>');
 							}
 
-							// set class on the row
-							row.addClass(result.type);
+							// remove added rows
 
-							// set message on trow
-							message = result.message || 'OK';
-							row.find('td.col-Messages').text(result.message);
-
-							icon = result.icon || 'check';
-							row.find('td.col-Icon').html('<i class="glyphicon glyphicon-' + icon + '"></i>');
-
-						}
-
-						if (focusedElName) {
-							grid.find(':input[name="' + focusedElName + '"]').focus();
-						}
-
-						// Update filter
-						if (grid.find('.filter-header').length) {
-							var content;
-							if (ajaxOpts.data[0].filter == "show") {
-								content = '<span class="non-sortable"></span>';
-								grid.addClass('show-filter').find('.filter-header').show();
-							} else {
-								content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
-								grid.removeClass('show-filter').find('.filter-header').hide();
+							if (focusedElName) {
+								grid.find(':input[name="' + focusedElName + '"]').focus();
 							}
 
-							grid.find('.sortable-header th:last').html(content);
-						}
-						form.removeClass('loading');
-						if (successCallback) {
-							successCallback.apply(this, arguments);
-						}
+							// Update filter
+							if (grid.find('.filter-header').length) {
+								var content;
+								if (ajaxOpts.data[0].filter == "show") {
+									content = '<span class="non-sortable"></span>';
+									grid.addClass('show-filter').find('.filter-header').show();
+								} else {
+									content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+									grid.removeClass('show-filter').find('.filter-header').hide();
+								}
+
+								grid.find('.sortable-header th:last').html(content);
+							}
+							form.removeClass('loading');
+							if (successCallback) {
+								successCallback.apply(this, arguments);
+							}
+
+						});
 					},
 					error: function (e) {
 						alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
@@ -257,12 +269,6 @@
 				$(".frontendify-datefield", $(this)).not('.datefieldified').datefieldify();
 				$(".frontendify-timefield", $(this)).not('.timefieldified').datefieldify();
 
-			}
-		});
-
-		$('.frontendify-gridfield *').entwine({
-			getFrontendifyGridField: function () {
-				return this.closest('.frontendify-gridfield');
 			}
 		});
 

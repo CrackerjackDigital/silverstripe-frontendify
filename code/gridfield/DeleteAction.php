@@ -27,8 +27,9 @@ class FrontendifyGridFieldDeleteAction extends GridFieldDeleteAction {
 			}
 
 			$field = GridField_FormAction::create( $gridField, 'DeleteRecord' . $record->ID, false, "deleterecord",
-				array( 'RecordID' => $record->ID ) )
-				->addExtraClass( 'gridfield-button-delete' )
+				array( 'RecordID' => $record->ID )
+			)
+				->addExtraClass( 'gridfield-button-delete glyphicon glyphicon-remove' )
 				->setAttribute( 'title', _t( 'GridAction.Delete', "Delete" ) )
 				->setAttribute( 'data-icon', 'cross-circle' )
 				->setDescription( _t( 'GridAction.DELETE_DESCRIPTION', 'Delete' ) );

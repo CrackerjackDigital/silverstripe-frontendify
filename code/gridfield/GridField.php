@@ -256,7 +256,7 @@ class FrontendifyGridField extends FrontEndGridField {
 			'Messages' => [
 				'title'    => 'Status',
 				'callback' => function ( $item ) {
-					$field = ( new LiteralField( 'Messages', 'OK' ) )->setAllowHTML( true );
+					$field = ( new LiteralField( 'Messages', '' ) )->setAllowHTML( true );
 
 					return $field;
 				},

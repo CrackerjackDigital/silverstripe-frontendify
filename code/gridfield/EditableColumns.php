@@ -74,6 +74,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 			}
 			$id = $row['ID'];
 
+			/** @var \DataObject $item */
 			if ( ! $id ) {
 				// this is a new model, create it
 				$item = new $modelClass( $row );
@@ -102,6 +103,8 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 				// give us a chance to do custom logic on the row
 				$grid->beforeRowSave( $row, $item, $line, $results );
 
+				$changed = $item->isChanged();
+
 				$item->write();
 
 				// give us a chance to do custom logic on the row
@@ -123,11 +126,25 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 						'message' => 'published',
 					];
 				} else {
+					if ( $id ) {
+						if ( $changed ) {
+							$message = 'updated';
+							$icon    = 'ok';
+						} else {
+							$message = 'unchanged';
+							$icon    = 'repeat';
+						}
+					} else {
+						$message = 'added';
+						$icon    = 'plus-sign';
+					}
 					$results[ $line ] = [
 						'id'      => $item->ID,
 						'index'   => $line,
 						'type'    => 'success',
-						'message' => $id ? 'updated' : 'scheduled',
+						'message' => $message,
+						'icon'    => $icon,
+
 					];
 
 				}
