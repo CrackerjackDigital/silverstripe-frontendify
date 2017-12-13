@@ -9,14 +9,14 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	const URLSegment   = '';
 
 	private static $url_handlers = [
-		'grid-edit/field/$Name!'    => 'field',
-		'grid-save/field/$Name!'    => 'grid_save',
-		'grid-refresh/field/$Name!' => 'grid_refresh',
-		'grid-save'                 => 'grid_save',
-		'grid-view'                 => 'grid_view',
-		'grid-edit'                 => 'grid_edit',
-		'grid-refresh'              => 'grid_refresh',
-		''                          => 'index',
+		'grid-edit/field/$Name!' => 'field',
+		'grid-save/field/$Name!' => 'grid_save',
+		'grid-view/field/$Name!' => 'grid_refresh',
+		'grid-save'              => 'grid_save',
+		'grid-view'              => 'grid_view',
+		'grid-edit'              => 'grid_edit',
+		'grid-refresh'           => 'grid_refresh',
+		''                       => 'index',
 	];
 	private static $allowed_actions = [
 		'index'        => true,

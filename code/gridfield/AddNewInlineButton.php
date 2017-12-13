@@ -118,7 +118,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		}
 
 		Requirements::javascript( THIRDPARTY_DIR . '/javascript-templates/tmpl.js' );
-//		GridFieldExtensions::include_requirements();
+
 		$this->requirements();
 
 		$data = new ArrayData( [

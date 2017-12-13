@@ -121,6 +121,7 @@ class FrontendifyGridField extends FrontEndGridField {
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
+		$this->setAttribute('data-mode-name', $this->mode ? 'edit' : 'view');
 		$this->setTitle( '' );
 	}
 

@@ -11,7 +11,8 @@
 					table = grid.find('table.ss-gridfield-table'),
 					rows = table.find('tbody:first'),
 					data = form.find(':input').serializeArray(),
-					url = this.data('url');
+					url = this.data('url'),
+					modeName = this.data('mode-name');
 
 				rows.find('.ss-gridfield-item')
 					.removeClass('error')
@@ -40,9 +41,9 @@
 					}
 				}
 
-				container.addClass('loading');
+				url += ((url.indexOf('?') === -1 ) ? '?' : '&') + '_mode=' + modeName;
 
-				url += '&_mode=view';
+				container.addClass('loading');
 
 				$.ajax($.extend({}, {
 					headers: {"X-Pjax": 'CurrentField'},
