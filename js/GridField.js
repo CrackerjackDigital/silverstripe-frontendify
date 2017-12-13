@@ -57,8 +57,15 @@
 						table.append(result.children());
 
 						container.removeClass('loading');
+						if (successCallback) {
+							successCallback.apply(this, arguments);
+						}
+					},
+					error: function (e) {
+						alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
+						form.removeClass('loading');
 					}
-				}));
+				}, ajaxOpts));
 			},
 			saveall: function (ajaxOpts, successCallback) {
 				var grid = this,
@@ -176,7 +183,7 @@
 						}
 					},
 					error: function (e) {
-						alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
+						alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
 						form.removeClass('loading');
 					}
 				}, ajaxOpts));
