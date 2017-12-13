@@ -4,6 +4,61 @@
 		 * GridFieldAddNewInlineButton
 		 */
 		$(".frontendify-gridfield").entwine({
+			refresh: function (ajaxOpts, successCallback) {
+				var grid = this,
+					container = this.closest('.frontendify'),
+					form = this.closest('form'),
+					table = grid.find('table.ss-gridfield-table'),
+					rows = table.find('tbody:first'),
+					data = form.find(':input').serializeArray(),
+					url = this.data('url');
+
+				rows.find('.ss-gridfield-item')
+					.removeClass('error')
+					.removeClass('warning')
+					.removeClass('success');
+
+				if (!ajaxOpts) {
+					ajaxOpts = {};
+				}
+				if (!ajaxOpts.data) {
+					ajaxOpts.data = [];
+				}
+				ajaxOpts.data = ajaxOpts.data.concat(data);
+
+				// Include any GET parameters from the current URL, as the view state might depend on it.
+				// For example, a list prefiltered through external search criteria might be passed to GridField.
+				if (window.location.search) {
+					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
+				}
+
+				// For browsers which do not support history.pushState like IE9, ss framework uses hash to track
+				// the current location for PJAX, so for them we pass the query string stored in the hash instead
+				if (!window.history || !window.history.pushState) {
+					if (window.location.hash && window.location.hash.indexOf('?') != -1) {
+						ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
+					}
+				}
+
+				container.addClass('loading');
+
+				url += '&_mode=view';
+
+				$.ajax($.extend({}, {
+					headers: {"X-Pjax": 'CurrentField'},
+					type: "POST",
+					url: url,
+					dataType: 'html',
+					success: function (pjaxHTML, textStatus, jqXHR) {
+						var result = $(pjaxHTML).find('table.ss-gridfield-table');
+
+						table.empty();
+						table.append(result.children());
+
+						container.removeClass('loading');
+					}
+				}));
+			},
 			saveall: function (ajaxOpts, successCallback) {
 				var grid = this,
 					form = this.closest('form'),
@@ -70,9 +125,10 @@
 							results = JSON.parse(json),     // json result for each row submitted (stashed)
 							stash,
 							result,
-							index;
-
-						debugger;
+							index,
+							icon,
+							message,
+							row;
 
 						for (index in results) {
 							result = results[index];
@@ -80,10 +136,20 @@
 
 							row = rows.children().eq(result.index - 1);
 
-							row.addClass(result.type).find('td.col-Messages').text(result.message);
 							if (result.id && (result.id !== stash.id)) {
 								row.find('.col-ID input').val(result.id);
 							}
+
+							// set class on the row
+							row.addClass(result.type);
+
+							// set message on trow
+							message = result.message || 'OK';
+							row.find('td.col-Messages').text(result.message);
+
+							icon = result.icon || 'check';
+							row.find('td.col-Icon').html('<i class="glyphicon glyphicon-' + icon + '"></i>');
+
 						}
 
 						if (focusedElName) {
@@ -307,8 +373,26 @@
 
 		});
 
+		$('.frontendify-gridfield .action.frontendify-filterbutton').entwine({
+			onclick: function (e) {
+				var filterState = 'show'; //filterstate should equal current state.
 
-		/**
+				e.preventDefault();
+				e.stopPropagation();
+
+				this.getFrontendifyGridField().refresh({
+					data: [{
+						name: this.attr('name'),
+						value: this.val(),
+						filter: filterState
+					}]
+				});
+
+				return false;
+			}
+		});
+
+			/**
 		 * GridFieldEditableColumns disable row clicks
 		 */
 

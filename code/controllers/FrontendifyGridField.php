@@ -9,17 +9,18 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	const URLSegment   = '';
 
 	private static $url_handlers = [
-		'grid-edit/field/$Name!' => 'field',
-		'grid-save/field/$Name!' => 'grid_save',
-		'grid-save'              => 'grid_save',
-		'grid-view'              => 'grid_view',
-		'grid-edit'              => 'grid_edit',
-		'grid-refresh'           => 'grid_refresh',
-		''                       => 'index',
+		'grid-edit/field/$Name!'    => 'field',
+		'grid-save/field/$Name!'    => 'grid_save',
+		'grid-refresh/field/$Name!' => 'grid_refresh',
+		'grid-save'                 => 'grid_save',
+		'grid-view'                 => 'grid_view',
+		'grid-edit'                 => 'grid_edit',
+		'grid-refresh'              => 'grid_refresh',
+		''                          => 'index',
 	];
 	private static $allowed_actions = [
-		'index'       => true,
-		'field'       => true,
+		'index'        => true,
+		'field'        => true,
 		'grid_view'    => true,
 		'grid_edit'    => true,
 		'grid_save'    => true,
@@ -65,7 +66,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$fieldName = $request->param( 'Name' );
 
 		/** @var \GridField $gridField */
-		$gridField = $this->EditForm()->Fields()->dataFieldByName( $fieldName );
+		$gridField = $this->Form()->Fields()->dataFieldByName( $fieldName );
 
 		return $gridField;
 	}
@@ -116,6 +117,13 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		return $this->grid_edit( $request );
 	}
 
+	/**
+	 * Return the grid contents as a PJax response
+	 *
+	 * @param \SS_HTTPRequest $request
+	 *
+	 * @return \HTMLText|string
+	 */
 	public function grid_refresh( SS_HTTPRequest $request ) {
 		/** @var \FrontEndGridField $field */
 		if ( $field = $this->field( $request ) ) {
@@ -169,12 +177,12 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseButtons( $grid, FrontendifyGridField::ModeEdit );
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
-		$data = $this->gridFieldData( $grid);
-		if (!$grid->config()->get('does_own_filtering')) {
+		$data = $this->gridFieldData( $grid );
+		if ( ! $grid->config()->get( 'does_own_filtering' ) ) {
 			$data = $this->applyFilters( $grid, $data );
 		}
 
-		$grid->setList($data);
+		$grid->setList( $data );
 
 		$form = new Form(
 			$this,
@@ -200,7 +208,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeView );
 
 		$grid->setList(
-			$this->applyFilters( $grid, $this->gridFieldData($grid ) )
+			$this->applyFilters( $grid, $this->gridFieldData( $grid ) )
 		);
 
 		$form = new Form(
@@ -236,7 +244,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 			new FrontendifyGridFieldDateFilter( [
 				CrewSchedule::class => function ( CrewSchedule $item, $date ) {
 					return $date >= $item->StartDate && $date <= $item->EndDate;
-				}
+				},
 			] ),
 			new FrontendifyApplyFilterAction()
 		);

@@ -32,6 +32,9 @@ class FrontendifyGridField extends FrontEndGridField {
 
 	private static $does_own_filtering = false;
 
+	// set in constructor to current mode, one of the self::ModeXYZ constants
+	protected $mode;
+
 	/**
 	 * FrontendifyGridField constructor.
 	 *
@@ -45,6 +48,7 @@ class FrontendifyGridField extends FrontEndGridField {
 	 */
 	public function __construct( $model, \SS_List $dataList = null, $columns = false, $mode = self::ModeRead, \GridFieldConfig $config = null ) {
 		$this->setModelClass( static::GridModelClass );
+		$this->mode = $mode;
 
 		$config = $config ?: new FrontEndGridFieldConfig_RecordEditor( 25 );
 
@@ -55,7 +59,7 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$model = singleton( $modelClass );
 
-		$columns = $columns ?: $this->editableColumns();
+		$columns = $columns ?: ($this->mode ? $this->editableColumns() : $this->viewableColumns());
 
 		$canCreate = $model->canCreate();
 
@@ -133,6 +137,10 @@ class FrontendifyGridField extends FrontEndGridField {
 	}
 
 	public function afterRowPublish( $row, $model, $lineNumber, &$results ) {
+
+	}
+
+	public function beforeRowRender() {
 
 	}
 
@@ -214,6 +222,10 @@ class FrontendifyGridField extends FrontEndGridField {
 		return $grid;
 	}
 
+	public function getMode() {
+		return $this->mode;
+	}
+
 	/**
 	 * Add some extra columns required across all models to those provided by the model, such as
 	 * 'ID' and 'Messages'.
@@ -232,10 +244,18 @@ class FrontendifyGridField extends FrontEndGridField {
 					return $field->setAttribute( 'data-id', $item->ID );
 				},
 			],
-			'Messages' => [
-				'title'    => '',
+			'Icon' => [
+				'title' => '',
 				'callback' => function ( $item ) {
-					$field = ( new LiteralField( 'Messages', '<i>&nbsp;</i>' ) )->setAllowHTML( true );
+					$field = ( new LiteralField( 'Icon', '<i></i>' ) )->setAllowHTML( true );
+
+					return $field;
+				},
+			],
+			'Messages' => [
+				'title'    => 'Status',
+				'callback' => function ( $item ) {
+					$field = ( new LiteralField( 'Messages', 'OK' ) )->setAllowHTML( true );
 
 					return $field;
 				},
@@ -244,7 +264,9 @@ class FrontendifyGridField extends FrontEndGridField {
 	}
 
 	public function viewableColumns() {
-		return [
+		$model = singleton($this->getModelClass());
+
+		return array_merge([
 			'ID'       => [
 				'title'    => '',
 				'callback' => function ( $item ) {
@@ -261,7 +283,7 @@ class FrontendifyGridField extends FrontEndGridField {
 					return $field;
 				},
 			],
-		];
+		], $model->summaryFields());
 	}
 
 	public function FieldHolder( $properties = [] ) {

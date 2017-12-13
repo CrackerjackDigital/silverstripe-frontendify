@@ -8,10 +8,6 @@ abstract class FrontendifyCalendar_Controller extends FrontendifyGridField_Contr
 //		"calendar_update", //ajax update on date changes
 	];
 
-	abstract public function calendar( SS_HTTPRequest $request );
-
-	abstract public function calendar_update( SS_HTTPRequest $request );
-
 	public function init() {
 		parent::init();
 		Requirements::javascript( "themes/geeves/js/moment.min.js" );
