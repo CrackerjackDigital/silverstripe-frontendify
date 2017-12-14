@@ -249,15 +249,6 @@ class FrontendifyGridField extends FrontEndGridField {
 	 */
 	public function editableColumns() {
 		return [
-			'ID'       => [
-				'title'    => 'ID',
-				'callback' => function ( $item ) {
-					$field = new TextField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
-					$field->setReadonly( true);
-
-					return $field->setAttribute( 'data-id', $item->ID );
-				},
-			],
 			'Icon'     => [
 				'title'    => '',
 				'callback' => function ( $item ) {
@@ -272,6 +263,14 @@ class FrontendifyGridField extends FrontEndGridField {
 					$field = ( new LiteralField( 'Messages', '' ) )->setAllowHTML( true );
 
 					return $field;
+				},
+			],
+			'ID' => [
+				'title'    => 'ID',
+				'callback' => function ( $item ) {
+					$field = new TextField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
+
+					return $field->setReadonly( true )->setAttribute( 'data-id', $item->ID );
 				},
 			],
 		];
