@@ -23,6 +23,14 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		return $this->process( $grid, false, $line, $results );
 	}
 
+	/**
+	 * @param \FrontendifyGridField|\GridField $grid
+	 * @param            $publish
+	 * @param int        $line
+	 * @param array      $results
+	 *
+	 * @throws \LogicException
+	 */
 	protected function process( GridField $grid, $publish, &$line = 0, &$results = [] ) {
 		$modelClass = $grid->getModelClass();
 		$model      = singleton( $modelClass );
@@ -67,17 +75,33 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 				$extra = array_intersect_key( $form->getData(), (array) $list->getExtraFields() );
 			}
 			try {
+
+				$grid->beforeRowSave($row, $item, $line, $results);
+
 				$item->write();
+
+				$grid->afterRowSave( $row, $item, $line, $results );
+
 				if ( $publish ) {
+					$grid->beforeRowPublish( $row, $item, $line, $results );
+
 					$item->publish( 'Stage', 'Live' );
+
+					$grid->afterRowPublish( $row, $item, $line, $results );
 				}
 				$list->add( $item, $extra );
+
+				if (isset($results[$line]['message'])) {
+					$message = $results[$line]['message'];
+				} else {
+					$message = '';
+				}
 
 				$results[ $line ] = [
 					'id'      => $item->ID,
 					'index'   => $line,
-					'type'    => 'success',
-					'message' => 'added',
+					'type'    => $message ? 'warning' : 'success',
+					'message' => $message ?: 'added',
 					'icon'    => 'plus-sign',
 				];
 

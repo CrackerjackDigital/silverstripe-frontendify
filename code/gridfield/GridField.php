@@ -59,7 +59,7 @@ class FrontendifyGridField extends FrontEndGridField {
 
 		$model = singleton( $modelClass );
 
-		$columns = $columns ?: ($this->mode ? $this->editableColumns() : $this->viewableColumns());
+		$columns = $columns ?: ( $this->mode ? $this->editableColumns() : $this->viewableColumns() );
 
 		$canCreate = $model->canCreate();
 
@@ -121,27 +121,39 @@ class FrontendifyGridField extends FrontEndGridField {
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
-		$this->setAttribute('data-mode-name', $this->mode ? 'edit' : 'view');
+		$this->setAttribute( 'data-mode-name', $this->mode ? 'edit' : 'view' );
 		$this->setTitle( '' );
 	}
 
+	/**
+	 * @param array      $row
+	 * @param DataObject $model
+	 * @param int        $lineNumber
+	 * @param            array
+	 *
+	 * @return array
+	 */
 	public function beforeRowSave( $row, $model, $lineNumber, &$results ) {
-
+		return [];
 	}
 
 	public function afterRowSave( $row, $model, $lineNumber, &$results ) {
+		return [];
 
 	}
 
 	public function beforeRowPublish( $row, $model, $lineNumber, &$results ) {
+		return [];
 
 	}
 
 	public function afterRowPublish( $row, $model, $lineNumber, &$results ) {
+		return [];
 
 	}
 
 	public function beforeRowRender() {
+		return [];
 
 	}
 
@@ -238,15 +250,15 @@ class FrontendifyGridField extends FrontEndGridField {
 	public function editableColumns() {
 		return [
 			'ID'       => [
-				'title'    => '',
+				'title'    => 'ID',
 				'callback' => function ( $item ) {
-					$field = new HiddenField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
+					$field = new ReadonlyField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
 
 					return $field->setAttribute( 'data-id', $item->ID );
 				},
 			],
-			'Icon' => [
-				'title' => '',
+			'Icon'     => [
+				'title'    => '',
 				'callback' => function ( $item ) {
 					$field = ( new LiteralField( 'Icon', '<i></i>' ) )->setAllowHTML( true );
 
@@ -265,9 +277,9 @@ class FrontendifyGridField extends FrontEndGridField {
 	}
 
 	public function viewableColumns() {
-		$model = singleton($this->getModelClass());
+		$model = singleton( $this->getModelClass() );
 
-		return array_merge([
+		return array_merge( [
 			'ID'       => [
 				'title'    => '',
 				'callback' => function ( $item ) {
@@ -284,7 +296,7 @@ class FrontendifyGridField extends FrontEndGridField {
 					return $field;
 				},
 			],
-		], $model->summaryFields());
+		], $model->summaryFields() );
 	}
 
 	public function FieldHolder( $properties = [] ) {

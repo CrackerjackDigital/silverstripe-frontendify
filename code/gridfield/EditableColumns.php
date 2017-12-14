@@ -68,6 +68,8 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 
 		foreach ( $rows as $rowID => $row ) {
 			$line ++;
+			$message = '';
+			$icon = '';
 
 			if ( ! is_numeric( $rowID ) || ! is_array( $row ) ) {
 				continue;
@@ -119,13 +121,13 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 					// give us a chance to do custom logic on the row
 					$grid->afterRowPublish( $row, $item, $line, $results );
 
-					$results[ $line ] = [
-						'id'      => $item->ID,
-						'index'   => $line,
-						'type'    => 'success',
-						'message' => 'published',
-					];
-				} else {
+					$message = 'published';
+					$icon = 'eye-open';
+				}
+				if (isset($results[$line]['message'])) {
+					$message = $results[$line]['message'];
+					$icon = 'warning-sign';
+				} elseif (!$message) {
 					if ( $id ) {
 						if ( $changed ) {
 							$message = 'updated';
@@ -138,16 +140,16 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 						$message = 'added';
 						$icon    = 'plus-sign';
 					}
-					$results[ $line ] = [
-						'id'      => $item->ID,
-						'index'   => $line,
-						'type'    => 'success',
-						'message' => $message,
-						'icon'    => $icon,
-
-					];
 
 				}
+				$results[ $line ] = [
+					'id'      => $item->ID,
+					'index'   => $line,
+					'type'    => 'success',
+					'message' => $message,
+					'icon'    => $icon,
+
+				];
 				$list->add( $item, $extra );
 
 			} catch ( ValidationException $e ) {
