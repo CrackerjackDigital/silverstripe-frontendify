@@ -252,7 +252,8 @@ class FrontendifyGridField extends FrontEndGridField {
 			'ID'       => [
 				'title'    => 'ID',
 				'callback' => function ( $item ) {
-					$field = new ReadonlyField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
+					$field = new TextField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
+					$field->setReadonly( true);
 
 					return $field->setAttribute( 'data-id', $item->ID );
 				},
