@@ -12,6 +12,51 @@
 		});
 
 		$(".frontendify-gridfield").entwine({
+			deleteRow: function(ajaxOpts, successCallback) {
+				var grid = this,
+					container = this.closest('.frontendify'),
+					url;
+
+				if (!ajaxOpts) {
+					ajaxOpts = {};
+				}
+				if (!ajaxOpts.data) {
+					ajaxOpts.data = {};
+				}
+
+				// Include any GET parameters from the current URL, as the view state might depend on it.
+				// For example, a list prefiltered through external search criteria might be passed to GridField.
+				if (window.location.search) {
+					ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
+				}
+
+				// For browsers which do not support history.pushState like IE9, ss framework uses hash to track
+				// the current location for PJAX, so for them we pass the query string stored in the hash instead
+				if (!window.history || !window.history.pushState) {
+					if (window.location.hash && window.location.hash.indexOf('?') != -1) {
+						ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
+					}
+				}
+
+				container.addClass('loading');
+
+				$.ajax($.extend({}, {
+					headers: {"X-Pjax": 'CurrentField'},
+					type: "POST",
+					url: url,
+					dataType: 'html',
+					success: function (result, textStatus, jqXHR) {
+						container.removeClass('loading');
+						if (successCallback) {
+							successCallback.apply(this, arguments);
+						}
+					},
+					error: function (e) {
+						alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
+						form.removeClass('loading');
+					}
+				}, ajaxOpts));
+			},
 			refresh: function (ajaxOpts, successCallback) {
 				var grid = this,
 					container = this.closest('.frontendify'),
@@ -148,16 +193,28 @@
 								result = results[index];
 								stash = _.find(stashed, {index: result.index});
 
-								row = rows.children().eq(result.index - 1);
 
-								// remove added rows and replace with row from incoming pjax
-								if (result.id && (result.id !== stash.id)) {
+								if (result.tempid) {
+									// find by tempID (new row)
+									row = rows.find('td.col-ID input[value="' + result.tempid + '"]').closest('tr');
+
+								} else {
+									// find by previous ID
+									row = rows.find('td.col-ID input[value="' + result.id + '"]').closest('tr');
+
+								}
+
+								if (result.id) {
+									// saved OK so replace it with result from server
 									row.remove();
 
 									row = $(pjax).find('tr[data-id="' + result.id + '"]');
+
 									rows.append(row);
 									row.find('.col-ID').data('id', result.id).find('input').val(result.id);
 								}
+
+
 								// set class on the row
 								row.addClass(result.type);
 
@@ -255,13 +312,22 @@
 				}
 				var tmpl = window.tmpl;
 				var row = this.find(".frontendify-add-inline-template:last");
-				var num = this.data("add-inline-num") || 1;
+				var num = this.data("add-inline-num") || 1,
+					tbody = this.find("table.ss-gridfield-table tbody:first"),
+					newrow;
 
 				tmpl.cache[this[0].id + "frontendify-add-inline-template"] = tmpl(row.html());
 
-				this.find("table.ss-gridfield-table tbody:first").append(tmpl(this[0].id + "frontendify-add-inline-template", {num: num}));
-				this.find("table.ss-gridfield-table tbody:first").children(".ss-gridfield-no-items").hide();
+				newrow = $(tmpl(this[0].id + "frontendify-add-inline-template", {num: num}));
+				newrow.find('td.col-ID input').val('NewRow' + (new Date().getTime()).toString(16));
+
+				tbody.append(newrow);
+
+				tbody.children(".ss-gridfield-no-items").hide();
+
 				this.data("add-inline-num", num + 1);
+
+
 
 				// Rebuild sort order fields
 				$(".ss-gridfield-orderable tbody").rebuildSort();
@@ -401,6 +467,22 @@
 						value: this.val(),
 						filter: filterState
 					}]
+				});
+
+				return false;
+			}
+		});
+
+		$('.frontendify-gridfield .action.frontendify-delete-row').entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				this.getFrontendifyGridField().deleteRow({
+					data: {
+						name: this.attr('name'),
+						value: this.val()
+					}
 				});
 
 				return false;

@@ -264,7 +264,7 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 			'ID' => [
 				'title'    => 'ID',
 				'callback' => function ( $item ) {
-					$field = new TextField( 'ID', '', $item->ID ?: uniqid( 'New ' . static::GridModelClass ) );
+					$field = new TextField( 'ID', '', $item->ID ?: uniqid( 'New' . static::GridModelClass ) );
 
 					return $field->setReadonly( true )->setAttribute( 'data-id', $item->ID );
 				},

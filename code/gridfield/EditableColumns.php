@@ -137,36 +137,45 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns
 
 					$message = 'published';
 					$icon    = self::IconPublished;
+					$type = 'success';
 				}
+				$type = 'warning';
+
 				if ( isset( $results[ $line ]['message'] ) ) {
 
 					$message = $results[ $line ]['message'];
 					$icon    = self::IconWarning;
+					$type = 'warning';
 
 				} elseif ( ! $message ) {
 					if ( $id ) {
 						if ( $changed ) {
 							$message = 'updated';
 							$icon    = self::IconUpdated;
+							$type = 'success';
 						} else {
 							$message = 'unchanged';
 							$icon    = self::IconUnchanged;
+							$type = 'success';
 						}
 					} else {
 						$message = 'added';
 						$icon    = self::IconAdded;
+						$type = 'success';
 					}
 
 				}
 				$results[ $line ] = [
 					'id'      => $item->ID,
 					'index'   => $line,
-					'type'    => self::TypeSuccess,
+					'type'    => $type,
 					'message' => $message,
 					'icon'    => $icon,
 
 				];
-				$list->add( $item, $extra );
+				if (!$id) {
+					$list->add( $item, $extra );
+				}
 
 			} catch ( ValidationException $e ) {
 				if ( $id ) {

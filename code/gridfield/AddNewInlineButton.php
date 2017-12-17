@@ -59,6 +59,8 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		foreach ( $rows as $row ) {
 			$line ++;
 
+			$tempID = $row['ID'];
+
 			$item  = $modelClass::create();
 			$extra = [];
 
@@ -104,6 +106,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'type'    => $message ? 'warning' : 'success',
 					'message' => $message ?: 'added',
 					'icon'    => $message ? self::IconWarning : self::IconAdded,
+					'tempid'  => $tempID,
 				];
 
 			} catch ( ValidationException $e ) {
@@ -114,6 +117,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'type'    => 'error',
 					'message' => join( ',', $e->getResult()->messageList() ),
 					'icon'    => self::IconError,
+					'tempid' => $tempID,
 				];
 
 			} catch ( Exception $e ) {
@@ -123,6 +127,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'type'    => 'error',
 					'message' => $e->getMessage(),
 					'icon'    => self::IconError,
+					'tempid' => $tempID,
 				];
 			}
 		}
