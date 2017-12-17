@@ -177,6 +177,8 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseButtons( $grid, FrontendifyGridField::ModeEdit );
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
+		$grid->loadFieldValues();
+
 		$data = $this->gridFieldData( $grid );
 		if ( ! $grid->config()->get( 'does_own_filtering' ) ) {
 			$data = $this->applyFilters( $grid, $data );

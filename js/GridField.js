@@ -136,7 +136,7 @@
 					type: "POST",
 					url: this.data('url'),
 					dataType: 'html',
-					success: function (data, textStatus, jqXHR) {
+					success: function (pjax, textStatus, jqXHR) {
 						var json = jqXHR.getResponseHeader('X-Messages'),
 							results = JSON.parse(json);     // json result for each row submitted (stashed)
 
@@ -150,10 +150,11 @@
 
 								row = rows.children().eq(result.index - 1);
 
-								// remove added rows and replace with row from data
+								// remove added rows and replace with row from incoming pjax
 								if (result.id && (result.id !== stash.id)) {
 									row.remove();
-									row = $(data).find('tr[data-id="' + result.id + '"]');
+
+									row = $(pjax).find('tr[data-id="' + result.id + '"]');
 									rows.append(row);
 									row.find('.col-ID').data('id', result.id).find('input').val(result.id);
 								}

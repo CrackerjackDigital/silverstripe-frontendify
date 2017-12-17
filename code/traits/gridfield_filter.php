@@ -13,14 +13,14 @@ trait gridfield_filter {
 	/**
 	 * @return mixed should be null if no value to filter on
 	 */
-	public function filterValue() {
-		$request = Controller::curr()->getRequest();
-
-		$value = $request->requestVar(
+	public function filterValue(&$wasSet = false) {
+		$value = Controller::curr()->getRequest()->requestVar(
 			$this->filterName()
-		) ?: $this->filterDefaultValue();
-
-		return $value;
+		);
+		$wasSet = !is_null($value);
+		return !$wasSet
+			? $this->filterDefaultValue()
+			: $value;
 	}
 
 	/**
@@ -34,9 +34,9 @@ trait gridfield_filter {
 	 * @throws \LogicException
 	 */
 	public function applyFilter( $request, $modelClass, &$data, $defaultFilters = [] ) {
-		$value = $this->filterValue();
+		$value = $this->filterValue($set);
 
-		if (! is_null( $value ) && $value != $this->filterAllValue() && !in_array($value, $this->filterIgnoreValues())) {
+		if ($set && $value != $this->filterAllValue() && !in_array($value, $this->filterIgnoreValues())) {
 
 			if ( isset( $this->modelFields[ $modelClass ] ) ) {
 				$filter = $this->modelFields[ $modelClass ];

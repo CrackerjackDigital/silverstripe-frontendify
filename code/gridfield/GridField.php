@@ -1,6 +1,6 @@
 <?php
 
-class FrontendifyGridField extends FrontEndGridField implements FrontendifyIconsInterface {
+abstract class FrontendifyGridField extends FrontEndGridField implements FrontendifyIconsInterface {
 	use frontendify_requirements, frontendify_config;
 
 	const ModeRead   = 0;
@@ -81,7 +81,6 @@ class FrontendifyGridField extends FrontEndGridField implements FrontendifyIcons
 			       ->removeComponentsByType( GridFieldButtonRow::class );
 
 			$config->addComponent( new FrontendifyGridFieldFilterRow() );
-//			$config->addComponent( new FrontendifyGridFieldCentreButtons() );
 			$config->addComponent( new GridFieldButtonRow() );
 
 			if ( ( $mode & self::ModeUpdate ) && $canEdit ) {
@@ -103,7 +102,6 @@ class FrontendifyGridField extends FrontEndGridField implements FrontendifyIcons
 			if ( $mode ) {
 				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
 			}
-
 		} else {
 			$config
 				->removeComponentsByType( GridFieldEditButton::class )
@@ -123,7 +121,15 @@ class FrontendifyGridField extends FrontEndGridField implements FrontendifyIcons
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
 		$this->setAttribute( 'data-mode-name', $this->mode ? 'edit' : 'view' );
 		$this->setTitle( '' );
+
+
 	}
+
+	/**
+	 * Load field values ready for editable columns to use
+	 * @return mixed
+	 */
+	abstract public function loadFieldValues();
 
 	/**
 	 * @param array      $row
@@ -161,7 +167,7 @@ class FrontendifyGridField extends FrontEndGridField implements FrontendifyIcons
 		$components = $this->getComponents();
 		foreach ( $components as $component ) {
 			if ( $component instanceof GridFieldFilterInterface ) {
-				$component->applyFilter( $request, $data, $defaultFilters );
+				$component->applyFilter( $request, static::GridModelClass, $data, $defaultFilters );
 			}
 		}
 	}
@@ -268,7 +274,7 @@ class FrontendifyGridField extends FrontEndGridField implements FrontendifyIcons
 			'ID' => [
 				'title'    => 'ID',
 				'callback' => function ( $item ) {
-					$field = new TextField( 'ID', '', $item->ID ?: uniqid( static::GridModelClass ) );
+					$field = new TextField( 'ID', '', $item->ID ?: uniqid( 'New ' . static::GridModelClass ) );
 
 					return $field->setReadonly( true )->setAttribute( 'data-id', $item->ID );
 				},
