@@ -259,6 +259,12 @@
 			td button.gridfield-button-delete {
 				width: 20px;
 				margin: 0;
+				color: #c00;
+
+				&:hover {
+					color: #f00;
+				}
+
 			}
 
 			td button.gridfield-button-delete span.btn-icon-decline {

@@ -1,6 +1,7 @@
 <?php
 
-class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
+class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns
+	implements FrontendifyIconsInterface {
 
 	// set in constructor to 'edit' or 'view'
 	protected $mode;
@@ -66,30 +67,43 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 		/** @var GridFieldOrderableRows $sortable */
 		$sortable = $grid->getConfig()->getComponentByType( 'GridFieldOrderableRows' );
 
+		// get form once we will load each item
+		$form = $this->getForm( $grid, $model );
+
 		foreach ( $rows as $rowID => $row ) {
 			$line ++;
 			$message = '';
-			$icon = '';
+			$icon    = '';
 
 			if ( ! is_numeric( $rowID ) || ! is_array( $row ) ) {
 				continue;
 			}
-			$id = $row['ID'];
-
-			/** @var \DataObject $item */
-			if ( ! $id ) {
-				// this is a new model, create it
-				$item = new $modelClass( $row );
-			} else {
-				$item = $list->byID( $id );
-			}
+			$item = null;
+			$id   = null;
 
 			try {
+				if ( ! array_key_exists( 'ID', $row ) ) {
+					throw new Exception( "No ID column in row $rowID" );
+				}
+
+				$id = $row['ID'];
+
+				/** @var \DataObject $item */
+				if ( ! $id ) {
+					// this is a new model, create it
+					$item = new $modelClass( $row );
+				} else {
+					if ( $item = $list->byID( $id ) ) {
+						// update the found model to new data
+						$item->update( $row );
+					} else {
+						throw new Exception( "Invalid grid item with id '$id', could'nt find it in grid data" );
+					}
+				}
 
 				$extra = [];
-				// get form once we will load each item
-				$form = $this->getForm( $grid, $item );
 
+				$form->loadDataFrom( $item );
 				$form->saveInto( $item );
 
 				// Check if we are also sorting these records
@@ -122,30 +136,32 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 					$grid->afterRowPublish( $row, $item, $line, $results );
 
 					$message = 'published';
-					$icon = 'eye-open';
+					$icon    = self::IconPublished;
 				}
-				if (isset($results[$line]['message'])) {
-					$message = $results[$line]['message'];
-					$icon = 'warning-sign';
-				} elseif (!$message) {
+				if ( isset( $results[ $line ]['message'] ) ) {
+
+					$message = $results[ $line ]['message'];
+					$icon    = self::IconWarning;
+
+				} elseif ( ! $message ) {
 					if ( $id ) {
 						if ( $changed ) {
 							$message = 'updated';
-							$icon    = 'ok';
+							$icon    = self::IconUpdated;
 						} else {
 							$message = 'unchanged';
-							$icon    = 'repeat';
+							$icon    = self::IconUnchanged;
 						}
 					} else {
 						$message = 'added';
-						$icon    = 'plus-sign';
+						$icon    = self::IconAdded;
 					}
 
 				}
 				$results[ $line ] = [
 					'id'      => $item->ID,
 					'index'   => $line,
-					'type'    => 'success',
+					'type'    => self::TypeSuccess,
 					'message' => $message,
 					'icon'    => $icon,
 
@@ -157,16 +173,18 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 					$results[ $line ] = [
 						'id'      => $item->ID,
 						'index'   => $line,
-						'type'    => 'error',
 						'message' => join( ',', $e->getResult()->messageList() ),
+						'type'    => self::TypeError,
+						'icon'    => self::IconError,
 					];
 				} else {
-
+					// new row
 					$results[ $line ] = [
 						'id'      => $item->ID,
 						'index'   => $line,
-						'type'    => 'warning',
 						'message' => $publish ? 'not published' : 'not scheduled',
+						'type'    => self::TypeError,
+						'icon'    => self::IconError,
 					];
 
 				}
@@ -175,8 +193,9 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns {
 				$results[ $line ] = [
 					'id'      => $item->ID,
 					'index'   => $line,
-					'type'    => 'error',
 					'message' => $e->getMessage(),
+					'type'    => self::TypeError,
+					'icon'    => self::IconError,
 				];
 			}
 		}

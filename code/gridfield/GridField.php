@@ -1,6 +1,6 @@
 <?php
 
-class FrontendifyGridField extends FrontEndGridField {
+class FrontendifyGridField extends FrontEndGridField implements FrontendifyIconsInterface {
 	use frontendify_requirements, frontendify_config;
 
 	const ModeRead   = 0;

@@ -1,6 +1,7 @@
 <?php
 
-class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton {
+class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
+	implements FrontendifyIconsInterface {
 	use frontendify_requirements, frontendify_config;
 
 	const FrontendifyType = 'GridField';
@@ -25,9 +26,9 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 
 	/**
 	 * @param \FrontendifyGridField|\GridField $grid
-	 * @param            $publish
-	 * @param int        $line
-	 * @param array      $results
+	 * @param                                  $publish
+	 * @param int                              $line
+	 * @param array                            $results
 	 *
 	 * @throws \LogicException
 	 */
@@ -76,7 +77,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 			}
 			try {
 
-				$grid->beforeRowSave($row, $item, $line, $results);
+				$grid->beforeRowSave( $row, $item, $line, $results );
 
 				$item->write();
 
@@ -91,8 +92,8 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 				}
 				$list->add( $item, $extra );
 
-				if (isset($results[$line]['message'])) {
-					$message = $results[$line]['message'];
+				if ( isset( $results[ $line ]['message'] ) ) {
+					$message = $results[ $line ]['message'];
 				} else {
 					$message = '';
 				}
@@ -102,15 +103,17 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'index'   => $line,
 					'type'    => $message ? 'warning' : 'success',
 					'message' => $message ?: 'added',
-					'icon'    => 'plus-sign',
+					'icon'    => $message ? self::IconWarning : self::IconAdded,
 				];
 
 			} catch ( ValidationException $e ) {
+				// validation leads to an error when adding
 				$results[ $line ] = [
 					'id'      => $item->ID,
 					'index'   => $line,
 					'type'    => 'error',
 					'message' => join( ',', $e->getResult()->messageList() ),
+					'icon'    => self::IconError,
 				];
 
 			} catch ( Exception $e ) {
@@ -119,6 +122,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'index'   => $line,
 					'type'    => 'error',
 					'message' => $e->getMessage(),
+					'icon'    => self::IconError,
 				];
 			}
 		}
