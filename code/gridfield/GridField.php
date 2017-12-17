@@ -59,8 +59,6 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 
 		$model = singleton( $modelClass );
 
-		$columns = $columns ?: ( $this->mode ? $this->editableColumns() : $this->viewableColumns() );
-
 		$canCreate = $model->canCreate();
 
 		$canEdit = $model->canEdit();
@@ -82,11 +80,6 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 
 			$config->addComponent( new FrontendifyGridFieldFilterRow() );
 			$config->addComponent( new GridFieldButtonRow() );
-
-			if ( ( $mode & self::ModeUpdate ) && $canEdit ) {
-				$config->removeComponentsByType( GridFieldDataColumns::class )
-				       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) );
-			}
 
 			// add new needs to come after editable columns so saving is kept in line order
 			if ( ( $mode & self::ModeCreate ) && $canCreate ) {
@@ -111,11 +104,6 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 				->addComponent( new FrontendifyGridFieldFilterRow() )
 				->addComponent( new FrontendifyGridFieldCentreButtons() );
 
-			if ( $columns ) {
-				/** @var \GridFieldDataColumns $dataColumns */
-				$dataColumns = $config->getComponentByType( GridFieldDataColumns::class );
-				$dataColumns->setDisplayFields( $columns );
-			}
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
@@ -254,6 +242,8 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 	 * @return array
 	 */
 	public function editableColumns() {
+		$this->loadFieldValues();
+
 		return [
 			'Icon'     => [
 				'title'    => '',

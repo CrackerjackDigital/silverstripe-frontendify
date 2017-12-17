@@ -8,10 +8,12 @@
 
 	$(selector).entwine('frontendify', {
 		onmatch: function(options) {
-			var colour = this.val();
-			this.closest('tr').css('background-color', colour);
+			var colour = this.val(),
+				selector = this.data('colourpicker-container');
 
-			console.log('matched ' + colour);
+			if (selector) {
+				this.closest('tr').css('background-color', colour);
+			}
 
 			options = {
 				templateResult: option,
@@ -21,8 +23,12 @@
 			this._super(options);
 		},
 		onchange: function () {
-			var colour = this.val();
-			this.closest('tr').css('background-color', colour);
+			var colour = this.val(),
+				selector = this.data('colourpicker-container');
+
+			if (selector) {
+				this.closest(selector).css('background-color', colour);
+			}
 
 			this._super();
 		}

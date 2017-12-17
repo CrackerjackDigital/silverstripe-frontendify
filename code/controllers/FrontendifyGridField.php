@@ -174,10 +174,15 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		/** @var \FrontendifyGridField $grid */
 		$grid = $gridFieldClass::edit_mode();
 
+		$config = $grid->getConfig();
+
 		$this->customiseButtons( $grid, FrontendifyGridField::ModeEdit );
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
-		$grid->loadFieldValues();
+		if ($columns = $grid->editableColumns()) {
+			$config->removeComponentsByType( GridFieldDataColumns::class )
+			       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) );
+		}
 
 		$data = $this->gridFieldData( $grid );
 		if ( ! $grid->config()->get( 'does_own_filtering' ) ) {
@@ -208,6 +213,16 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 		$this->customiseButtons( $grid, FrontendifyGridField::ModeView );
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeView );
+
+		$config = $grid->getConfig();
+
+		$columns = $grid->viewableColumns();
+		if ($columns) {
+			/** @var \GridFieldDataColumns $dataColumns */
+			$dataColumns = $config->getComponentByType( GridFieldDataColumns::class );
+			$dataColumns->setDisplayFields( $columns );
+		}
+
 
 		$grid->setList(
 			$this->applyFilters( $grid, $this->gridFieldData( $grid ) )
