@@ -36,6 +36,7 @@ class FrontendifyMultiSelect2Field extends ListboxField {
 	 */
 	public function __construct( $name, $title = null, $source = [], $values = [], $form = null, $emptyString = null ) {
 		$this->setMultiple( true );
+		$this->setAttribute('multiple', 'multiple');
 		$source = $this->decode_list( $source ?: ( $this->config()->get( 'items' ) ?: [] ) );
 		parent::__construct( $name, $title, $source, $values, $form, $emptyString );
 	}

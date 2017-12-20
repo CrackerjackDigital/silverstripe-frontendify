@@ -200,7 +200,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns
 
 			} catch ( Exception $e ) {
 				$results[ $line ] = [
-					'id'      => $item->ID,
+					'id'      => $item ? $item->ID : '',
 					'index'   => $line,
 					'message' => $e->getMessage(),
 					'type'    => self::TypeError,

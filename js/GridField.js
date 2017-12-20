@@ -12,10 +12,13 @@
 		});
 
 		$(".frontendify-gridfield").entwine({
-			deleteRow: function(ajaxOpts, successCallback) {
+			deleteRow: function (ajaxOpts, successCallback) {
 				var grid = this,
 					container = this.closest('.frontendify'),
-					url;
+					url = this.data('url'),
+					row = this.closest('tr'),
+					dataID = row.data('id'),
+					id;
 
 				if (!ajaxOpts) {
 					ajaxOpts = {};
@@ -37,25 +40,42 @@
 						ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
 					}
 				}
+				if (dataID) {
+					// no data id attribute means row is new and not saved
+					container.addClass('loading');
 
-				container.addClass('loading');
-
-				$.ajax($.extend({}, {
-					headers: {"X-Pjax": 'CurrentField'},
-					type: "POST",
-					url: url,
-					dataType: 'html',
-					success: function (result, textStatus, jqXHR) {
-						container.removeClass('loading');
-						if (successCallback) {
-							successCallback.apply(this, arguments);
-						}
+					$.ajax(
+						$.extend(
+							{},
+							{
+								headers: {"X-Pjax": 'CurrentField'},
+								type: "POST",
+								url: url,
+								dataType: 'html',
+								success: function (result, textStatus, jqXHR) {
+									container.removeClass('loading');
+									if (successCallback) {
+										successCallback.apply(this, arguments);
+									}
+								},
+								error: function (e) {
+									alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
+									form.removeClass('loading');
+								}
+							},
+							ajaxOpts
+						)
+					);
+				}
+				row.animate(
+					{
+						height: 0
 					},
-					error: function (e) {
-						alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
-						form.removeClass('loading');
+					function() {
+						row.detach();
 					}
-				}, ajaxOpts));
+				);
+
 			},
 			refresh: function (ajaxOpts, successCallback) {
 				var grid = this,
@@ -123,13 +143,14 @@
 			saveall: function (ajaxOpts, successCallback) {
 				var grid = this,
 					form = this.closest('form'),
-					rows = grid.find('table.ss-gridfield-table tbody:first'),
+					tbody$ = 'table.ss-gridfield-table tbody:first',
+					tbody = grid.find(tbody$),
 					focusedElName = this.find(':input:focus').attr('name'),
 					data = form.find(':input').serializeArray(),
 					index = 1,
 					stashed = [];
 
-				rows.find('.ss-gridfield-item')
+				tbody.find('.ss-gridfield-item')
 					.removeClass('error')
 					.removeClass('warning')
 					.removeClass('success');
@@ -137,10 +158,11 @@
 				// save all rows, for errors we need to be able to restore the pre-saved value
 				// as the response from the server only contains valid rows without changes if
 				// an error has occured.
-				rows.find("tr.ss-gridfield-item").each(function () {
-					var id = $(this).data('id'),
-						action = id ? 'update' : 'new',
-						row = $(this).clone();
+				tbody.find("tr.ss-gridfield-item").each(function () {
+					var row = $(this),
+						id = row.find('.col-ID input').val(),
+						action = row.data('id') ? 'update' : 'new';
+
 
 					stashed[index] = {
 						'id': id,
@@ -186,34 +208,40 @@
 							results = JSON.parse(json);     // json result for each row submitted (stashed)
 
 						// doit on the repaint
-						window.requestAnimationFrame(function() {
+						window.requestAnimationFrame(function () {
 							var index, row, icon, message, result, stash;
 
 							for (index in results) {
 								result = results[index];
-								stash = _.find(stashed, {index: result.index});
-
 
 								if (result.tempid) {
-									// find by tempID (new row)
-									row = rows.find('td.col-ID input[value="' + result.tempid + '"]').closest('tr');
+									stash = _.filter(stashed, {id: result.tempid});
+
+									if (stash.length) {
+										// find by tempID (new row)
+										row = stash[0].row;
+									} else {
+										// something wrong, skip it
+										continue;
+									}
 
 								} else {
 									// find by previous ID
-									row = rows.find('td.col-ID input[value="' + result.id + '"]').closest('tr');
+									row = tbody.find('td.col-ID input[value="' + result.id + '"]').closest('tr');
 
 								}
 
 								if (result.id) {
-									// saved OK so replace it with result from server
-									row.remove();
-
-									row = $(pjax).find('tr[data-id="' + result.id + '"]');
-
-									rows.append(row);
-									row.find('.col-ID').data('id', result.id).find('input').val(result.id);
+									if (result.tempid) {
+										// saved new row OK so replace it with result from server
+										// otherwise we leave it in place as couldn't save
+										row.detach();
+										row = $(pjax).find('tr[data-id="' + result.id + '"]');
+										tbody.append(row);
+									}
+									// set id and data attribute to whatever we got back
+									row.data('id', result.id);
 								}
-
 
 								// set class on the row
 								row.addClass(result.type);
@@ -326,8 +354,6 @@
 				tbody.children(".ss-gridfield-no-items").hide();
 
 				this.data("add-inline-num", num + 1);
-
-
 
 				// Rebuild sort order fields
 				$(".ss-gridfield-orderable tbody").rebuildSort();
@@ -474,14 +500,17 @@
 		});
 
 		$('.frontendify-gridfield .action.frontendify-delete-row').entwine({
-			onclick: function(e) {
+			onclick: function (e) {
 				e.preventDefault();
 				e.stopPropagation();
+
+				var row = this.closest('tr');
 
 				this.getFrontendifyGridField().deleteRow({
 					data: {
 						name: this.attr('name'),
-						value: this.val()
+						value: this.val(),
+						row: row
 					}
 				});
 
@@ -489,7 +518,7 @@
 			}
 		});
 
-			/**
+		/**
 		 * GridFieldEditableColumns disable row clicks
 		 */
 

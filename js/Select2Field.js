@@ -5,7 +5,7 @@
 		var self = $(this),
 			placeholder = self.attr('placeholder'),
 			seperator = self.data('frontendify-tag-seperator') || ',',
-			tags = self.data('frontendify-tags') || '',
+			tags = seperator ? (self.data('frontendify-tags') || true) : false
 			defaults = {
 				placeholder: placeholder
 			};
@@ -21,6 +21,7 @@
 			} : {},
 			options || {}
 		);
+		console.dir(options);
 
 		window.requestAnimationFrame(function () {
 
@@ -39,12 +40,16 @@
 	$(selector).entwine('frontendify', {
 		onmatch: function (options) {
 			var self = $(this);
+			console.log(self);
+
 			self.select2ify(options);
 		},
 		onchange: function () {
 			console.log('changed');
 		}
 	});
-	$(selector).select2ify();
+	$(selector).each(function() {
+		$(this).select2ify();
+	});
 
 })(jQuery);

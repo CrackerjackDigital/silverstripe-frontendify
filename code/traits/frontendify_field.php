@@ -3,7 +3,7 @@
 trait frontendify_field {
 	public function Field( $properties = [] ) {
 		$this->requirements();
-		$classes = strtolower( self::FrontendifyType);
+		$classes = strtolower( static::FrontendifyType);
 
 		$this->addExtraClass( "frontendify-field frontendify-{$classes}");
 
