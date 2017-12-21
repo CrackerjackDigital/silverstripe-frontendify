@@ -5,17 +5,18 @@
 		var self = $(this),
 			placeholder = self.attr('placeholder'),
 			seperator = self.data('frontendify-tag-seperator') || ',',
-			tags = seperator ? (self.data('frontendify-tags') || true) : false
+			tags = self.data('frontendify-tags'),
 			defaults = {
 				placeholder: placeholder
 			};
 
+		console.dir(options);
+
 		options = $.extend(
 			defaults,
 			tags ? {
-				tags: tags,
+				tags: true,
 				tokenSeparators: [seperator],
-				placeholder: placeholder,
 				allowClear: true,
 				data: data || []
 			} : {},
@@ -40,7 +41,7 @@
 	$(selector).entwine('frontendify', {
 		onmatch: function (options) {
 			var self = $(this);
-			console.log(self);
+			console.log(options);
 
 			self.select2ify(options);
 		},
@@ -48,8 +49,6 @@
 			console.log('changed');
 		}
 	});
-	$(selector).each(function() {
-		$(this).select2ify();
-	});
+	$(selector).select2ify();
 
 })(jQuery);

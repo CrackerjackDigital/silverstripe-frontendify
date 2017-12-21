@@ -23,9 +23,9 @@ class FrontendifySelect2TagField extends ListboxField {
 
 	public function __construct( $name, $title = null, $source = [], $value = [], $maxLength = null, $form = null ) {
 		$this->setMultiple( true );
-		$this->setSource( $source );
-		$this->setValue( $value );
-		parent::__construct( $name, $title, $value, $maxLength, $form );
+//		$this->setSource( $source );
+//		$this->setValue( $value );
+		parent::__construct( $name, $title, $source, $value, $maxLength, $form );
 	}
 
 	/**
@@ -50,7 +50,7 @@ class FrontendifySelect2TagField extends ListboxField {
 			if ( $fieldName && $record && $relation &&
 			     ( $relation instanceof RelationList || $relation instanceof UnsavedRelationList ) ) {
 
-				$ids = [];
+				$record->$fieldName()->removeAll();
 
 				foreach ( $this->value as $value ) {
 					if (is_numeric($value)) {
@@ -63,13 +63,11 @@ class FrontendifySelect2TagField extends ListboxField {
 							'Title'  => $value,
 							'Source' => $record->ClassName,
 						] );
-						$ids[] = $model->write();
-					} else {
-						$ids[] = $model->ID;
+						$model->write();
 					}
+					$record->$fieldName()->add($model);
 				}
 
-				$relation->setByIDList( $ids );
 
 			} elseif ( $fieldName && $record ) {
 				if ( $this->value ) {
