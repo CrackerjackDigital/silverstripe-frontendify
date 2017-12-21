@@ -104,6 +104,13 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 				->addComponent( new FrontendifyGridFieldFilterRow() )
 				->addComponent( new FrontendifyGridFieldCentreButtons() );
 
+			if ($columns) {
+				/** @var \GridFieldDataColumns $dataColumns */
+				if ($dataColumns = $config->getComponentByType( GridFieldDataColumns::class )) {
+					$dataColumns->setDisplayFields( $columns);
+				}
+			}
+
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
@@ -206,6 +213,7 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 			$columns,
 			self::ModeRead
 		);
+
 
 		return $grid;
 	}
