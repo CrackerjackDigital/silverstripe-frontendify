@@ -41,7 +41,7 @@ class FrontendifySelect2TagField extends ListboxField {
 			$fieldName = $this->name;
 
 			$modelClass = $record->getManyManyComponents( $fieldName )->dataClass();
-			$allTags = $modelClass::get()->filter('Source', $record->ClassName);
+			$allTags    = $modelClass::get()->filter( 'Source', $record->ClassName );
 
 			$relation = ( $fieldName && $record && $record->hasMethod( $fieldName ) )
 				? $record->$fieldName()
@@ -53,21 +53,20 @@ class FrontendifySelect2TagField extends ListboxField {
 				$record->$fieldName()->removeAll();
 
 				foreach ( $this->value as $value ) {
-					if (is_numeric($value)) {
+					if ( is_numeric( $value ) ) {
 						$model = $allTags->find( 'ID', $value );
 					} else {
-						$model = $allTags->find( 'Title:nocase', $value);
+						$model = $allTags->find( 'Title:nocase', $value );
 					}
-					if ( !$model ) {
+					if ( ! $model ) {
 						$model = new $modelClass( [
 							'Title'  => $value,
 							'Source' => $record->ClassName,
 						] );
 						$model->write();
 					}
-					$record->$fieldName()->add($model);
+					$record->$fieldName()->add( $model );
 				}
-
 
 			} elseif ( $fieldName && $record ) {
 				if ( $this->value ) {
@@ -99,12 +98,12 @@ class FrontendifySelect2TagField extends ListboxField {
 		} elseif ( $values instanceof DataList ) {
 			$values = $values->map()->toArray();
 		}
-		$values = is_array($values) ? array_values( $values ) : [];
-		if ($values) {
+		$values = is_array( $values ) ? $values : [];
+		if ( $values ) {
 			$this->setFieldData( 'tag-seperator', $this->tagSeperator() );
 			$this->setFieldData( 'tags', implode( $this->tagSeperator(), $values ?: [] ) );
 		}
-		parent::setValue( $values);
+		$this->value = $values;
 
 		return $this;
 	}
@@ -127,6 +126,42 @@ class FrontendifySelect2TagField extends ListboxField {
 		}
 
 		return parent::setSource( $options );
+	}
+
+	/**
+	 * Returns a <select> tag containing all the appropriate <option> tags
+	 */
+	public function Field( $properties = [] ) {
+		if ( $this->multiple ) {
+			$this->name .= '[]';
+		}
+		$options = [];
+
+		$allValues = $this->getSource();
+		$selected = is_array( $this->value ) ? $this->value : [ $this->value ];
+		$disabled = $this->disabledItems;
+		$defaults = $this->defaultItems;
+
+		// Loop through and figure out which values were selected.
+		foreach ( $allValues as $value => $title ) {
+			$isSelected = ( isset($selected[$value]) || isset( $defaults[$value]) );
+			$isDisabled = $this->disabled || in_array( $value, $disabled );
+
+			$options[] = new ArrayData( [
+				'Title'    => $title,
+				'Value'    => $value,
+				'Selected' => $isSelected,
+				'Disabled' => $isDisabled,
+			] );
+		}
+
+		$properties = array_merge( $properties, [
+			'Options' => new ArrayList( $options ),
+		] );
+
+		$this->frontendify();
+
+		return FormField::Field( $properties );
 	}
 
 	protected function tagSeperator() {

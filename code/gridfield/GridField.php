@@ -81,10 +81,6 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 			$config->addComponent( new FrontendifyGridFieldFilterRow() );
 			$config->addComponent( new GridFieldButtonRow() );
 
-			// add new needs to come after editable columns so saving is kept in line order
-			if ( ( $mode & self::ModeCreate ) && $canCreate ) {
-				$config->addComponent( new FrontendifyGridFieldAddNewInlineButton( $columns, 'buttons-before-right' ) );
-			}
 			if ( ( $mode & self::ModeDelete ) && $canDelete ) {
 				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
 			}

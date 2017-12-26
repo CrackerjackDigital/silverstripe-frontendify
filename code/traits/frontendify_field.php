@@ -2,14 +2,21 @@
 
 trait frontendify_field {
 	public function Field( $properties = [] ) {
-		$this->requirements();
-		$classes = strtolower( static::FrontendifyType);
+		$this->frontendify();
+		return parent::Field( $properties );
+	}
 
-		$this->addExtraClass( "frontendify-field frontendify-{$classes}");
+	/**
+	 * Add attributes and requirements (from frontendify_requirements trait).
+	 * @throws \FrontendifyException
+	 */
+	protected function frontendify() {
+		$this->requirements();
+		$classes = strtolower( static::FrontendifyType );
+
+		$this->addExtraClass( "frontendify-field frontendify-{$classes}" );
 
 		$this->setAttribute( 'placeholder', $this->Title() );
-
-		return parent::Field( $properties );
 	}
 
 	public function setFieldData( $name, $value ) {

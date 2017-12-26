@@ -179,9 +179,11 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$this->customiseButtons( $grid, FrontendifyGridField::ModeEdit );
 		$this->customiseFilters( $grid, FrontendifyGridField::ModeEdit );
 
-		if ($columns = $grid->editableColumns()) {
+		if ( $columns = $grid->editableColumns() ) {
+
 			$config->removeComponentsByType( GridFieldDataColumns::class )
-			       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) );
+			       ->addComponent( new FrontendifyGridFieldEditableColumns( $columns ) )
+			       ->addComponent( new FrontendifyGridFieldAddNewInlineButton( $columns, 'buttons-before-right' ) );
 		}
 
 		$data = $this->gridFieldData( $grid );
@@ -217,12 +219,11 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 		$config = $grid->getConfig();
 
 		$columns = $grid->viewableColumns();
-		if ($columns) {
+		if ( $columns ) {
 			/** @var \GridFieldDataColumns $dataColumns */
 			$dataColumns = $config->getComponentByType( GridFieldDataColumns::class );
 			$dataColumns->setDisplayFields( $columns );
 		}
-
 
 		$grid->setList(
 			$this->applyFilters( $grid, $this->gridFieldData( $grid ) )
