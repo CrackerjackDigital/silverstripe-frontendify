@@ -9,10 +9,10 @@
 	$(selector).entwine('frontendify', {
 		onmatch: function(options) {
 			var colour = this.val(),
-				selector = this.data('colourpicker-container');
+				closest = this.data('frontendify-colourpicker-container');
 
 			if (selector) {
-				this.closest('tr').css('background-color', colour);
+				this.closest(closest).css('background-color', colour);
 			}
 
 			options = {
@@ -27,10 +27,10 @@
 		},
 		onchange: function () {
 			var colour = this.val(),
-				selector = this.data('colourpicker-container');
+				closest = this.data('frontendify-colourpicker-container');
 
 			if (selector) {
-				this.closest(selector).css('background-color', colour);
+				this.closest(closest).css('background-color', colour);
 			}
 
 			this._super();
