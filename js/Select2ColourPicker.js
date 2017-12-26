@@ -19,11 +19,7 @@
 				templateResult: option,
 				templateSelection: option
 			};
-			console.log('colourpickerify');
-			console.dir(options);
-			console.log('siprting');
 			this.select2ify(options);
-			console.lof('asdasd');
 		},
 		onchange: function () {
 			var colour = this.val(),
