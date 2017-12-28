@@ -673,7 +673,6 @@
 	    }else{
 	    	filterBar.css('top','160px');
 	    	filterBar.css('background-color','#fff');
-	    }
-	    console.log(scrollPos);
+	    } 
 	});
 })(jQuery);
