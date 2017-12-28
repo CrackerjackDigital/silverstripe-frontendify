@@ -661,5 +661,19 @@
 		});
 
 
-	})
+	});
+
+	//scroll events
+	$(window).scroll(function(){
+	    var scrollPos = $(document).scrollTop();
+	    var filterBar = $('.ss-gridfield-buttonrow');
+	    if(scrollPos >= 100){
+	    	filterBar.css('top','55px');
+	    	filterBar.css('background-color','#FFD5B7');
+	    }else{
+	    	filterBar.css('top','160px');
+	    	filterBar.css('background-color','#fff');
+	    }
+	    console.log(scrollPos);
+	});
 })(jQuery);
