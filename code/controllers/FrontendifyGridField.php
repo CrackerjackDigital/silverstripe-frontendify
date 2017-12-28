@@ -95,11 +95,13 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 
 				foreach ( $data as $name => $value ) {
 					// this seems really messy way to figure out?
-					if ( substr( $name, 0, strlen( 'action_gridFieldAlterAction' ) ) == 'action_gridFieldAlterAction' ) {
+					if ( substr( $name, 0, strlen( 'action_' ) ) == 'action_' ) {
 						$action = strtolower( $value );
 						break;
 					}
 				}
+				$state = $field->getState();
+
 				$field->handleAlterAction( $action, [], $data, $messages );
 			}
 			$response = $this->getResponse();

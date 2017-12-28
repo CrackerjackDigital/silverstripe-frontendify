@@ -126,6 +126,8 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns
 				// give us a chance to do custom logic on the row
 				$grid->afterRowSave( $row, $item, $line, $results );
 
+				$type = 'warning';
+
 				if ( $publish ) {
 					// give us a chance to do custom logic on the row
 					$grid->beforeRowPublish( $row, $item, $line, $results );
@@ -139,7 +141,6 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns
 					$icon    = self::IconPublished;
 					$type = 'success';
 				}
-				$type = 'warning';
 
 				if ( isset( $results[ $line ]['message'] ) ) {
 

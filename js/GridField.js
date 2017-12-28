@@ -11,14 +11,24 @@
 			}
 		});
 
+		$(".frontendify-gridfield .ss-gridfield-item").entwine({
+			onmatch: function () {
+				// set background row colour to attribute value if set
+				var bgColour = this.data('row-background-colour');
+				if (bgColour) {
+					this.css('background-color', bgColour);
+				}
+			}
+		});
+
 		$(".frontendify-gridfield").entwine({
 			deleteRow: function (ajaxOpts, successCallback) {
 				var grid = this,
-					container = this.closest('.frontendify'),
-					url = this.data('url'),
-					row = this.closest('tr'),
-					dataID = row.data('id'),
-					id;
+					container = grid.closest('.frontendify'),
+					url = grid.data('url'),
+					row = ajaxOpts.row,
+					ID = ajaxOpts.ID,
+					isNew = ajaxOpts.isNew;
 
 				if (!ajaxOpts) {
 					ajaxOpts = {};
@@ -40,8 +50,8 @@
 						ajaxOpts.data = window.location.hash.substring(window.location.hash.indexOf('?') + 1) + '&' + $.param(ajaxOpts.data);
 					}
 				}
-				if (dataID) {
-					// no data id attribute means row is new and not saved
+
+				if (ajaxOpts.ID && !ajaxOpts.isNew) {
 					container.addClass('loading');
 
 					$.ajax(
@@ -57,6 +67,15 @@
 									if (successCallback) {
 										successCallback.apply(this, arguments);
 									}
+									row.animate(
+										{
+											height: 0
+										},
+										function () {
+											row.detach();
+										}
+									);
+
 								},
 								error: function (e) {
 									alert(ss ? ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION') : 'Sorry, there was an error, please submit again');
@@ -67,15 +86,6 @@
 						)
 					);
 				}
-				row.animate(
-					{
-						height: 0
-					},
-					function() {
-						row.detach();
-					}
-				);
-
 			},
 			refresh: function (ajaxOpts, successCallback) {
 				var grid = this,
@@ -504,15 +514,29 @@
 				e.preventDefault();
 				e.stopPropagation();
 
-				var row = this.closest('tr');
+				var row = this.closest('tr'),
+					ID, isNew;
 
-				this.getFrontendifyGridField().deleteRow({
-					data: {
-						name: this.attr('name'),
-						value: this.val(),
+				if (row && row.length) {
+					ID = row.data('id');
+					isNew = row.is('.frontendify-inline-new');
+
+					this.getFrontendifyGridField().deleteRow({
+						data: [
+							{
+								name: this.attr('name'),
+								value: this.val()
+							},
+							{
+								name: 'RecordID',
+								value: ID
+							}
+						],
+						ID: ID,
+						isNew: isNew,
 						row: row
-					}
-				});
+					});
+				}
 
 				return false;
 			}

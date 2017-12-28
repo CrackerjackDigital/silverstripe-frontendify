@@ -240,7 +240,13 @@
 				padding: 1px 0;
 				width: auto;
 				text-shadow: none;
+
+				&.action {
+					width: 15px;
+					overflow: hidden;
+				}
 			}
+
 
 			td button.ui-state-hover {
 				background: none;
