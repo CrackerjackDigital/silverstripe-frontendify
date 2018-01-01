@@ -19,9 +19,15 @@
 		border-radius: 0.5em;
 		display: inline-block;
 		float: right;
+		top: 160px;
+		position: fixed;
+		right: 0px;
+		background: #fff;
+		z-index: 2000;
 	}
 	.ss-gridfield > div.ss-gridfield-buttonrow.frontendify-filter-row {
 		float: left;
+		left: 0px;
 	}
 
 	.ss-gridfield[data-selectable] tr.ui-selected, .ss-gridfield[data-selectable] tr.ui-selecting {
@@ -125,6 +131,7 @@
 		border-collapse: separate;
 		border-bottom: 0 none;
 		width: 100%;
+		margin-top: 60px;
 
 		thead {
 			color: #323e46;
