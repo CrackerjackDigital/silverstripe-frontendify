@@ -1,3 +1,4 @@
+<% uncached %>
 <script type="text/x-tmpl" class="frontendify-add-inline-template ss-gridfield-add-inline-template">
 	<tr class="ss-gridfield-item frontendify-inline-new ss-gridfield-inline-new">
 		<% loop $Me %>
@@ -11,3 +12,4 @@
 		<% end_loop %>
 	</tr>
 </script>
+<% end_cached %>

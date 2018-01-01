@@ -11,6 +11,8 @@ trait gridfield_filter {
 	abstract public function filterIgnoreValues();
 
 	/**
+	 * @param bool $wasSet true if a non-null value was passed in request, otherwise false
+	 *
 	 * @return mixed should be null if no value to filter on
 	 */
 	public function filterValue(&$wasSet = false) {
@@ -18,9 +20,7 @@ trait gridfield_filter {
 			$this->filterName()
 		);
 		$wasSet = !is_null($value);
-		return !$wasSet
-			? $this->filterDefaultValue()
-			: $value;
+		return $wasSet ? $value : $this->filterDefaultValue();
 	}
 
 	/**

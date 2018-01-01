@@ -117,7 +117,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'type'    => 'error',
 					'message' => join( ',', $e->getResult()->messageList() ),
 					'icon'    => self::IconError,
-					'tempid' => $tempID,
+					'tempid'  => $tempID,
 				];
 
 			} catch ( Exception $e ) {
@@ -127,7 +127,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 					'type'    => 'error',
 					'message' => $e->getMessage(),
 					'icon'    => self::IconError,
-					'tempid' => $tempID,
+					'tempid'  => $tempID,
 				];
 			}
 		}
@@ -177,7 +177,6 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 	 */
 	protected function getRowTemplate( GridField $grid, GridFieldEditableColumns $editable ) {
 		$columns = new ArrayList();
-		$handled = array_keys( $editable->getDisplayFields( $grid ) );
 
 		if ( $grid->getList() ) {
 			$record = Object::create( $grid->getModelClass() );
@@ -190,22 +189,21 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 		$grid->invokeWithExtensions( 'customiseAddNewFields', $fields );
 
 		foreach ( $grid->getColumns() as $column ) {
-			if ( in_array( $column, $handled ) ) {
-				$field = $fields->fieldByName( $column );
-				if ( $field ) {
-					$field->setName( sprintf(
-						'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), __CLASS__, $field->getName()
-					) );
+			$field = $fields->fieldByName( $column );
 
-					$content = $field->Field();
+			if ( $field ) {
+				$field->setName( sprintf(
+					'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), __CLASS__, $field->getName()
+				) );
 
-					// Convert HTML IDs built by FormTemplateHelper to the template format
-					$content = str_replace(
-						'GridFieldAddNewInlineButton_o.num_',
-						'GridFieldAddNewInlineButton_{%=o.num%}_',
-						$content
-					);
-				}
+				$content = $field->Field();
+
+				// Convert HTML IDs built by FormTemplateHelper to the template format
+				$content = str_replace(
+					'GridFieldAddNewInlineButton_o.num_',
+					'GridFieldAddNewInlineButton_{%=o.num%}_',
+					$content
+				);
 			} else {
 				$content = $grid->getColumnContent( $record, $column );
 
@@ -230,7 +228,7 @@ class FrontendifyGridFieldAddNewInlineButton extends GridFieldAddNewInlineButton
 			] ) );
 		}
 
-		return $columns->renderWith( 'FrontendifyGridFieldAddNewInlineRow' );
+		return $columns->renderWith( [ 'FrontendifyGridFieldAddNewInlineRow' ] );
 	}
 
 }
