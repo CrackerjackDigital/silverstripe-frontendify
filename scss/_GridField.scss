@@ -25,6 +25,14 @@
 		background: #fff;
 		z-index: 2000;
 	}
+
+	&.mode-view {
+		// hide buttons if in view mode
+		.ss-gridfield > div.ss-gridfield-buttonrow {
+			display: none;
+		}
+	}
+
 	.ss-gridfield > div.ss-gridfield-buttonrow.frontendify-filter-row {
 		float: left;
 		left: 0px;
