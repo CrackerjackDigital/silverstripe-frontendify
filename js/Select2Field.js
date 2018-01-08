@@ -5,7 +5,7 @@
 		var self = $(this),
 			placeholder = self.attr('placeholder'),
 			seperator = self.data('frontendify-tag-seperator') || ',',
-			tags = self.data('frontendify-tags'),
+			tags = seperator ? (self.data('frontendify-tags') || true) : false,
 			defaults = {
 				placeholder: placeholder
 			};
@@ -49,6 +49,8 @@
 			console.log('changed');
 		}
 	});
-	$(selector).select2ify();
+	$(selector).each(function () {
+		$(this).select2ify();
+	});
 
 })(jQuery);
