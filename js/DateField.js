@@ -8,11 +8,12 @@
 
 		window.requestAnimationFrame(function() {
 			$(selector).pickadate({
-				format: 'yyyy-mm-dd',
+				format: 'dd/mm/yyyy',
 				selectYears: 2,
 				firstDay: 1,
 				selectMonths: true,
-				container: 'body'
+				container: 'body',
+				formatSubmit: 'yyyy-mm-dd'
 			}).addClass('datefieldified');
 		});
 
