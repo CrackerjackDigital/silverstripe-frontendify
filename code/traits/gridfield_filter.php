@@ -36,7 +36,7 @@ trait gridfield_filter {
 	public function applyFilter( $request, $modelClass, &$data, $defaultFilters = [] ) {
 		$value = $this->filterValue($set);
 
-		if ($set && $value != $this->filterAllValue() && !in_array($value, $this->filterIgnoreValues())) {
+		if ($value != $this->filterAllValue() && !in_array($value, $this->filterIgnoreValues())) {
 
 			if ( isset( $this->modelFields[ $modelClass ] ) ) {
 				$filter = $this->modelFields[ $modelClass ];

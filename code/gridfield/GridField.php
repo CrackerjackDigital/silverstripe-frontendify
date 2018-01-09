@@ -25,8 +25,7 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 
 	private static $frontendify_require = [
 		self::FrontendifyType => [
-			'js/lib/lodash.min.js',
-			'/themes/default/css/frontendify.css',
+			'js/lib/lodash.min.js'
 		],
 	];
 
@@ -71,7 +70,7 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 			->removeComponentsByType( GridFieldPageCount::class )
 			->removeComponentsByType( GridFieldPaginator::class );
 
-		if ( $mode ) {
+		if ( $mode && ($canEdit || $canCreate || $canDelete)) {
 			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
 			       ->removeComponentsByType( GridFieldAddNewButton::class )
 			       ->removeComponentsByType( GridFieldEditButton::class )

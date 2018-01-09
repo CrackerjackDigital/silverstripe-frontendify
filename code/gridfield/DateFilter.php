@@ -8,6 +8,7 @@ class FrontendifyGridFieldDateFilter
 
 	protected $modelFields = [];
 
+	// can be a value or a callable
 	protected $filterDefaultValue;
 
 	public function __construct( $modelFields, $defaultValue = null) {
@@ -20,7 +21,14 @@ class FrontendifyGridFieldDateFilter
 	}
 
 	public function filterDefaultValue() {
-		return $this->filterDefaultValue;
+		if ($this->filterDefaultValue) {
+			if (is_callable( $this->filterDefaultValue)) {
+				$callable = $this->filterDefaultValue;
+				return $callable($this);
+			} else {
+				return $this->filterDefaultValue;
+			}
+		}
 	}
 
 	public function filterAllValue() {

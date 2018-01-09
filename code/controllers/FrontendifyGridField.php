@@ -254,18 +254,15 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Add extra filters etc in derived class, or override to NOP to not add filters
+	 * Add extra filters etc in derived class, or override to NOP to not add filters.
+	 *
+	 * Finally call to add the filter apply button
 	 *
 	 * @param \GridField $grid
 	 * @param int        $mode one of the FrontendifyGridField::ModeABC constants
 	 */
 	protected function customiseFilters( GridField $grid, $mode ) {
 		$grid->getConfig()->addComponents(
-			new FrontendifyGridFieldDateFilter( [
-				CrewSchedule::class => function ( CrewSchedule $item, $date ) {
-					return $date >= $item->StartDate && $date <= $item->EndDate;
-				},
-			] ),
 			new FrontendifyApplyFilterAction()
 		);
 	}

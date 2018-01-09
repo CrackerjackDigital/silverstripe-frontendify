@@ -26,9 +26,7 @@
 				var grid = this,
 					container = grid.closest('.frontendify'),
 					url = grid.data('url'),
-					row = ajaxOpts.row,
-					ID = ajaxOpts.ID,
-					isNew = ajaxOpts.isNew;
+					row = ajaxOpts.row;
 
 				if (!ajaxOpts) {
 					ajaxOpts = {};
@@ -673,6 +671,6 @@
 	    }else{
 	    	filterBar.css('top','160px');
 	    	filterBar.css('background-color','#fff');
-	    } 
+	    }
 	});
 })(jQuery);

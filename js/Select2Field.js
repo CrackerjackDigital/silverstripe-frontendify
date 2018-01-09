@@ -5,24 +5,21 @@
 		var self = $(this),
 			placeholder = self.attr('placeholder'),
 			seperator = self.data('frontendify-tag-seperator') || ',',
+			clear = !!self.data('frontendify-show-clear'),
 			tags = seperator ? (self.data('frontendify-tags') || true) : false,
 			defaults = {
-				placeholder: placeholder
+				placeholder: placeholder,
+				allowClear: clear
 			};
-
-		console.dir(options);
-
 		options = $.extend(
 			defaults,
 			tags ? {
 				tags: true,
 				tokenSeparators: [seperator],
-				allowClear: true,
 				data: data || []
 			} : {},
 			options || {}
 		);
-		console.dir(options);
 
 		window.requestAnimationFrame(function () {
 
@@ -41,12 +38,8 @@
 	$(selector).entwine('frontendify', {
 		onmatch: function (options) {
 			var self = $(this);
-			console.log(options);
 
 			self.select2ify(options);
-		},
-		onchange: function () {
-			console.log('changed');
 		}
 	});
 	$(selector).each(function () {
