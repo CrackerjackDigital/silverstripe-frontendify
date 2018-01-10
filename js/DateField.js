@@ -7,15 +7,13 @@
 
 			console.log('using pickadate');
 
-			window.requestAnimationFrame(function () {
-				$(selector).pickadate({
-					format: 'dd/mm/yyyy',
-					selectYears: 2,
-					firstDay: 1,
-					selectMonths: true,
-					container: 'body'
-				}).addClass('datefieldified');
-			});
+			$(this).pickadate({
+				format: 'dd/mm/yyyy',
+				selectYears: 2,
+				firstDay: 1,
+				selectMonths: true,
+				container: 'body'
+			}).addClass('datefieldified');
 
 		} else {
 			console.log('using native');

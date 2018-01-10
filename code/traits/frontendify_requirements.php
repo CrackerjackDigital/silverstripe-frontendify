@@ -35,14 +35,14 @@ trait frontendify_requirements {
 			? ( isset( $all[ static::FrontendifyType ] ) ? $all[ static::FrontendifyType ] : [] )
 			: [];
 
-		// put default/hardwired requirements up front, then custom requirements
+		// put custom requirements first, e.g. external scripts, then default requirements if they exist
 		$requirements = array_merge(
+			$requirements ?: [],
 			[
 				'css/frontendify.css',
 				"css/$type.css",
 				"js/$type.js",
-			],
-			$requirements ?: []
+			]
 		);
 
 		foreach ( $requirements as $requirement ) {
