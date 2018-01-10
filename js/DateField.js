@@ -1,23 +1,25 @@
 (function ($) {
 	var selector = '.frontendify-datefield';
 
-	// if ($('[type="date"]').prop('type') != 'date') {
-
 	$.fn.datefieldify = function () {
-		console.log('datefieldify');
+		// only do it if we don't support native (html5) date field
+		if ($('[type="date"]').prop('type') != 'date') {
 
-		window.requestAnimationFrame(function() {
-			$(selector).pickadate({
-				format: 'dd/mm/yyyy',
-				selectYears: 2,
-				firstDay: 1,
-				selectMonths: true,
-				container: 'body',
-				formatSubmit: 'yyyy-mm-dd'
-			}).addClass('datefieldified');
-		});
+			console.log('using pickadate');
 
+			window.requestAnimationFrame(function () {
+				$(selector).pickadate({
+					format: 'dd/mm/yyyy',
+					selectYears: 2,
+					firstDay: 1,
+					selectMonths: true,
+					container: 'body'
+				}).addClass('datefieldified');
+			});
 
+		} else {
+			console.log('using native');
+		}
 	};
 
 	$(selector).entwine("frontendify", {

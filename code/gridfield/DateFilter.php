@@ -2,7 +2,9 @@
 
 class FrontendifyGridFieldDateFilter
 	implements GridField_HTMLProvider, GridFieldFilterInterface {
-	use gridfield_filter;
+	use gridfield_filter {
+		filterValue as fv;
+	}
 
 	const FilterFieldName = 'DateFilter';
 
@@ -16,29 +18,21 @@ class FrontendifyGridFieldDateFilter
 		$this->filterDefaultValue = $defaultValue;
 	}
 
-	public function filterName() {
-		return static::FilterFieldName;
-	}
-
-	public function filterDefaultValue() {
-		if ($this->filterDefaultValue) {
-			if (is_callable( $this->filterDefaultValue)) {
-				$callable = $this->filterDefaultValue;
-				return $callable($this);
-			} else {
-				return $this->filterDefaultValue;
-			}
+	/**
+	 * Always return the value as yyyy-mm-dd
+	 *
+	 * @param bool $wasSet true if a non-null value was passed in request, otherwise false
+	 *
+	 * @return mixed should be null if no value to filter on
+	 */
+	public function filterValue( &$wasSet = false ) {
+		if ($value = $this->fv($wasSet)) {
+			$field = new FrontendifyDateField( 'asd' );
+			$field->setValue( $value );
+			$value = $field->dataValue();
 		}
+		return $value;
 	}
-
-	public function filterAllValue() {
-		return null;
-	}
-
-	public function filterIgnoreValues() {
-		return [];
-	}
-
 	/**
 	 * Returns a map where the keys are fragment names and the values are
 	 * pieces of HTML to add to these fragments.

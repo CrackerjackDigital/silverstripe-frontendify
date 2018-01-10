@@ -14,12 +14,28 @@ class FrontendifyDateField extends TextField {
 	];
 
 	public function __construct($name, $title = null, $value = null) {
-		if ($value) {
-			$value = date("d/m/Y", strtotime($value));
-		}
 		parent::__construct($name, $title, $value);
-		$this->setAttribute('type', 'date');
 		$this->removeExtraClass('datepicker');
 		$this->removeExtraClass('hasDatepicker');
 	}
+
+	public function setValue($value) {
+		if (strpos($value, '/')) {
+			$parts = explode('/', $value);
+			if (count($parts) == 3) {
+				$value = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+			} else {
+				$value = '';
+			}
+		}
+		return parent::setValue($value);
+	}
+
+	public function Value() {
+		if ($value = $this->dataValue()) {
+			$value = date( 'd/m/Y', strtotime( $value ) );
+		}
+		return $value;
+	}
+
 }

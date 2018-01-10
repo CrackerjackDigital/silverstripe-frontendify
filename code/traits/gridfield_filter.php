@@ -2,13 +2,29 @@
 
 trait gridfield_filter {
 
-	abstract public function filterName();
+	public function filterName() {
+		return static::FilterFieldName;
+	}
 
-	abstract public function filterDefaultValue();
+	public function filterDefaultValue() {
+		if ( $this->filterDefaultValue ) {
+			if ( is_callable( $this->filterDefaultValue ) ) {
+				$callable = $this->filterDefaultValue;
 
-	abstract public function filterAllValue();
+				return $callable( $this );
+			} else {
+				return $this->filterDefaultValue;
+			}
+		}
+	}
 
-	abstract public function filterIgnoreValues();
+	public function filterAllValue() {
+		return null;
+	}
+
+	public function filterIgnoreValues() {
+		return [];
+	}
 
 	/**
 	 * @param bool $wasSet true if a non-null value was passed in request, otherwise false
@@ -20,7 +36,8 @@ trait gridfield_filter {
 			$this->filterName()
 		);
 		$wasSet = !is_null($value);
-		return $wasSet ? $value : $this->filterDefaultValue();
+		$value = $wasSet ? $value : $this->filterDefaultValue();
+		return $value;
 	}
 
 	/**
@@ -34,7 +51,7 @@ trait gridfield_filter {
 	 * @throws \LogicException
 	 */
 	public function applyFilter( $request, $modelClass, &$data, $defaultFilters = [] ) {
-		$value = $this->filterValue($set);
+		$value = $this->filterValue($wasSet);
 
 		if ($value != $this->filterAllValue() && !in_array($value, $this->filterIgnoreValues())) {
 
