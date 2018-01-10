@@ -13,10 +13,13 @@ class FrontendifyDateField extends TextField {
 		],
 	];
 
-	public function __construct( $name, $title = null, $value = null ) {
-		parent::__construct( $name, $title, $value );
-		$this->setAttribute( 'type', 'date');
-		$this->removeExtraClass( 'datepicker');
-		$this->removeExtraClass( 'hasDatepicker');
+	public function __construct($name, $title = null, $value = null) {
+		if ($value) {
+			$value = date("d/m/Y", strtotime($value));
+		}
+		parent::__construct($name, $title, $value);
+		$this->setAttribute('type', 'date');
+		$this->removeExtraClass('datepicker');
+		$this->removeExtraClass('hasDatepicker');
 	}
 }
