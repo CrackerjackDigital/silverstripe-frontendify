@@ -58,6 +58,8 @@ class FrontendifyGridFieldDateFilter
 		$field = ( new FrontendifyDateField( $this->filterName(), '', $value ) )
 			->addExtraClass( 'frontendify-filter' )
 			->addExtraClass( 'frontendify-datefilter-date' )
+			->setAttribute( 'frontendify-default-value', $this->filterDefaultValue() )
+			->setAttribute( 'frontendify-clear-value', ' ' )
 			->setAttribute('placeholder', 'on date');
 
 		return [

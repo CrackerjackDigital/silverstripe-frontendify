@@ -263,7 +263,7 @@ abstract class FrontendifyGridField_Controller extends Page_Controller {
 	 */
 	protected function customiseFilters( GridField $grid, $mode ) {
 		$grid->getConfig()->addComponents(
-			new FrontendifyClearFilterAction(),
+//			new FrontendifyClearFilterAction(),
 			new FrontendifyApplyFilterAction()
 		);
 	}

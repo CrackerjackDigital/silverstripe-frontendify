@@ -488,9 +488,9 @@
 
 		});
 
-		$('.frontendify-gridfield .action.frontendify-filterbutton').entwine({
+		$('.frontendify-gridfield .action.frontendify-filter-apply').entwine({
 			onclick: function (e) {
-				var filterState = 'show'; //filterstate should equal current state.
+				console.log('show');
 
 				e.preventDefault();
 				e.stopPropagation();
@@ -499,13 +499,47 @@
 					data: [{
 						name: this.attr('name'),
 						value: this.val(),
-						filter: filterState
+						filter: 'apply'
 					}]
 				});
 
 				return false;
 			}
 		});
+
+		$('.frontendify-gridfield .action.frontendify-filter-clear').entwine({
+			onclick: function (e) {
+				console.log('clear');
+				e.preventDefault();
+				e.stopPropagation();
+
+				this.closest('.frontendify-filter-row').find(':input').not('button').each(function() {
+					// if clear is present and it has a value then use it, otherwise use ''
+					// if default is present then use it otherwise use the current value
+					// (so if neither clear or default defined then don't clear at all)
+					var clear = $(this).attr('frontendify-clear-value'),
+						def = $(this).attr('frontendify-default-value'),
+						name = $(this).attr('name'),
+						value = (typeof clear === typeof undefined)
+							? ((typeof def !== typeof undefined) ? def : $(this).val())
+							: (clear || '');
+
+					console.log('clearing ' + name + ' to ' + value);
+					$(this).val(value);
+				});
+
+				this.getFrontendifyGridField().refresh({
+					data: [{
+						name: this.attr('name'),
+						value: this.val(),
+						filter: 'clear'
+					}]
+				});
+
+				return false;
+			}
+		});
+
 
 		$('.frontendify-gridfield .action.frontendify-delete-row').entwine({
 			onclick: function (e) {
@@ -657,14 +691,6 @@
 				return false;
 			}
 		});
-
-		$('.frontendify-filter-clear').entwine({
-			onclick: function(ev) {
-				console.log('clicked');
-				this.closest('form').clear();
-			}
-		});
-
 
 	});
 
