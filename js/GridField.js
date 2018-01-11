@@ -658,6 +658,13 @@
 			}
 		});
 
+		$('.frontendify-filter-clear').entwine({
+			onclick: function(ev) {
+				console.log('clicked');
+				this.closest('form').clear();
+			}
+		});
+
 
 	});
 

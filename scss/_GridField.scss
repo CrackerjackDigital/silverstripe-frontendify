@@ -6,6 +6,8 @@
 		margin-bottom: 36px;
 	}
 
+
+
 	.ss-gridfield > div.addNewGridFieldButton {
 		margin-bottom: 0;
 	}
@@ -27,6 +29,9 @@
 	}
 
 	&.mode-view {
+		.ss-gridfield-table {
+			margin-top: 0;
+		}
 		// hide buttons if in view mode
 		.ss-gridfield > div.ss-gridfield-buttonrow {
 			display: none;
