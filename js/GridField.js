@@ -1,16 +1,17 @@
 (function ($) {
 	$.entwine("frontendify", function ($) {
 		/**
-		 * GridFieldAddNewInlineButton
+		 * Common functions across frontendify-gridfield classed elements
 		 */
-
-
 		$('.frontendify-gridfield *').entwine({
 			getFrontendifyGridField: function () {
 				return this.closest('.frontendify-gridfield');
 			}
 		});
 
+		/**
+		 * Set item backgrounds on load from row-background-colour attribute
+		 */
 		$(".frontendify-gridfield .ss-gridfield-item").entwine({
 			onmatch: function () {
 				// set background row colour to attribute value if set
@@ -21,6 +22,9 @@
 			}
 		});
 
+		/**
+		 * GridField actions: deleteRow, refresh, saveall, addnewinline
+		 */
 		$(".frontendify-gridfield").entwine({
 			deleteRow: function (ajaxOpts, successCallback) {
 				var grid = this,
@@ -294,6 +298,35 @@
 					}
 				}, ajaxOpts));
 			},
+			onfrontendifyaddnewinline: function (e) {
+				if (e.target != this[0]) {
+					return;
+				}
+				var tmpl = window.tmpl;
+				var row = this.find(".frontendify-add-inline-template:last");
+				var num = this.data("add-inline-num") || 1,
+					tbody = this.find("table.ss-gridfield-table tbody:first"),
+					newrow;
+
+				tmpl.cache[this[0].id + "frontendify-add-inline-template"] = tmpl(row.html());
+
+				newrow = $(tmpl(this[0].id + "frontendify-add-inline-template", {num: num}));
+				newrow.find('td.col-ID input').val('NewRow' + (new Date().getTime()).toString(16));
+
+				tbody.append(newrow);
+
+				tbody.children(".ss-gridfield-no-items").hide();
+
+				this.data("add-inline-num", num + 1);
+
+				// Rebuild sort order fields
+				$(".ss-gridfield-orderable tbody").rebuildSort();
+
+				$('.frontendify-select2field', $(this)).not('.select2ified').select2ify();
+				$(".frontendify-datefield", $(this)).not('.datefieldified').datefieldify();
+				$(".frontendify-timefield", $(this)).not('.timefieldified').datefieldify();
+
+			},
 			onpaste: function (e) {
 				// The following was used as a basis for clipboard data access:
 				// http://stackoverflow.com/questions/2176861/javascript-get-clipboard-data-on-paste-event-cross-browser
@@ -341,39 +374,13 @@
 						target.data("pasteManipulatedElements", []);
 					}
 				}
-			},
-			onfrontendifyaddnewinline: function (e) {
-				if (e.target != this[0]) {
-					return;
-				}
-				var tmpl = window.tmpl;
-				var row = this.find(".frontendify-add-inline-template:last");
-				var num = this.data("add-inline-num") || 1,
-					tbody = this.find("table.ss-gridfield-table tbody:first"),
-					newrow;
-
-				tmpl.cache[this[0].id + "frontendify-add-inline-template"] = tmpl(row.html());
-
-				newrow = $(tmpl(this[0].id + "frontendify-add-inline-template", {num: num}));
-				newrow.find('td.col-ID input').val('NewRow' + (new Date().getTime()).toString(16));
-
-				tbody.append(newrow);
-
-				tbody.children(".ss-gridfield-no-items").hide();
-
-				this.data("add-inline-num", num + 1);
-
-				// Rebuild sort order fields
-				$(".ss-gridfield-orderable tbody").rebuildSort();
-
-				$('.frontendify-select2field', $(this)).not('.select2ified').select2ify();
-				$(".frontendify-datefield", $(this)).not('.datefieldified').datefieldify();
-				$(".frontendify-timefield", $(this)).not('.timefieldified').datefieldify();
-
 			}
+
 		});
 
-
+		/**
+		 * Save all button
+		 */
 		$('.frontendify-gridfield .action.frontendify-saveallbutton').entwine({
 			onclick: function (e) {
 				var filterState = 'show'; //filterstate should equal current state.
@@ -431,7 +438,9 @@
 
 		});
 
-
+		/**
+		 * Publish button
+		 */
 		$('.frontendify-gridfield .action.frontendify-publishbutton').entwine({
 			onclick: function (e) {
 				var filterState = 'show'; //filterstate should equal current state.
@@ -488,6 +497,9 @@
 
 		});
 
+		/**
+		 * Filters
+		 */
 		$('.frontendify-gridfield .action.frontendify-filter-apply').entwine({
 			onclick: function (e) {
 				console.log('show');
@@ -568,6 +580,25 @@
 						isNew: isNew,
 						row: row
 					});
+				}
+
+				return false;
+			}
+		});
+
+		$(".frontendify-add-new-inline").entwine({
+			onclick: function (e) {
+				this.getFrontendifyGridField().trigger("frontendifyaddnewinline");
+				return false;
+			}
+		});
+
+		$(".frontendify-delete-inline").entwine({
+			onclick: function () {
+				var msg = ss.i18n._t("GridFieldExtensions.CONFIRMDEL", "Are you sure you want to delete this?");
+
+				if (confirm(msg)) {
+					this.parents("tr.frontendify-inline-new:first").remove();
 				}
 
 				return false;
@@ -670,25 +701,6 @@
 				if (this.data('sortable')) {
 					this.sortable("destroy");
 				}
-			}
-		});
-
-		$(".frontendify-add-new-inline").entwine({
-			onclick: function (e) {
-				this.getFrontendifyGridField().trigger("frontendifyaddnewinline");
-				return false;
-			}
-		});
-
-		$(".frontendify-delete-inline").entwine({
-			onclick: function () {
-				var msg = ss.i18n._t("GridFieldExtensions.CONFIRMDEL", "Are you sure you want to delete this?");
-
-				if (confirm(msg)) {
-					this.parents("tr.frontendify-inline-new:first").remove();
-				}
-
-				return false;
 			}
 		});
 
