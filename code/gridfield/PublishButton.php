@@ -25,6 +25,8 @@ class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButto
 			$grid->setValue( $data[ $grid->Name ] );
 			$model = singleton( $grid->List->dataClass() );
 
+			$this->unpublishAllRecords($grid);
+
 			foreach ( $grid->getConfig()->getComponents() as $component ) {
 				if ( $component instanceof GridField_SaveHandler ) {
 					$component->handlePublish( $grid, $model, $line, $results );
@@ -38,6 +40,37 @@ class FrontendifyGridFieldPublishButton extends FrontendifyGridFieldSaveAllButto
 				}
 				$response->addHeader( 'X-Status', rawurlencode( $this->completeMessage ) );
 			}
+		}
+	}
+
+	/**
+	 * Unpublish all published records for the grid model.
+	 *
+	 * @param \GridField $grid
+	 *
+	 * @throws \LogicException
+	 */
+	public function unpublishAllRecords(GridField $grid) {
+		$model = singleton( $grid->getModelClass() );
+
+		if ($model->hasExtension( Versioned::class)) {
+			if ($model->canPublish()) {
+
+				$liveStage = Versioned::get_live_stage();
+
+				$oldMode = Versioned::get_reading_mode();
+				Versioned::reading_stage( $liveStage );
+
+				$published = $model::get();
+
+				/** @var \Versioned $model */
+				foreach ( $published as $model ) {
+					$model->deleteFromStage( $liveStage );
+				}
+
+				Versioned::reading_stage( $oldMode );
+			}
+
 		}
 	}
 
