@@ -11,12 +11,12 @@ trait frontendify_field {
 	 * @throws \FrontendifyException
 	 */
 	protected function frontendify() {
-		$this->requirements();
 		$classes = strtolower( static::FrontendifyType );
 
 		$this->addExtraClass( "frontendify-field frontendify-{$classes}" );
 
 		$this->setAttribute( 'placeholder', $this->Title() );
+		$this->requirements();
 	}
 
 	public function setFieldData( $name, $value ) {

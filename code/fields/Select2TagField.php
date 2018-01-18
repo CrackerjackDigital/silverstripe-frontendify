@@ -5,7 +5,7 @@
  *
  * By default expects select2 to be installed via composer to component/select2/
  */
-class FrontendifySelect2TagField extends ListboxField {
+class FrontendifySelect2TagField extends FrontendifySelect2Field {
 	use frontendify_field, frontendify_requirements;
 
 	const FrontendifyType = 'Select2Field';
@@ -14,18 +14,14 @@ class FrontendifySelect2TagField extends ListboxField {
 
 	protected $allTags;
 
-	private static $frontendify_require = [
-		self::FrontendifyType => [
-			"js/lib/select2/select2.min.js",
-			"css/select2.min.css",
-		],
-	];
-
 	public function __construct( $name, $title = null, $source = [], $value = [], $maxLength = null, $form = null ) {
 		$this->setMultiple( true );
-//		$this->setSource( $source );
-//		$this->setValue( $value );
+		$this->setTagField( true );
 		parent::__construct( $name, $title, $source, $value, $maxLength, $form );
+
+		// preload requirements
+		$this->requirements();
+
 	}
 
 	/**
@@ -101,7 +97,7 @@ class FrontendifySelect2TagField extends ListboxField {
 		$values = is_array( $values ) ? $values : [];
 		if ( $values ) {
 			$this->setFieldData( 'tag-seperator', $this->tagSeperator() );
-			$this->setFieldData( 'tags', implode( $this->tagSeperator(), $values ?: [] ) );
+			$this->setFieldData( 'data', implode( $this->tagSeperator(), $values ?: [] ) );
 		}
 		$this->value = $values;
 
@@ -138,13 +134,13 @@ class FrontendifySelect2TagField extends ListboxField {
 		$options = [];
 
 		$allValues = $this->getSource();
-		$selected = is_array( $this->value ) ? $this->value : [ $this->value ];
-		$disabled = $this->disabledItems;
-		$defaults = $this->defaultItems;
+		$selected  = is_array( $this->value ) ? $this->value : [ $this->value ];
+		$disabled  = $this->disabledItems;
+		$defaults  = $this->defaultItems;
 
 		// Loop through and figure out which values were selected.
 		foreach ( $allValues as $value => $title ) {
-			$isSelected = ( isset($selected[$value]) || isset( $defaults[$value]) );
+			$isSelected = ( isset( $selected[ $value ] ) || isset( $defaults[ $value ] ) );
 			$isDisabled = $this->disabled || in_array( $value, $disabled );
 
 			$options[] = new ArrayData( [

@@ -32,18 +32,8 @@ trait frontendify_requirements {
 
 		// get requirements for ths component added via e.g. frontendify_reqreuirments['Select2Field'] = [ 'js/Select2Field.js' ]
 		$requirements = ( $all = ( static::config()->get( "frontendify_require" ) ?: [] ) )
-			? ( isset( $all[ static::FrontendifyType ] ) ? $all[ static::FrontendifyType ] : [] )
+			? ( isset( $all[ $type ] ) ? $all[ $type ] : [] )
 			: [];
-
-		// put custom requirements first, e.g. external scripts, then default requirements if they exist
-		$requirements = array_merge(
-			$requirements ?: [],
-			[
-				'css/frontendify.css',
-				"css/$type.css",
-				"js/$type.js",
-			]
-		);
 
 		foreach ( $requirements as $requirement ) {
 			if ( substr( $requirement, 0, 1 ) == '/' ) {
