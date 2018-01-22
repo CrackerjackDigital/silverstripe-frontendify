@@ -3,10 +3,11 @@
 		channel = postal.channel('select2field');
 
 	function templateSelection(item) {
-		var option = $(item.element);
+		var option = $(item.element),
+			classes = option.hasClass('conflict') ? 'conflict' : '';
 
 		// copy data-id and data-model-class to the list item
-		return $('<span data-model-class="' + option.data('model-class')  + '" data-id="' + item.id + '">' + item.text + '</span>');
+		return $('<span class="' + classes + '" data-model-class="' + option.data('model-class')  + '" data-id="' + item.id + '">' + item.text + '</span>');
 	}
 
 	$.fn.select2ify = function (options, data) {
@@ -27,7 +28,7 @@
 				// tag field options
 				tags: true,
 				tokenSeparators: [seperator],
-				data: data || [],
+				data: data || []
 			} : {
 				// non tag-field options
 			},

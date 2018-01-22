@@ -62,6 +62,7 @@ class FrontendifySelect2Field extends ListboxField {
 
 	public function setModelClass($className) {
 		$this->modelClass = $className;
+		$this->setAttribute( 'data-model-class', $className);
 		return $this;
 	}
 

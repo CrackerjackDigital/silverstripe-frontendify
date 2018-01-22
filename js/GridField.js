@@ -299,6 +299,8 @@
 				}, ajaxOpts));
 			},
 			onfrontendifyaddnewinline: function (e) {
+				console.log('onfrontendifyaddnewinline');
+
 				if (e.target != this[0]) {
 					return;
 				}
