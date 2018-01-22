@@ -25,7 +25,8 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 
 	private static $frontendify_require = [
 		self::FrontendifyType => [
-			'js/lib/lodash.min.js'
+			'js/lib/lodash.min.js',
+			'js/GridField.js'
 		],
 	];
 
@@ -56,13 +57,8 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 		// no title by default
 		parent::__construct( $modelClass, '', $dataList, $config );
 
+		/** @var DataObject|Versioned $model */
 		$model = singleton( $modelClass );
-
-		$canCreate = $model->canCreate();
-
-		$canEdit = $model->canEdit();
-
-		$canDelete = $model->canDelete();
 
 		$config = $this->getConfig();
 
@@ -70,56 +66,77 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 			->removeComponentsByType( GridFieldPageCount::class )
 			->removeComponentsByType( GridFieldPaginator::class );
 
-		if ( $mode && ($canEdit || $canCreate || $canDelete)) {
-			$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
-			       ->removeComponentsByType( GridFieldAddNewButton::class )
-			       ->removeComponentsByType( GridFieldEditButton::class )
-			       ->removeComponentsByType( GridFieldDeleteAction::class )
-			       ->removeComponentsByType( GridFieldButtonRow::class );
+		// mode other than zero means editable in some way (create, delete, edit)
+		if ( $mode ) {
+			static::configure_editable( $config, $model, $mode );
 
-			$config->addComponent( new FrontendifyGridFieldFilterRow() );
-			$config->addComponent( new GridFieldButtonRow() );
-
-			if ( ( $mode & self::ModeDelete ) && $canDelete ) {
-				$config->addComponent( new FrontendifyGridFieldDeleteAction() );
-			}
-			if ( $model->hasExtension( 'Versioned' ) && $model->canPublish() ) {
-				$config->addComponent( new FrontendifyGridFieldPublishButton( 'buttons-before-right' ) );
-			}
-
-			if ( $mode ) {
-				$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
-			}
 		} else {
-			$config
-				->removeComponentsByType( GridFieldEditButton::class )
-				->removeComponentsByType( GridFieldDeleteAction::class )
-				->removeComponentsByType( GridFieldAddNewButton::class )
-				->removeComponentsByType( GridFieldSaveRowButton::class )
-				->addComponent( new FrontendifyGridFieldFilterRow() )
-				->addComponent( new FrontendifyGridFieldCentreButtons() );
+			static::configure_readonly( $config, $model );
 
-			if ($columns) {
-				/** @var \GridFieldDataColumns $dataColumns */
-				if ($dataColumns = $config->getComponentByType( GridFieldDataColumns::class )) {
-					$dataColumns->setDisplayFields( $columns);
-				}
+		}
+		if ( $columns ) {
+			/** @var \GridFieldDataColumns $dataColumns */
+			if ( $dataColumns = $config->getComponentByType( GridFieldDataColumns::class ) ) {
+				$dataColumns->setDisplayFields( $columns );
 			}
-
 		}
 
 		$this->addExtraClass( 'frontendify-gridfield responsive' );
 		$this->setAttribute( 'data-mode-name', $this->mode ? 'edit' : 'view' );
 		$this->setTitle( '' );
 
-
 	}
 
 	/**
 	 * Load field values ready for editable columns to use
+	 *
 	 * @return mixed
 	 */
 	abstract public function loadFieldValues();
+
+	/**
+	 * @param GridFieldConfig      $config
+	 * @param DataObject|Versioned $model
+	 */
+	protected static function configure_editable( GridFieldConfig $config, $model, $mode ) {
+		$canCreate = ( ( $mode && self::ModeCreate ) == self::ModeCreate )
+		             && $model->canCreate();
+
+		$canEdit = ( ( $mode && self::ModeEdit ) == self::ModeEdit )
+		           && $model->canEdit();
+
+		$canDelete = ( ( $mode && self::ModeDelete ) == self::ModeDelete )
+		             && $model->canDelete();
+
+		$config->removeComponentsByType( GridFieldAddExistingSearchButton::class )
+		       ->removeComponentsByType( GridFieldAddNewButton::class )
+		       ->removeComponentsByType( GridFieldEditButton::class )
+		       ->removeComponentsByType( GridFieldDeleteAction::class )
+		       ->removeComponentsByType( GridFieldButtonRow::class );
+
+		$config->addComponent( new FrontendifyGridFieldFilterRow() );
+		$config->addComponent( new GridFieldButtonRow() );
+
+		if ( $canDelete ) {
+			$config->addComponent( new FrontendifyGridFieldDeleteAction() );
+		}
+		if ( $model->hasExtension( 'Versioned' ) && $model->canPublish() ) {
+			$config->addComponent( new FrontendifyGridFieldPublishButton( 'buttons-before-right' ) );
+		}
+
+		$config->addComponent( new FrontendifyGridFieldSaveAllButton( 'buttons-before-right' ) );
+	}
+
+	protected static function configure_readonly( GridFieldConfig $config, DataObject $model ) {
+		$config
+			->removeComponentsByType( GridFieldEditButton::class )
+			->removeComponentsByType( GridFieldDeleteAction::class )
+			->removeComponentsByType( GridFieldAddNewButton::class )
+			->removeComponentsByType( GridFieldSaveRowButton::class )
+			->addComponent( new FrontendifyGridFieldFilterRow() )
+			->addComponent( new FrontendifyGridFieldCentreButtons() );
+
+	}
 
 	/**
 	 * @param array      $row
@@ -209,7 +226,6 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 			self::ModeRead
 		);
 
-
 		return $grid;
 	}
 
@@ -264,7 +280,7 @@ abstract class FrontendifyGridField extends FrontEndGridField implements Fronten
 					return $field;
 				},
 			],
-			'ID' => [
+			'ID'       => [
 				'title'    => 'ID',
 				'callback' => function ( $item ) {
 					$field = new TextField( 'ID', '', $item->ID ?: uniqid( 'New' . static::GridModelClass ) );
