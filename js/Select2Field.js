@@ -38,8 +38,14 @@
 		self.select2(
 			options
 		);
+		self.on('select2:selecting', function (e) {
+			channel.publish('item.selecting', e);
+		});
 		self.on('select2:select', function (e) {
 			channel.publish('item.select', e);
+		});
+		self.on('select2:unselecting', function (e) {
+			channel.publish('item.unselecting', e);
 		});
 		self.on('select2:unselect', function (e) {
 			channel.publish('item.unselect', e);
@@ -55,8 +61,7 @@
 
 	$(selector).entwine('frontendify', {
 		onmatch: function (options) {
-			$(this).select2ify(options);
-			this._super();
+			$(this[0]).select2ify(options);
 		}
 	});
 
