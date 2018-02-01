@@ -12,6 +12,12 @@ class FrontendifySelect2ColourPicker extends FrontendifySelect2Field {
 	// override the config.colourpicker_container
 	protected $colourPickerContainer = '';
 
+	private static $frontendify_require = [
+		self::FrontendifyType => [
+			'/frontendify/js/Select2ColourPicker.js',
+		],
+	];
+
 	public function __construct( $name, $title = null, $source = null, $value = null, $form = null, $emptyString = null ) {
 		$source = $this->decode_list(
 			$source ?: ( $this->config()->get( 'colours' ) ?: [] )
