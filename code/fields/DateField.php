@@ -10,6 +10,7 @@ class FrontendifyDateField extends TextField {
 			'/frontendify/css/default.picker.css',
 			'/frontendify/js/lib/picker.js',
 			'/frontendify/js/lib/picker.date.js',
+			'/frontendify/js/DateField.js',
 		],
 	];
 
