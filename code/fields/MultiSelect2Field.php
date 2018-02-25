@@ -28,6 +28,7 @@ class FrontendifyMultiSelect2Field extends FrontendifySelect2Field {
 	 */
 	public function __construct( $name, $title = null, $source = [], $values = [], $form = null, $emptyString = null ) {
 		$this->setMultiple( true );
+		$this->setAttribute('data-frontendify-keep-open', true);
 		parent::__construct( $name, $title, $source, $values, $form, $emptyString );
 	}
 

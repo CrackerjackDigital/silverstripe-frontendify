@@ -16,10 +16,12 @@
 			seperator = self.data('frontendify-tag-seperator') || ',',
 			clear = !!self.data('frontendify-show-clear'),
 			tagField = self.hasClass('frontendify-tagfield'),
+			keepOpen = self.data('frontendify-keep-open') || false,
 			defaults = {
 				placeholder: placeholder,
 				allowClear: clear,
-				templateSelection: templateSelection
+				templateSelection: templateSelection,
+				closeOnSelect: !keepOpen
 			};
 
 		options = $.extend(

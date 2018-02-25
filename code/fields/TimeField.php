@@ -9,8 +9,8 @@ class FrontendifyTimeField extends TextField {
 	private static $frontendify_require = [
 		self::FrontendifyType => [
 			'/frontendify/css/default.pickatime.css',
-			'/frontendify/js/lib/picker.js',
-			'/frontendify/js/lib/picker.time.js',
+			'/frontendify/js/lib/picker/picker.js',
+			'/frontendify/js/lib/picker/picker.time.js',
 		]
 	];
 

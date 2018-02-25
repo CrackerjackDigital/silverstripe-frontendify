@@ -232,6 +232,7 @@ class FrontendifyGridFieldEditableColumns extends GridFieldEditableColumns
 		$value = $this->formatValue( $grid, $record, $col, $value );
 
 		$field->setName( $this->getFieldName( $field->getName(), $grid, $record ) );
+
 		$field->setValue( $value );
 
 		if ( $field instanceof HtmlEditorField ) {
