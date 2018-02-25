@@ -1,11 +1,16 @@
 (function ($) {
 	$.entwine("frontendify", function ($) {
+
 		/**
 		 * Common functions across frontendify-gridfield classed elements
 		 */
 		$('.frontendify-gridfield *').entwine({
 			getFrontendifyGridField: function () {
 				return this.closest('.frontendify-gridfield');
+			},
+
+			onkeyup: function (e) {
+				console.log(e.keyCode);
 			}
 		});
 
@@ -702,6 +707,24 @@
 			onremove: function () {
 				if (this.data('sortable')) {
 					this.sortable("destroy");
+				}
+			}
+		});
+
+		// Keyboard Shortcuts
+		$('body.frontendify-grid-page').entwine({ 
+			onkeyup: function (e) {
+				// 
+			},
+			onkeydown: function (e) {
+				if(e.ctrlKey && e.which == 83){ 
+					// save grid
+					$('.frontendify-saveallbutton').trigger( "click" );					
+					e.preventDefault(); 
+				}else if(e.ctrlKey && e.which == 78){
+					// add new row 
+					$('.frontendify-add-new-inline').trigger( "click" );
+					e.preventDefault(); 
 				}
 			}
 		});
