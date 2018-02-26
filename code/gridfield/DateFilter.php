@@ -1,7 +1,6 @@
 <?php
 
-class FrontendifyGridFieldDateFilter
-	implements GridField_HTMLProvider, GridFieldFilterInterface {
+class FrontendifyGridFieldDateFilter implements GridField_HTMLProvider, GridFieldFilterInterface {
 	use gridfield_filter {
 		filterValue as fv;
 	}
@@ -13,8 +12,8 @@ class FrontendifyGridFieldDateFilter
 	// can be a value or a callable
 	protected $filterDefaultValue;
 
-	public function __construct( $modelFields, $defaultValue = null) {
-		$this->modelFields        = $modelFields;
+	public function __construct($modelFields, $defaultValue = null) {
+		$this->modelFields = $modelFields;
 		$this->filterDefaultValue = $defaultValue;
 	}
 
@@ -25,10 +24,10 @@ class FrontendifyGridFieldDateFilter
 	 *
 	 * @return mixed should be null if no value to filter on
 	 */
-	public function filterValue( &$wasSet = false ) {
+	public function filterValue(&$wasSet = false) {
 		if ($value = $this->fv($wasSet)) {
-			$field = new FrontendifyDateField( 'asd' );
-			$field->setValue( $value );
+			$field = new FrontendifyDateField('asd');
+			$field->setValue($value);
 			$value = $field->dataValue();
 		}
 		return $value;
@@ -52,16 +51,17 @@ class FrontendifyGridFieldDateFilter
 	 *
 	 * @return array
 	 */
-	public function getHTMLFragments( $gridField ) {
+	public function getHTMLFragments($gridField) {
 		$value = $this->filterValue();
 
-		$field = ( new FrontendifyDateField( $this->filterName(), '', $value ) )
-			->addExtraClass( 'frontendify-filter' )
-			->addExtraClass( 'frontendify-datefilter-date' )
-			->setAttribute( 'frontendify-default-value', $this->filterDefaultValue() )
-			->setAttribute( 'frontendify-display-format', 'ddd d mmmm' )
-			->setAttribute( 'frontendify-clear-value', ' ' )
-			->setAttribute('placeholder', 'on date');
+		$field = (new FrontendifyDateField($this->filterName(), '', $value))
+			->addExtraClass('frontendify-filter')
+			->addExtraClass('frontendify-datefilter-date')
+			->setAttribute('frontendify-default-value', $this->filterDefaultValue())
+			->setAttribute('frontendify-display-format', 'ddd d mmmm')
+			->setAttribute('frontendify-clear-value', ' ')
+			->setAttribute('placeholder', 'on date')
+			->setAttribute('data-value', $this->filterDefaultValue());
 
 		return [
 			self::TargetFragment => $field->SmallFieldHolder(),

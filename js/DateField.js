@@ -6,7 +6,7 @@
 //		if ($('[type="date"]').prop('type') != 'date') {
 
 			console.log('using pickadate');
-			var format = $(this).attr('frontendify-display-format') || 'dd/mm/yyyy';
+			var format = $(this).attr('frontendify-display-format') || 'dd/mm/yyyy'; 
 
 			console.log('format: ' + format);
 
